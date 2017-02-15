@@ -1,0 +1,5 @@
+/* Use `zoom` over `transform` since some tests depend on reading height and width */
+#ember-testing {
+  transform: none !important;
+  zoom: 50%;
+}
