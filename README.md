@@ -1,4 +1,5 @@
 # ember-gridstack
+[![Travis][build-badge]][build]
 
 Ember components to build drag-and-drop multi-column grids powered by [gridstack.js](https://troolee.github.io/gridstack.js/)
 
@@ -144,3 +145,6 @@ export default Ember.Component.extend({
   }
 });
 ```
+
+[build-badge]: https://travis-ci.org/yahoo/ember-gridstack.svg?branch=master
+[build]: https://travis-ci.org/yahoo/ember-gridstack
