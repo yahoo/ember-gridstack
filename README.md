@@ -8,6 +8,11 @@ Ember components to build drag-and-drop multi-column grids powered by [gridstack
 ember install ember-gridstack
 ```
 
+Ember <= 2.4
+```
+ember install ember-assign-polyfill
+```
+
 ## Basic Usage
 
 ```hbs
