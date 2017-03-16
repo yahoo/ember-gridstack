@@ -10,7 +10,7 @@ module.exports = {
     // Lodash
     app.import({
       development: app.bowerDirectory + '/lodash/lodash.js',
-      production:  app.bowerDirectory + '/lodash/lodash.min.js'
+      production:  app.bowerDirectory + '/lodash/dist/lodash.min.js'
     });
 
     // JQuery UI
