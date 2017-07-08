@@ -14,10 +14,17 @@ module.exports = {
     });
 
     // JQuery UI
-    ['core', 'widget', 'mouse', 'draggable', 'resizable'].forEach(function(module) {
+    ['core', 'widget'].forEach(function(module) {
       app.import({
         development: app.bowerDirectory + '/jquery-ui/ui/' + module + '.js',
         production:  app.bowerDirectory + '/jquery-ui/ui/minified/' + module + '.min.js'
+      });
+    });
+
+    ['mouse', 'draggable', 'resizable'].forEach(function(module) {
+      app.import({
+        development: app.bowerDirectory + '/jquery-ui/ui/widgets/' + module + '.js',
+        production:  app.bowerDirectory + '/jquery-ui/ui/widgets/minified/' + module + '.min.js'
       });
     });
 
