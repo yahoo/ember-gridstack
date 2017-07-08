@@ -32,6 +32,11 @@ module.exports = {
         production:  app.bowerDirectory + '/jquery-ui/ui/widgets/minified/' + module + '.min.js'
       });
     });
+    
+    app.import({
+      development: app.bowerDirectory + '/jquery.ui.touch-punch/dist/jquery.ui.touch-punch.js',
+      production:  app.bowerDirectory + '/jquery.ui.touch-punch/dist/jquery.ui.touch-punch.min.js'
+    });
 
 
     // Gridstack
