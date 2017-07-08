@@ -14,7 +14,12 @@ module.exports = {
     });
 
     // JQuery UI
-    ['core', 'widget'].forEach(function(module) {
+    app.import({
+      development: app.bowerDirectory + '/jquery-ui/jquery-ui.js',
+      production:  app.bowerDirectory + '/jquery-ui/jquery-ui.min.js'
+    });
+    
+    ['widget', 'plugin'].forEach(function(module) {
       app.import({
         development: app.bowerDirectory + '/jquery-ui/ui/' + module + '.js',
         production:  app.bowerDirectory + '/jquery-ui/ui/minified/' + module + '.min.js'
