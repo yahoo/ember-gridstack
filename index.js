@@ -34,8 +34,8 @@ module.exports = {
     });
     
     app.import({
-      development: app.bowerDirectory + '/jquery.ui.touch-punch/dist/jquery.ui.touch-punch.js',
-      production:  app.bowerDirectory + '/jquery.ui.touch-punch/dist/jquery.ui.touch-punch.min.js'
+      development: app.bowerDirectory + '/jquery.ui.touch/jquery.ui.touch.js',
+      production:  app.bowerDirectory + '/jquery.ui.touch/jquery.ui.touch.min.js'
     });
 
 

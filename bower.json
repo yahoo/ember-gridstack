@@ -6,7 +6,7 @@
     "gridstack": "^0.2.6",
     "jquery-ui": "1.12.1",
     "lodash": "3.7.0",
-    "jquery.ui.touch-punch": "latest"
+    "jquery.ui.touch": "latest"
   },
   "resolutions": {
     "lodash": "3.7.0",
