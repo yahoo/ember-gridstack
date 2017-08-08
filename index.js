@@ -40,10 +40,8 @@ module.exports = {
 
 
     // Gridstack
-    app.import({
-      development: app.bowerDirectory + '/gridstack/dist/gridstack.js',
-      production:  app.bowerDirectory + '/gridstack/dist/gridstack.min.js'
-    });
+    app.import(app.bowerDirectory + '/gridstack.js/dist/gridstack.all.js');
+
     app.import(app.bowerDirectory + '/gridstack/dist/gridstack.css');
 
   }
