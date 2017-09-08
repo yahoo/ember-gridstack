@@ -68,12 +68,10 @@ export default Ember.Component.extend({
   /**
    * @method didUpdateAttrs
    */
-  didUpdateAttrs(changeSet) {
-    if (changeSet.newAttrs.options) {
-      // Reset gridstack to pick up latest option changes
-      this._destroyGridStack();
-      this._createGridStack();
-    }
+  didUpdateAttrs() {
+    // Reset gridstack to pick up latest option changes
+    this._destroyGridStack();
+    this._createGridStack();
   },
 
   /**
