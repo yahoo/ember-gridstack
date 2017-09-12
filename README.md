@@ -146,5 +146,27 @@ export default Ember.Component.extend({
 });
 ```
 
+## Build Configuration
+
+By default, the [bower dependencies for Gridstack](https://github.com/troolee/gridstack.js#requirements)
+will be installed automatically.
+
+### Exclude Optional Dependencies
+
+You can exclude the optional [jquery.ui.touch-punch](https://github.com/furf/jquery-ui-touch-punch) dependency by using
+the following configuration in your `config/environment.js`:
+
+```js
+// config.environment.js
+module.exports = function(environment) {
+  return {
+    'ember-gridstack': {
+      // Exclude the optional jquery.ui.touch-punch dependency
+      exclude: ['jquery.ui.touch-punch']
+    }
+  };
+```
+
+
 [build-badge]: https://travis-ci.org/yahoo/ember-gridstack.svg?branch=master
 [build]: https://travis-ci.org/yahoo/ember-gridstack

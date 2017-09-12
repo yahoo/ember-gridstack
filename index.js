@@ -14,12 +14,32 @@ module.exports = {
     });
 
     // JQuery UI
-    ['core', 'widget', 'mouse', 'draggable', 'resizable'].forEach(function(module) {
+    app.import({
+      development: app.bowerDirectory + '/jquery-ui/jquery-ui.js',
+      production:  app.bowerDirectory + '/jquery-ui/jquery-ui.min.js'
+    });
+
+    ['widget', 'plugin'].forEach(function(module) {
       app.import({
         development: app.bowerDirectory + '/jquery-ui/ui/' + module + '.js',
         production:  app.bowerDirectory + '/jquery-ui/ui/minified/' + module + '.min.js'
       });
     });
+
+    ['mouse', 'draggable', 'resizable'].forEach(function(module) {
+      app.import({
+        development: app.bowerDirectory + '/jquery-ui/ui/widgets/' + module + '.js',
+        production:  app.bowerDirectory + '/jquery-ui/ui/widgets/minified/' + module + '.min.js'
+      });
+    });
+
+    let config = this.getOptions();
+    if (config.exclude.indexOf('jquery.ui.touch-punch') < 0) {
+      app.import({
+        development: app.bowerDirectory + '/jquery.ui.touch-punch/dist/jquery.ui.touch-punch.js',
+        production: app.bowerDirectory + '/jquery.ui.touch-punch/dist/jquery.ui.touch-punch.min.js'
+      });
+    }
 
 
     // Gridstack
@@ -29,5 +49,16 @@ module.exports = {
     });
     app.import(app.bowerDirectory + '/gridstack/dist/gridstack.css');
 
+  },
+
+  getOptions() {
+    let projectConfig = (this.project.config(process.env.EMBER_ENV) || {})['ember-gridstack'] || {};
+
+    let config = Object.assign({}, {
+      exclude: [],
+    }, projectConfig);
+    config.exclude = config.exclude || [];
+
+    return config;
   }
 };

@@ -4,12 +4,13 @@
     "ember": "~2.10.0",
     "ember-cli-shims": "0.1.3",
     "gridstack": "^0.2.6",
-    "jquery-ui": "1.11.4",
-    "lodash": "3.7.0"
+    "jquery-ui": "1.12.1",
+    "lodash": "3.7.0",
+    "jquery.ui.touch-punch": "0.3.0"
   },
   "resolutions": {
     "lodash": "3.7.0",
     "jquery": ">= 1.7.0 < 4.0.0",
-    "jquery-ui": "1.11.4"
+    "jquery-ui": "1.12.1"
   }
 }
