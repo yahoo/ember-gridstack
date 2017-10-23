@@ -7,26 +7,25 @@ module.exports = {
   included: function(app) {
     this._super.included(app);
 
-    // Lodash
+    // lodash
     app.import({
       development: app.bowerDirectory + '/lodash/lodash.js',
       production:  app.bowerDirectory + '/lodash/dist/lodash.min.js'
     });
 
-    // JQuery UI
-    app.import({
-      development: app.bowerDirectory + '/jquery-ui/jquery-ui.js',
-      production:  app.bowerDirectory + '/jquery-ui/jquery-ui.min.js'
-    });
-
-    ['widget', 'plugin'].forEach(function(module) {
+    // jquery-ui dependencies needed by gridstack.js
+    // https://github.com/gridstack/gridstack.js/blob/v0.2.6/src/gridstack.js#L10
+    [ 'version', 'data', 'disable-selection', 'focusable', 'escape-selector', 'form',
+      'ie', 'keycode', 'labels', 'jquery-1-7', 'plugin', 'safe-active-element',
+      'safe-blur', 'scroll-parent', 'tabbable', 'unique-id', 'widget'
+    ].forEach(function(module) {
       app.import({
         development: app.bowerDirectory + '/jquery-ui/ui/' + module + '.js',
         production:  app.bowerDirectory + '/jquery-ui/ui/minified/' + module + '.min.js'
       });
     });
 
-    ['mouse', 'draggable', 'resizable'].forEach(function(module) {
+    [ 'mouse', 'draggable', 'droppable', 'resizable' ].forEach(function(module) {
       app.import({
         development: app.bowerDirectory + '/jquery-ui/ui/widgets/' + module + '.js',
         production:  app.bowerDirectory + '/jquery-ui/ui/widgets/minified/' + module + '.min.js'
