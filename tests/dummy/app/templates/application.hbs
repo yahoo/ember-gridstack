@@ -1,5 +1,7 @@
 <h2 id="title">Welcome to Ember Gridstack</h2>
 
+<button class="new-item-btn" onclick={{action 'changeItems'}}>+ New Item</button>
+
 {{#grid-stack classNames='grid-stack' onChange=(action (mut test) true)}}
   {{#each items as |item|}}
     {{#grid-stack-item}}
@@ -8,6 +10,5 @@
   {{/each}}
 {{/grid-stack}}
 
-<button onclick={{action 'changeItems'}}>+ New Item</button>
 
 {{outlet}}

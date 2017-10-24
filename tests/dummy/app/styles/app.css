@@ -3,3 +3,11 @@
   transform: none !important;
   zoom: 50%;
 }
+
+.grid-stack-item {
+  border: 1px solid #000000;
+}
+
+.new-item-btn {
+  margin: 8px 0;
+}
