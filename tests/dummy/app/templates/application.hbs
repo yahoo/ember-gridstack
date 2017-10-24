@@ -4,7 +4,9 @@
 
 {{#grid-stack classNames='grid-stack' onChange=(action (mut test) true)}}
   {{#each items as |item|}}
-    {{#grid-stack-item}}
+    {{#grid-stack-item
+       options=(hash x=0 y=item)
+    }}
       {{item}}
     {{/grid-stack-item}}
   {{/each}}
