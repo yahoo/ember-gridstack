@@ -38,8 +38,7 @@ module.exports = {
       name: 'ember-lts-2.12',
       npm: {
         devDependencies: {
-          'ember-source': '~2.12.0',
-          'ember-native-dom-event-dispatcher': null
+          'ember-source': '~2.12.0'
         }
       }
     },
