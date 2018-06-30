@@ -17,6 +17,9 @@ module.exports = {
         name: 'gridstack',
         target: '~0.2.6'
       },
+      blueprintOptions: {
+        saveDev: true
+      },
     ];
 
     if (!(config.exclude && config.exclude.indexOf('jquery.ui.touch-punch') >= 0)) {
