@@ -1,9 +1,9 @@
-import Ember from 'ember';
+import { A } from '@ember/array';
+import Controller from '@ember/controller';
+import { get } from '@ember/object';
 
-const { get } = Ember;
-
-export default Ember.Controller.extend({
-  items: Ember.A([0, 1, 2]),
+export default Controller.extend({
+  items: A([0, 1, 2]),
 
   actions: {
     changeItems() {

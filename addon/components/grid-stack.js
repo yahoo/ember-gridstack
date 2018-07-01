@@ -1,5 +1,5 @@
 /**
- * Copyright 2017, Yahoo Inc.
+ * Copyright 2018, Yahoo Inc.
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Usage:
@@ -21,12 +21,18 @@
  * Full list of options:
  *   https://github.com/troolee/gridstack.js/tree/master/doc#options
  */
-import Ember from 'ember';
+import { assign } from '@ember/polyfills';
+import Component from '@ember/component';
+import { get, computed } from '@ember/object';
+import { run } from '@ember/runloop';
+import { capitalize } from '@ember/string';
 import layout from '../templates/components/grid-stack';
 
-const { get, run, String: {capitalize} } = Ember;
+const GRID_STACK_EVENTS = [
+  'dragstart', 'dragstop', 'resizestart', 'resizestop', 'added', 'change', 'enable', 'removed'
+];
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
 
   /**
@@ -43,7 +49,7 @@ export default Ember.Component.extend({
    * https://github.com/troolee/gridstack.js/tree/master/doc#api
    * @property {Object} gridStack - reference to gridstack object
    */
-  gridStack: Ember.computed(function() {
+  gridStack: computed(function() {
     if(this.$()) {
       return this.$().data('gridstack');
     }
@@ -53,15 +59,14 @@ export default Ember.Component.extend({
    * https://github.com/troolee/gridstack.js/tree/master/doc#events
    * @property {Array} gridStackEvents - list of gridstack events
    */
-  gridStackEvents: [
-    'dragstart', 'dragstop', 'resizestart', 'resizestop', 'added', 'change', 'enable', 'removed'
-  ],
+  gridStackEvents: undefined,
 
   /**
    * @method didInsertElement
    */
   didInsertElement() {
     this._super(...arguments);
+    this.set('gridStackEvents', GRID_STACK_EVENTS);
     this._createGridStack();
   },
 
@@ -111,7 +116,7 @@ export default Ember.Component.extend({
    * @private
    */
   _createGridStack() {
-    let options = Ember.assign({}, get(this, 'options'));
+    let options = assign({}, get(this, 'options'));
     this.$().gridstack(options);
 
     // Since destroying gridstack disables it,

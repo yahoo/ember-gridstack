@@ -1,5 +1,5 @@
 /**
- * Copyright 2017, Yahoo Inc.
+ * Copyright 2018, Yahoo Inc.
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Usage:
@@ -16,15 +16,15 @@
  * Full list of options:
  *   https://github.com/troolee/gridstack.js/tree/master/doc#item-attributes
  */
-import Ember from 'ember';
+import { dasherize } from '@ember/string';
+import Component from '@ember/component';
+import { get, computed } from '@ember/object';
 import layout from '../templates/components/grid-stack-item';
-
-const { computed, get } = Ember;
 
 // Common prefix shared by gridstack data attributes
 const GS_PREFIX = 'data-gs-';
 
-export default Ember.Component.extend({
+export default Component.extend({
   layout,
 
   /**
@@ -55,7 +55,7 @@ export default Ember.Component.extend({
 
         // Convert each given option into a html data attribute
         Object.keys(options).map(key => {
-          let dataKey = GS_PREFIX + Ember.String.dasherize(key);
+          let dataKey = GS_PREFIX + dasherize(key);
 
           return `options.${key}:${dataKey}`;
         })

@@ -1,6 +1,6 @@
+import Component from '@ember/component';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
 
 moduleForComponent('grid-stack-item', 'Integration | Component | grid stack item', {
   integration: true
@@ -10,8 +10,7 @@ test('item renders', function(assert) {
   assert.expect(3);
 
   // Create a fake version of `grid-stack` component to test update actions
-  let assertMessage = '',
-      mockGridStack = Ember.Component.extend({
+  let mockGridStack = Component.extend({
         gridStackContainer: true,
         actions: {
           addWidget() {
@@ -25,9 +24,6 @@ test('item renders', function(assert) {
 
   this.register('component:mock-grid-stack', mockGridStack);
 
-  // Test didInsertElement calls update
-  assertMessage = 'grid-stack component is notified to update when item renders';
-
   this.render(hbs`
     {{#mock-grid-stack}}
       {{#grid-stack-item}}
@@ -39,9 +35,6 @@ test('item renders', function(assert) {
   assert.equal(this.$().text().trim(),
     'template block text',
   'Inner template is yielded');
-
-  // Test willDestroyElement calls update
-  assertMessage = 'grid-stack component is notified to update when item is destroyed';
 });
 
 test('item options', function(assert) {
