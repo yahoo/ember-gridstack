@@ -44,9 +44,9 @@ Used to construct a grid-stack layout
 `{{grid-stack}}` can take an `options` object attribute to configure the grid. All gridstack grid options are valid and take the form `data-gs-{option}`. However, when using `{{grid-stack}}` the `data-gs` is omitted.
 
 **Example:**
-```hbs 
+```hbs
 {{#grid-stack
-  options=(hash 
+  options=(hash
     animate=true
     width=12
     height=10
@@ -63,7 +63,7 @@ The full list of options can be found here: https://github.com/troolee/gridstack
 All gridstack events can be handled as Ember actions. They take the form `on{Eventname}`.
 
 **Example:**
-```hbs 
+```hbs
 {{#grid-stack
   onDragstart=(action 'dragStart')
   onDragstop=(action 'dragStop')
@@ -83,7 +83,7 @@ The full list of events can found here: https://github.com/troolee/gridstack.js/
 The `{{grid-stack}}` component uses the block form to yield `{{grid-stack-item}}` components. In addition, `{{grid-stack}}` yields a reference to itself in the case inner components need the reference or would like to listen to events triggered on the grid element.
 
 **Example:**
-```hbs 
+```hbs
 {{#grid-stack as |grid|}}
   {{#grid-stack-item
      options=(hash x=0 y=0 width=6 height=2)
@@ -102,9 +102,9 @@ Used to construct a grid item inside a `{{grid-stack}}` component
 `{{grid-stack-item}}` can take an `options` object attribute to configure the grid item. All gridstack item options are valid and take the form `data-gs-{option}`. However, when using `{{grid-stack-item}}` the `data-gs` is omitted.
 
 **Example:**
-```hbs 
+```hbs
 {{#grid-stack-item
-  options=(hash 
+  options=(hash
     width=4
     height=4
     x=0
@@ -120,10 +120,10 @@ The full list of options can be found here: https://github.com/troolee/gridstack
 
 #### Block Form
 
-The `{{grid-stack-item}}` component uses the block form to yield the content of the item. In addition, `{{grid-stack-item}}` yields a reference to itself in the case inner components need the reference or would like to listen to events triggered on the grid. 
+The `{{grid-stack-item}}` component uses the block form to yield the content of the item. In addition, `{{grid-stack-item}}` yields a reference to itself in the case inner components need the reference or would like to listen to events triggered on the grid.
 
 **Example:**
-```hbs 
+```hbs
 {{#grid-stack-item
    options=(hash x=0 y=0 width=6 height=2)
    as |item|
