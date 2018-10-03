@@ -34,7 +34,11 @@ test('gridstack with items', function(assert) {
   this.render(hbs`
     {{#grid-stack}}
       {{#each items as |item|}}
-        {{grid-stack-item}}
+        {{#grid-stack-item
+          options=(hash x=0 y=item)
+        }}
+          {{item}}
+        {{/grid-stack-item}}
       {{/each}}
     {{/grid-stack}}
   `);
@@ -51,7 +55,7 @@ test('gridstack with items', function(assert) {
     3,
   'new grid-stack-item components are initialized by gridstack when added through an each loop');
 
-  // Since gridstack defaults to adding new items vertically, and each item has height = 1,
+  // Since each gridstack item has height = 1,
   // we can check how many items are recognized by using the height property
   assert.equal(this.$('.grid-stack').attr('data-gs-current-height'),
     3,
@@ -151,7 +155,9 @@ test('onChange action', function(assert) {
   this.render(hbs`
     {{#grid-stack}}
       {{#each items as |item|}}
-        {{#grid-stack-item}}
+        {{#grid-stack-item
+          options=(hash x=0 y=item)
+        }}
           {{item}}
         {{/grid-stack-item}}
       {{/each}}
@@ -180,7 +186,9 @@ test('onChange action', function(assert) {
       onChange=(action onChange)
     }}
       {{#each items as |item|}}
-        {{#grid-stack-item}}
+        {{#grid-stack-item
+          options=(hash x=0 y=item)
+        }}
           {{item}}
         {{/grid-stack-item}}
       {{/each}}
