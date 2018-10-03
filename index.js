@@ -40,13 +40,14 @@ module.exports = {
       });
     }
 
-
     // Gridstack
-    app.import({
-      development: app.bowerDirectory + '/gridstack/dist/gridstack.js',
-      production:  app.bowerDirectory + '/gridstack/dist/gridstack.min.js'
-    });
-    app.import(app.bowerDirectory + '/gridstack/dist/gridstack.css');
+    [ 'gridstack', 'gridstack.jQueryUI' ].forEach(function(module) {
+      app.import({
+        development: 'node_modules/gridstack/dist/'+ module +'.js',
+        production:  'node_modules/gridstack/dist/'+ module +'.min.js'
+      });
+    })
+    app.import('node_modules/gridstack/dist/gridstack.css');
 
   },
 
