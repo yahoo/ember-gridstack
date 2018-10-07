@@ -1,9 +1,6 @@
 {
   "name": "ember-gridstack",
   "dependencies": {
-    "jquery-ui": "1.12.1",
-    "jquery": ">= 3.1.0",
-    "jquery.ui.touch-punch": "0.3.0",
-    "lodash": ">= 4.17.10"
+    "jquery.ui.touch-punch": "0.3.0"
   }
 }

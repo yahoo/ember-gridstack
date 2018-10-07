@@ -9,8 +9,8 @@ module.exports = {
 
     // lodash
     app.import({
-      development: app.bowerDirectory + '/lodash/lodash.js',
-      production:  app.bowerDirectory + '/lodash/dist/lodash.min.js'
+      development: 'node_modules/lodash/lodash.js',
+      production:  'node_modules/lodash/dist/lodash.min.js'
     });
 
     // jquery-ui dependencies needed by gridstack.js
@@ -20,15 +20,15 @@ module.exports = {
       'safe-blur', 'scroll-parent', 'tabbable', 'unique-id', 'widget'
     ].forEach(function(module) {
       app.import({
-        development: app.bowerDirectory + '/jquery-ui/ui/' + module + '.js',
-        production:  app.bowerDirectory + '/jquery-ui/ui/minified/' + module + '.min.js'
+        development: 'node_modules/jquery-ui/ui/' + module + '.js',
+        production:  'node_modules/jquery-ui/ui/minified/' + module + '.min.js'
       });
     });
 
     [ 'mouse', 'draggable', 'droppable', 'resizable' ].forEach(function(module) {
       app.import({
-        development: app.bowerDirectory + '/jquery-ui/ui/widgets/' + module + '.js',
-        production:  app.bowerDirectory + '/jquery-ui/ui/widgets/minified/' + module + '.min.js'
+        development: 'node_modules/jquery-ui/ui/widgets/' + module + '.js',
+        production:  'node_modules/jquery-ui/ui/widgets/minified/' + module + '.min.js'
       });
     });
 
