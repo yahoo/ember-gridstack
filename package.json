@@ -24,7 +24,11 @@
   },
   "dependencies": {
     "ember-cli-babel": "^6.6.0",
-    "ember-cli-htmlbars": "^2.0.1"
+    "ember-cli-htmlbars": "^2.0.1",
+    "lodash": "^4.17.10",
+    "gridstack": "^0.4.0",
+    "jquery": "^3.1.0",
+    "jquery-ui": "1.12.1"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.5",
