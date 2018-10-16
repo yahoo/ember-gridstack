@@ -13,14 +13,14 @@ module('Integration | Component | grid stack', function(hooks) {
     assert.expect(1);
 
     await render(hbs`
-      {{#grid-stack}}
+      <GridStack>
           <div class='grid-stack-item'
               data-gs-x='0' data-gs-y='0'
               data-gs-width='1' data-gs-height='1'
           >
             <div class='grid-stack-item-content'>My Widget</div>
           </div>
-      {{/grid-stack}}
+      </GridStack>
     `);
 
     assert.ok(this.$('.grid-stack .grid-stack-item').is('.ui-draggable.ui-resizable'),
@@ -33,15 +33,15 @@ module('Integration | Component | grid stack', function(hooks) {
     this.set('items', A([1, 2]));
 
     await render(hbs`
-      {{#grid-stack}}
+      <GridStack>
         {{#each items as |item|}}
-          {{#grid-stack-item
-            options=(hash x=0 y=item)
-          }}
+          <GridStackItem
+            @options={{hash x=0 y=item}}
+          >
             {{item}}
-          {{/grid-stack-item}}
+          </GridStackItem>
         {{/each}}
-      {{/grid-stack}}
+      </GridStack>
     `);
 
     assert.dom('.grid-stack .grid-stack-item.ui-draggable.ui-resizable').exists(
@@ -81,16 +81,16 @@ module('Integration | Component | grid stack', function(hooks) {
     });
 
     await render(hbs`
-      {{#grid-stack
-        options=options
-      }}
+      <GridStack
+        @options={{options}}
+      >
           <div class='grid-stack-item'
               data-gs-x='0' data-gs-y='0'
               data-gs-width='1' data-gs-height='1'
           >
             <div class='grid-stack-item-content'>My Widget</div>
           </div>
-      {{/grid-stack}}
+      </GridStack>
     `);
 
     assert.equal(this.$('.grid-stack-item').height(),
@@ -130,12 +130,12 @@ module('Integration | Component | grid stack', function(hooks) {
     this.owner.register('component:event-listener', eventListener);
 
     await render(hbs`
-      {{#grid-stack}}
-        {{#grid-stack-item as |item|}}
-          {{event-listener containerComponent=item}}
-        {{/grid-stack-item}}
+      <GridStack>
+        <GridStackItem as |item|>
+          <EventListener @containerComponent={{item}}/>
+        </GridStackItem>
         <div class='a-different-item' />
-      {{/grid-stack}}
+      </GridStack>
     `);
 
     next(async () => {
@@ -156,15 +156,15 @@ module('Integration | Component | grid stack', function(hooks) {
     /* == Test `change` event handler when `didUpdateGrid` attr not provided == */
 
     await render(hbs`
-      {{#grid-stack}}
+      <GridStack>
         {{#each items as |item|}}
-          {{#grid-stack-item
-            options=(hash x=0 y=item)
-          }}
+          <GridStackItem
+            @options={{hash x=0 y=item}}
+          >
             {{item}}
-          {{/grid-stack-item}}
+          </GridStackItem>
         {{/each}}
-      {{/grid-stack}}
+      </GridStack>
     `);
 
     run(() => this.get('items').pushObject(2));
@@ -185,17 +185,17 @@ module('Integration | Component | grid stack', function(hooks) {
     });
 
     await render(hbs`
-      {{#grid-stack
-        onChange=(action onChange)
-      }}
+      <GridStack
+        @onChange={{action onChange}}
+      >
         {{#each items as |item|}}
-          {{#grid-stack-item
-            options=(hash x=0 y=item)
-          }}
+          <GridStackItem
+            @options={{hash x=0 y=item}}
+          >
             {{item}}
-          {{/grid-stack-item}}
+          </GridStackItem>
         {{/each}}
-      {{/grid-stack}}
+      </GridStack>
     `);
 
     //Update gridstack
