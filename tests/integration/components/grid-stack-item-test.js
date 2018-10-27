@@ -1,7 +1,7 @@
 import Component from '@ember/component';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | grid stack item', function(hooks) {
@@ -49,18 +49,18 @@ module('Integration | Component | grid stack item', function(hooks) {
       }}
     `);
 
-    assert.dom('.grid-stack-item').hasAttribute('data-gs-min-height', 2, 'Item options are added as data attributes');
+    assert.dom('.grid-stack-item').hasAttribute('data-gs-min-height', '2', 'Item options are added as data attributes');
 
     this.set('options', {
       minHeight: 3
     });
 
-    assert.dom('.grid-stack-item').hasAttribute('data-gs-min-height', 3, 'Data attributes are updated with options');
+    assert.dom('.grid-stack-item').hasAttribute('data-gs-min-height', '3', 'Data attributes are updated with options');
 
     this.set('options', {
       minHeight: undefined,
     });
 
-    assert.dom('.grid-stack-item').hasAttribute('data-gs-min-height', undefined, 'Data attributes can be removed');
+    assert.dom('.grid-stack-item').doesNotHaveAttribute('data-gs-min-height', 'Data attributes can be removed');
   });
 });

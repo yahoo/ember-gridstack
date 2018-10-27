@@ -14,7 +14,8 @@
   },
   "authors": [
     "Mike Musson<musson@yahoo-inc.com>",
-    "Jon Kilroy<kilroy@yahoo-inc.com>"
+    "Jon Kilroy<kilroy@oath.com>",
+    "Balaji Manoharan<balajim1@oath.com>"
   ],
   "scripts": {
     "build": "ember build",

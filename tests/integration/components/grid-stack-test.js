@@ -3,7 +3,7 @@ import { run, next } from '@ember/runloop';
 import { A, isArray } from '@ember/array';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, find, findAll, triggerEvent } from '@ember/test-helpers';
+import { render, triggerEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | grid stack', function(hooks) {
@@ -60,7 +60,7 @@ module('Integration | Component | grid stack', function(hooks) {
 
     // Since each gridstack item has height = 1,
     // we can check how many items are recognized by using the height property
-    assert.dom('.grid-stack').hasAttribute('data-gs-current-height', 3, 'gridstack recognizes new items');
+    assert.dom('.grid-stack').hasAttribute('data-gs-current-height', '3', 'gridstack recognizes new items');
 
     run(() => {
       this.get('items').popObject();
@@ -68,7 +68,7 @@ module('Integration | Component | grid stack', function(hooks) {
 
     assert.dom('.grid-stack').hasAttribute(
       'data-gs-current-height',
-      2,
+      '2',
       'gridstack updates its item count when one is removed through an each loop'
     );
   });

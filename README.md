@@ -4,7 +4,6 @@
 Ember components to build drag-and-drop multi-column grids powered by [gridstack.js](https://troolee.github.io/gridstack.js/)
 
 Installation
-------------------------------------------------------------------------------
 
 ```
 ember install ember-gridstack
