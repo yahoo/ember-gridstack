@@ -10,7 +10,7 @@ module.exports = {
     // lodash
     app.import({
       development: 'node_modules/lodash/lodash.js',
-      production:  'node_modules/lodash/dist/lodash.min.js'
+      production:  'node_modules/lodash/lodash.min.js'
     });
 
     // jquery-ui dependencies needed by gridstack.js
