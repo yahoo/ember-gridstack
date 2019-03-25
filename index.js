@@ -32,14 +32,6 @@ module.exports = {
       });
     });
 
-    let config = this.getOptions();
-    if (config.exclude.indexOf('jquery.ui.touch-punch') < 0) {
-      app.import({
-        development: app.bowerDirectory + '/jquery.ui.touch-punch/dist/jquery.ui.touch-punch.js',
-        production: app.bowerDirectory + '/jquery.ui.touch-punch/dist/jquery.ui.touch-punch.min.js'
-      });
-    }
-
     // Gridstack
     [ 'gridstack', 'gridstack.jQueryUI' ].forEach(function(module) {
       app.import({
@@ -49,16 +41,5 @@ module.exports = {
     })
     app.import('node_modules/gridstack/dist/gridstack.css');
 
-  },
-
-  getOptions() {
-    let projectConfig = (this.project.config(process.env.EMBER_ENV) || {})['ember-gridstack'] || {};
-
-    let config = Object.assign({}, {
-      exclude: [],
-    }, projectConfig);
-    config.exclude = config.exclude || [];
-
-    return config;
   }
 };
