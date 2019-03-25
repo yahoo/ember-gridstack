@@ -154,12 +154,16 @@ export default Ember.Component.extend({
 });
 ```
 
-## Build Configuration
+## Touch Support
+
+For touch support do the following
+
+### ember-grid-stack < 2.x
 
 By default, the [bower dependencies for Gridstack](https://github.com/troolee/gridstack.js#requirements)
 will be installed automatically.
 
-### Exclude Optional Dependencies
+#### Exclude Optional Dependencies
 
 You can exclude the optional [jquery.ui.touch-punch](https://github.com/furf/jquery-ui-touch-punch) dependency by using
 the following configuration in your `config/environment.js`:
@@ -173,6 +177,22 @@ module.exports = function(environment) {
       exclude: ['jquery.ui.touch-punch']
     }
   };
+```
+
+### ember-grid-stack >= 2.x
+
+- Install [jquery.ui.touch-punch](https://www.npmjs.com/package/jquery-ui-touch-punch) through npm
+```js
+npm install jquery.ui.touch-punch
+```
+
+- Verify the installed path and include the package in your index.js
+```js
+// config.environment.js
+app.import({
+  development: 'node_modules/jquery.ui.touch-punch/jquery.ui.touch-punch.js',
+  production: 'node_modules/jquery.ui.touch-punch/jquery.ui.touch-punch.min.js'
+});
 ```
 
 [build-badge]: https://travis-ci.org/yahoo/ember-gridstack.svg?branch=master
