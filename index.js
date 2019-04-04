@@ -10,7 +10,7 @@ module.exports = {
     // lodash
     app.import({
       development: 'node_modules/lodash/lodash.js',
-      production:  'node_modules/lodash/dist/lodash.min.js'
+      production:  'node_modules/lodash/lodash.min.js'
     });
 
     // jquery-ui dependencies needed by gridstack.js
@@ -21,14 +21,14 @@ module.exports = {
     ].forEach(function(module) {
       app.import({
         development: 'node_modules/jquery-ui/ui/' + module + '.js',
-        production:  'node_modules/jquery-ui/ui/minified/' + module + '.min.js'
+        production:  'node_modules/jquery-ui/ui/' + module + '.js'
       });
     });
 
     [ 'mouse', 'draggable', 'droppable', 'resizable' ].forEach(function(module) {
       app.import({
         development: 'node_modules/jquery-ui/ui/widgets/' + module + '.js',
-        production:  'node_modules/jquery-ui/ui/widgets/minified/' + module + '.min.js'
+        production: 'node_modules/jquery-ui/ui/widgets/' + module + '.js'
       });
     });
 
