@@ -54,13 +54,11 @@ jobs:
 
 before_install:
   - npm config set spin false
-  - npm install -g bower
   - npm install -g npm@6
   - npm --version
 
 install:
   - npm install
-  - bower install
 
 script:
   - npm run test
