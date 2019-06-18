@@ -29,7 +29,7 @@
     "ember-cli-babel": "^7.1.2",
     "ember-cli-htmlbars": "^3.0.0",
     "gridstack": "^0.4.0",
-    "jquery": "^3.1.0",
+    "jquery": "^3.4.1",
     "jquery-ui": "1.12.1",
     "lodash": "^4.17.10"
   },
@@ -37,7 +37,7 @@
     "@ember/jquery": "^0.5.2",
     "@ember/optional-features": "^0.6.4",
     "broccoli-asset-rev": "^2.7.0",
-    "ember-cli": "~3.8.1",
+    "ember-cli": "^3.10.1",
     "ember-cli-dependency-checker": "^3.1.0",
     "ember-cli-eslint": "^4.2.3",
     "ember-cli-htmlbars-inline-precompile": "^1.0.3",
