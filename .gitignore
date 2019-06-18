@@ -5,6 +5,7 @@
 /tmp/
 
 # dependencies
+/bower_components/
 /node_modules/
 
 # misc
@@ -21,4 +22,5 @@ package-lock.json
 
 # ember-try
 /.node_modules.ember-try/
+/bower.json.ember-try
 /package.json.ember-try
