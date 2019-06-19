@@ -2,15 +2,15 @@
 
 <button class='new-item-btn' onclick={{action 'changeItems'}}>+ New Item</button>
 
-{{#grid-stack onChange=(action (mut test) true)}}
+<GridStack @onChange={{action (mut test) true}}>
   {{#each items as |item|}}
-    {{#grid-stack-item
-      options=(hash x=0 y=item)
-    }}
+    <GridStackItem
+      @options={{hash x=0 y=item}}
+    >
       {{item}}
-    {{/grid-stack-item}}
+    </GridStackItem>
   {{/each}}
-{{/grid-stack}}
+</GridStack>
 
 
 {{outlet}}
