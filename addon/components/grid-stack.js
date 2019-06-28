@@ -122,7 +122,23 @@ export default Component.extend({
     // Since destroying gridstack disables it,
     // we must manually enable it
     if (!get(this, 'options.staticGrid')) {
-      get(this, 'gridStack').enable();
+      let grid = get(this, 'gridStack');
+      let itemClass = grid.opts.itemClass;
+      this.$().children(`.${itemClass}`).each((i, el) => {
+        let $el = this.$(el);
+
+        // only enable items that are supposed to mobile
+        let noMove = $el.attr('data-gs-no-move');
+        let noResize = $el.attr('data-gs-no-resize');
+
+        if (!noMove) {
+          grid.movable(el, true);
+        }
+
+        if (!noResize) {
+          grid.resizable(el, true);
+        }
+      });
     }
 
     get(this, 'gridStackEvents').forEach(eventName => {

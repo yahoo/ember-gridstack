@@ -202,4 +202,21 @@ module('Integration | Component | grid stack', function(hooks) {
     run(() => this.get('items').pushObject(2));
     run(() => this.get('items').removeObject(2));
   });
+
+  test('gridstack items with noMove/Resize', async function(assert) {
+    await render(hbs`
+      <GridStack>
+        <GridStackItem
+          @options={{hash x=0 y=0 noMove='true' noResize='true'}}
+        >
+          Test widget
+        </GridStackItem>
+      </GridStack>
+    `);
+
+    assert.dom('.grid-stack .grid-stack-item.ui-draggable.ui-resizable.ui-draggable-disabled.ui-resizable-disabled').exists(
+      { count: 1 },
+      'grid-stack-item noResize and noMove properties are applied'
+    );
+  });
 });
