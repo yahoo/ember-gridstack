@@ -1,6 +1,6 @@
 {
   "name": "ember-gridstack",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Ember Gridstack",
   "keywords": [
     "ember-addon",
@@ -13,9 +13,9 @@
     "test": "tests"
   },
   "authors": [
-    "Mike Musson<musson@yahoo-inc.com>",
-    "Jon Kilroy<kilroy@oath.com>",
-    "Balaji Manoharan<balajim1@oath.com>"
+    "Mike Musson",
+    "Jon Kilroy<kilroy@verizonmedia.com>",
+    "Balaji Manoharan<balajim1@verizonmedia.com>"
   ],
   "scripts": {
     "build": "ember build",
