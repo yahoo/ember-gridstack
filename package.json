@@ -31,7 +31,7 @@
     "gridstack": "^0.4.0",
     "jquery": "^3.4.1",
     "jquery-ui": "1.12.1",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@ember/jquery": "^0.5.2",
