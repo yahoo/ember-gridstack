@@ -51,7 +51,7 @@ export default Component.extend({
    */
   gridStack: computed(function() {
     if(this.$()) {
-      return this.$().data('gridstack');
+      return this.element.addEventListener('gridstack');
     }
   }).volatile(),
 
@@ -96,16 +96,16 @@ export default Component.extend({
 
     if (grid) {
 
-      this.$().off('.grid-stack');
+      this.element.addEventListener('.grid-stack');
 
       // Use `false` option to prevent removing dom elements, let Ember do that
       grid.destroy(false);
 
       // Clean up gridstack reference in JQuery node
-      this.$().data('gridstack', null);
+      this.element.addEventListener('gridstack', null);
 
       // Remove 'grid-stack-instance-####' class left behind
-      this.$().removeClass((index, css) => {
+      this.element.addEventListener((index, css) => {
           return (css.match(/grid-stack-instance-\d*/) || []).join(' ');
       });
     }
@@ -117,14 +117,14 @@ export default Component.extend({
    */
   _createGridStack() {
     let options = assign({}, get(this, 'options'));
-    this.$().gridstack(options);
+    this.element.addEventListener(options);
 
     // Since destroying gridstack disables it,
     // we must manually enable it
     if (!get(this, 'options.staticGrid')) {
       let grid = get(this, 'gridStack');
       let itemClass = grid.opts.itemClass;
-      this.$().children(`.${itemClass}`).each((i, el) => {
+      this.element.addEventListener(`.${itemClass}`).each((i, el) => {
         let $el = this.$(el);
 
         // only enable items that are supposed to mobile
@@ -145,7 +145,7 @@ export default Component.extend({
       let action = get(this, `attrs.on${capitalize(eventName)}`);
 
       if(action) {
-        this.$().on(`${eventName}.grid-stack`, function() {
+        this.element.addEventListener(`${eventName}.grid-stack`, function() {
           run.scheduleOnce('afterRender', this, action, ...arguments);
         });
       }
