@@ -23,7 +23,7 @@
  */
 import { assign } from '@ember/polyfills';
 import Component from '@ember/component';
-import { get, computed } from '@ember/object';
+import { get } from '@ember/object';
 import { run } from '@ember/runloop';
 import { capitalize } from '@ember/string';
 import layout from '../templates/components/grid-stack';
@@ -49,11 +49,13 @@ export default Component.extend({
    * https://github.com/troolee/gridstack.js/tree/master/doc#api
    * @property {Object} gridStack - reference to gridstack object
    */
-  gridStack: computed(function() {
+  get gridStack() {
     if(this.$()) {
       return this.$().data('gridstack');
+    } else {
+      return null;
     }
-  }).volatile(),
+  },
 
   /**
    * https://github.com/troolee/gridstack.js/tree/master/doc#events
