@@ -57,8 +57,8 @@ Used to construct a grid-stack layout
 {{#grid-stack
   options=(hash
     animate=true
-    width=12
-    height=10
+    column=12
+    maxRow=10
   )
 }}
   ...
