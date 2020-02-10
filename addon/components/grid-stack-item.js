@@ -1,5 +1,5 @@
 /**
- * Copyright 2018, Yahoo Inc.
+ * Copyright 2020, Yahoo Inc.
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Usage:
@@ -18,35 +18,36 @@
  */
 import { dasherize } from '@ember/string';
 import Component from '@ember/component';
-import { get, computed } from '@ember/object';
+import { computed } from '@ember/object';
 import layout from '../templates/components/grid-stack-item';
 
 // Common prefix shared by gridstack data attributes
 const GS_PREFIX = 'data-gs-';
 
-export default Component.extend({
-  layout,
+export default class extends Component {
+  layout = layout
 
   /**
    * @property {Array} classNames
    */
-  classNames: ['grid-stack-item'],
+  classNames = ['grid-stack-item']
 
   /**
    * @property {Ember.Component} parentContainer - reference to the grid-stack component this component belongs to
    */
-  parentContainer: computed(function() {
+  @computed
+  get parentContainer() {
     return this.nearestWithProperty('gridStackContainer');
-  }),
+  }
 
   /**
    * @method didReceiveAttrs
    * @override
    */
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
-    let options = get(this, 'options');
+    let options = this.options;
 
     if (options) {
       // Since attributeBindings cannot be a computed property,
@@ -61,35 +62,35 @@ export default Component.extend({
         })
       );
     }
-  },
+  }
 
   /**
    * @method didInsertElement
    * @override
    */
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
-    let gridStack = get(this, 'parentContainer');
+    let gridStack = this.parentContainer;
 
     if (gridStack) {
       // Register widget with grid
       gridStack.send('addWidget', this.element);
     }
-  },
+  }
 
   /**
    * @method willDestroyElement
    * @override
    */
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
-    let gridStack = this.get('parentContainer');
+    let gridStack = this.parentContainer;
 
     if (gridStack) {
       // Make sure grid stack is updated
       gridStack.send('removeWidget', this.element);
     }
   }
-});
+}
