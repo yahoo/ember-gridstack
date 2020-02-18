@@ -5,6 +5,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, triggerEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
+import { camelize } from '@ember/string';
 
 module('Integration | Component | grid stack', function(hooks) {
   setupRenderingTest(hooks);
@@ -148,16 +149,17 @@ module('Integration | Component | grid stack', function(hooks) {
     });
   });
 
-  test('onChange action', async function(assert) {
-    assert.expect(6);
+  test('onChange, onAdded, onRemove actions', async function(assert) {
+    // onAdded should run twice, onChange, onRemoved should each run once
+    assert.expect(12);
 
     this.set('items', A([1]));
 
-    /* == Test `change` event handler when `didUpdateGrid` attr not provided == */
+    /* == Test event handlers when respective attrs not provided == */
 
     await render(hbs`
       <GridStack>
-        {{#each items as |item|}}
+        {{#each this.items as |item|}}
           <GridStackItem
             @options={{hash x=0 y=item}}
           >
@@ -169,26 +171,37 @@ module('Integration | Component | grid stack', function(hooks) {
 
     run(() => this.get('items').pushObject(2));
 
-    /* == Test `change` event handler when `didUpdateGrid` attr provided == */
+    /* == Test event handler when respective attrs provided == */
 
     this.set('items', A([1]));
 
-    this.set('onChange', (event, items) => {
-      assert.ok('`onChange` fires when gridstack `change` event fires');
+    const events = ['change', 'added', 'removed'];
 
-      assert.equal(event.type,
-        'change',
-      '`onChange` action provides the `event` argument');
+    events.forEach(e => {
+      let onAttr = camelize(`on-${e}`);
+      this.set(onAttr, (event, items) => {
+        assert.ok(`\`${onAttr}\` fires when gridstack \`${e}\` event fires`);
 
-      assert.ok(isArray(items),
-        '`onChange` action provides the `items` argument');
+        assert.equal(
+          event.type,
+          e,
+          `\`${onAttr}\` action provides the \`event\` argument`
+        );
+
+        assert.ok(
+          isArray(items),
+          `\`${onAttr}\` action provides the \`items\` argument`
+        );
+      });
     });
 
     await render(hbs`
       <GridStack
-        @onChange={{action onChange}}
+        @onChange={{action this.onChange}}
+        @onAdded={{action this.onAdded}}
+        @onRemoved={{action this.onRemoved}}
       >
-        {{#each items as |item|}}
+        {{#each this.items as |item|}}
           <GridStackItem
             @options={{hash x=0 y=item}}
           >
@@ -200,6 +213,11 @@ module('Integration | Component | grid stack', function(hooks) {
 
     //Update gridstack
     run(() => this.get('items').pushObject(2));
+
+    // this will trigger onChange in addition to onAdded as
+    // the existing item at y=2 will be moved by gridstack
+    run(() => this.get('items').pushObject(2));
+
     run(() => this.get('items').removeObject(2));
   });
 
