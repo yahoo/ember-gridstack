@@ -148,12 +148,12 @@ module('Integration | Component | grid stack', function(hooks) {
     });
   });
 
-  test('onChange action', async function(assert) {
-    assert.expect(6);
+  test('onAdded action', async function(assert) {
+    assert.expect(3);
 
     this.set('items', A([1]));
 
-    /* == Test `change` event handler when `didUpdateGrid` attr not provided == */
+    /* == Test `change` event handler when `onAdded` attr not provided == */
 
     await render(hbs`
       <GridStack>
@@ -169,24 +169,58 @@ module('Integration | Component | grid stack', function(hooks) {
 
     run(() => this.get('items').pushObject(2));
 
-    /* == Test `change` event handler when `didUpdateGrid` attr provided == */
+    /* == Test `change` event handler when `onAdded` attr provided == */
 
     this.set('items', A([1]));
 
-    this.set('onChange', (event, items) => {
-      assert.ok('`onChange` fires when gridstack `change` event fires');
+    this.set('onAdded', (event, items) => {
+      assert.ok('`onAdded` fires when gridstack `change` event fires');
 
       assert.equal(event.type,
-        'change',
-      '`onChange` action provides the `event` argument');
+        'added',
+      '`onAdded` action provides the `event` argument');
 
       assert.ok(isArray(items),
-        '`onChange` action provides the `items` argument');
+        '`onAdded` action provides the `items` argument');
     });
 
     await render(hbs`
       <GridStack
-        @onChange={{action onChange}}
+        @onAdded={{action onAdded}}
+      >
+        {{#each items as |item|}}
+          <GridStackItem
+            @options={{hash x=0 y=item}}
+          >
+            {{item}}
+          </GridStackItem>
+        {{/each}}
+      </GridStack>
+    `);
+
+    //Update gridstack
+    run(() => this.get('items').pushObject(2));
+  });
+
+  test('onRemoved action', async function(assert) {
+    assert.expect(3);
+
+    this.set('items', A([1]));
+
+    this.set('onRemoved', (event, items) => {
+      assert.ok('`onRemoved` fires when gridstack `change` event fires');
+
+      assert.equal(event.type,
+        'removed',
+      '`onRemoved` action provides the `event` argument');
+
+      assert.ok(isArray(items),
+        '`onRemoved` action provides the `items` argument');
+    });
+
+    await render(hbs`
+      <GridStack
+        @onRemoved={{action onRemoved}}
       >
         {{#each items as |item|}}
           <GridStackItem
