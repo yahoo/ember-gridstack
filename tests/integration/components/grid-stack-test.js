@@ -61,14 +61,14 @@ module('Integration | Component | grid stack', function(hooks) {
 
     // Since each gridstack item has height = 1,
     // we can check how many items are recognized by using the height property
-    assert.dom('.grid-stack').hasAttribute('data-gs-current-height', '3', 'gridstack recognizes new items');
+    assert.dom('.grid-stack').hasAttribute('data-gs-current-row', '3', 'gridstack recognizes new items');
 
     run(() => {
       this.get('items').popObject();
     });
 
     assert.dom('.grid-stack').hasAttribute(
-      'data-gs-current-height',
+      'data-gs-current-row',
       '2',
       'gridstack updates its item count when one is removed through an each loop'
     );
