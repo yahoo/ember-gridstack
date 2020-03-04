@@ -6,7 +6,6 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, triggerEvent } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { camelize } from '@ember/string';
-import jQuery from 'jquery';
 
 module('Integration | Component | grid stack', function(hooks) {
   setupRenderingTest(hooks);
@@ -25,9 +24,11 @@ module('Integration | Component | grid stack', function(hooks) {
       </GridStack>
     `);
 
-    assert.strictEqual(document.querySelector('.grid-stack .grid-stack-item'),
+    assert.strictEqual(
+      document.querySelector('.grid-stack .grid-stack-item'),
       document.querySelector('.ui-draggable.ui-resizable'),
-      'Dom elements with grid-stack-item class are initialized by gridstack');
+      'Dom elements with grid-stack-item class are initialized by gridstack'
+    );
   });
 
   test('gridstack with items', async function(assert) {
@@ -99,26 +100,28 @@ module('Integration | Component | grid stack', function(hooks) {
       </GridStack>
     `);
 
-    assert.equal(this.element.querySelector('.grid-stack-item').clientHeight,
+    assert.equal(
+      this.element.querySelector('.grid-stack-item').clientHeight,
       200,
-    'Cell height option is passed through to gridstack');
+      'Cell height option is passed through to gridstack'
+    );
 
     this.set('options', {
       cellHeight: '300px'
     });
 
-    assert.equal(this.element.querySelector('.grid-stack-item').clientHeight,
-      300,
-    'Gridstack updates with options');
+    assert.equal(this.element.querySelector('.grid-stack-item').clientHeight, 300, 'Gridstack updates with options');
 
     this.set('options', {
       cellHeight: '300px',
       staticGrid: true
     });
 
-    assert.strictEqual(document.querySelector('.grid-stack-static .grid-stack-item'),
+    assert.strictEqual(
+      document.querySelector('.grid-stack-static .grid-stack-item'),
       document.querySelector('.ui-draggable-disabled.ui-resizable-disabled'),
-      'staticGrid property can disable editing');
+      'staticGrid property can disable editing'
+    );
   });
 
   test('grid stack item events', async function(assert) {
@@ -128,7 +131,7 @@ module('Integration | Component | grid stack', function(hooks) {
     let eventListener = Component.extend({
       didInsertElement() {
         this._super(...arguments);
-        jQuery(this.containerComponent.element).on('resizestop', () => {
+        this.containerComponent.element.addEventListener('resizestop', () => {
           assert.ok(true, 'resize action is called when item is resized');
         });
       }

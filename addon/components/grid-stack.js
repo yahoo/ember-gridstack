@@ -26,7 +26,6 @@ import { get, action } from '@ember/object';
 import { run } from '@ember/runloop';
 import { capitalize } from '@ember/string';
 import layout from '../templates/components/grid-stack';
-import jQuery from 'jquery';
 
 export const GRID_STACK_EVENTS = [
   'dragstart',
@@ -105,9 +104,9 @@ export default class GridStackComponent extends Component {
       this.gridStack = null;
 
       // Remove 'grid-stack-instance-####' class left behind
-      jQuery(this.element).removeClass((index, css) => {
-        return (css.match(/grid-stack-instance-\d*/) || []).join(' ');
-      });
+      [...this.element.classList]
+        .filter(x => /grid-stack-instance-\d*/.test(x))
+        .forEach(x => this.element.classList.remove(x));
     }
   }
 
@@ -122,22 +121,20 @@ export default class GridStackComponent extends Component {
     // we must manually enable it
     if (!(this.options && this.options.staticGrid)) {
       let grid = this.gridStack;
-      let itemClass = grid.opts.itemClass;
-      jQuery(this.element)
-        .children(`.${itemClass}`)
-        .each((_, el) => {
-          // only enable items that are supposed to mobile
-          let noMove = el.getAttribute('data-gs-no-move');
-          let noResize = el.getAttribute('data-gs-no-resize');
 
-          if (!noMove) {
-            grid.movable(el, true);
-          }
+      this.element.querySelectorAll(`.${grid.opts.itemClass}`).forEach(el => {
+        // only enable items that are supposed to mobile
+        let noMove = el.getAttribute('data-gs-no-move');
+        let noResize = el.getAttribute('data-gs-no-resize');
 
-          if (!noResize) {
-            grid.resizable(el, true);
-          }
-        });
+        if (!noMove) {
+          grid.movable(el, true);
+        }
+
+        if (!noResize) {
+          grid.resizable(el, true);
+        }
+      });
     }
 
     GRID_STACK_EVENTS.forEach(eventName => {
@@ -147,6 +144,7 @@ export default class GridStackComponent extends Component {
         this.gridStack.on(eventName, function() {
           run.scheduleOnce('afterRender', this, action, ...arguments);
         });
+
         this.subscribedEvents.push(eventName);
       }
     });
