@@ -28,6 +28,18 @@ import { capitalize } from '@ember/string';
 import layout from '../templates/components/grid-stack';
 
 
+export const GRID_STACK_EVENTS = [
+  'dragstart',
+  'dragstop',
+  'resizestart',
+  'resizestop',
+  'added',
+  'change',
+  'enable',
+  'removed'
+];
+
+
 export default class GridStackComponent extends Component {
   layout = layout;
 
@@ -46,21 +58,6 @@ export default class GridStackComponent extends Component {
    * @property {Object} gridStack - reference to gridstack object
    */
   gridStack = null;
-
-  /**
-   * https://github.com/troolee/gridstack.js/tree/master/doc#events
-   * @property {Array} gridStackEvents - list of gridstack events
-   */
-  gridStackEvents = [
-    'dragstart',
-    'dragstop',
-    'resizestart',
-    'resizestop',
-    'added',
-    'change',
-    'enable',
-    'removed'
-  ];
 
   /**
    * @property {Array} subscribedEvents - List of events for which event handlers were set up
@@ -144,7 +141,7 @@ export default class GridStackComponent extends Component {
       });
     }
 
-    this.gridStackEvents.forEach(eventName => {
+    GRID_STACK_EVENTS.forEach(eventName => {
       let action = get(this, `attrs.on${capitalize(eventName)}`);
 
       if(action) {
