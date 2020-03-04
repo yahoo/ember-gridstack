@@ -60,7 +60,7 @@ module('Integration | Component | grid stack', function(hooks) {
     );
 
     // Since each gridstack item has height = 1,
-    // we can check how many items are recognized by using the height property
+    // we can check how many items are recognized by using the row property
     assert.dom('.grid-stack').hasAttribute('data-gs-current-row', '3', 'gridstack recognizes new items');
 
     run(() => {
