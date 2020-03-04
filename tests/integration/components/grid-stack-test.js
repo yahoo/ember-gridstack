@@ -11,24 +11,26 @@ module('Integration | Component | grid stack', function(hooks) {
   setupRenderingTest(hooks);
 
   test('gridstack renders', async function(assert) {
-    assert.expect(1);
+    assert.expect(2);
 
     await render(hbs`
       <GridStack>
-          <div class='grid-stack-item'
-              data-gs-x='0' data-gs-y='0'
-              data-gs-width='1' data-gs-height='1'
-          >
-            <div class='grid-stack-item-content'>My Widget</div>
-          </div>
+        <div class='grid-stack-item'
+          data-gs-x='0' data-gs-y='0'
+          data-gs-width='1' data-gs-height='1'
+        >
+          <div class='grid-stack-item-content'>My Widget</div>
+        </div>
       </GridStack>
     `);
 
-    assert.strictEqual(
-      document.querySelector('.grid-stack .grid-stack-item'),
-      document.querySelector('.ui-draggable.ui-resizable'),
-      'Dom elements with grid-stack-item class are initialized by gridstack'
-    );
+    assert
+      .dom('.grid-stack .grid-stack-item')
+      .hasClass('ui-draggable', 'Dom elements with grid-stack-item class are initialized by gridstack');
+
+    assert
+      .dom('.grid-stack .grid-stack-item')
+      .hasClass('ui-resizable', 'Dom elements with grid-stack-item class are initialized by gridstack');
   });
 
   test('gridstack with items', async function(assert) {
@@ -81,7 +83,7 @@ module('Integration | Component | grid stack', function(hooks) {
   });
 
   test('gridstack options', async function(assert) {
-    assert.expect(3);
+    assert.expect(4);
 
     this.set('options', {
       cellHeight: '200px'
@@ -91,12 +93,12 @@ module('Integration | Component | grid stack', function(hooks) {
       <GridStack
         @options={{options}}
       >
-          <div class='grid-stack-item'
-              data-gs-x='0' data-gs-y='0'
-              data-gs-width='1' data-gs-height='1'
-          >
-            <div class='grid-stack-item-content'>My Widget</div>
-          </div>
+        <div class='grid-stack-item'
+          data-gs-x='0' data-gs-y='0'
+          data-gs-width='1' data-gs-height='1'
+        >
+          <div class='grid-stack-item-content'>My Widget</div>
+        </div>
       </GridStack>
     `);
 
@@ -117,11 +119,12 @@ module('Integration | Component | grid stack', function(hooks) {
       staticGrid: true
     });
 
-    assert.strictEqual(
-      document.querySelector('.grid-stack-static .grid-stack-item'),
-      document.querySelector('.ui-draggable-disabled.ui-resizable-disabled'),
-      'staticGrid property can disable editing'
-    );
+    assert
+      .dom('.grid-stack-static .grid-stack-item')
+      .hasClass('ui-draggable-disabled', 'staticGrid property can disable editing');
+    assert
+      .dom('.grid-stack-static .grid-stack-item')
+      .hasClass('ui-resizable-disabled', 'staticGrid property can disable editing');
   });
 
   test('grid stack item events', async function(assert) {
