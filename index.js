@@ -7,9 +7,9 @@ module.exports = {
   included: function(app) {
     this._super.included(app);
 
-    app.import("node_modules/gridstack/dist/gridstack.all.js");
+    app.import('node_modules/gridstack/dist/gridstack.all.js');
 
-    app.import("node_modules/gridstack/dist/gridstack.css");
-    app.import("node_modules/gridstack/dist/gridstack-extra.css");
+    app.import('node_modules/gridstack/dist/gridstack.css');
+    app.import('node_modules/gridstack/dist/gridstack-extra.css');
   }
 };
