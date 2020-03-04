@@ -26,6 +26,7 @@ import { get, action } from '@ember/object';
 import { run } from '@ember/runloop';
 import { capitalize } from '@ember/string';
 import layout from '../templates/components/grid-stack';
+import jQuery from 'jquery';
 
 export const GRID_STACK_EVENTS = [
   'dragstart',
@@ -104,7 +105,7 @@ export default class GridStackComponent extends Component {
       this.gridStack = null;
 
       // Remove 'grid-stack-instance-####' class left behind
-      this.$().removeClass((index, css) => {
+      jQuery(this.element).removeClass((index, css) => {
         return (css.match(/grid-stack-instance-\d*/) || []).join(' ');
       });
     }
@@ -122,14 +123,12 @@ export default class GridStackComponent extends Component {
     if (!(this.options && this.options.staticGrid)) {
       let grid = this.gridStack;
       let itemClass = grid.opts.itemClass;
-      this.$()
+      jQuery(this.element)
         .children(`.${itemClass}`)
-        .each((i, el) => {
-          let $el = this.$(el);
-
+        .each((_, el) => {
           // only enable items that are supposed to mobile
-          let noMove = $el.attr('data-gs-no-move');
-          let noResize = $el.attr('data-gs-no-resize');
+          let noMove = el.getAttribute('data-gs-no-move');
+          let noResize = el.getAttribute('data-gs-no-resize');
 
           if (!noMove) {
             grid.movable(el, true);
