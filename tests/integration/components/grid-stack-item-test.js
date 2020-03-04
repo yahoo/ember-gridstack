@@ -11,19 +11,17 @@ module('Integration | Component | grid stack item', function(hooks) {
     assert.expect(3);
 
     // Create a fake version of `grid-stack` component to test update actions
-    let mockGridStack = Component.extend({
-          gridStackContainer: true,
-          actions: {
-            addWidget() {
-              assert.ok(true, '`addWidget` action is called on init');
-            },
-            removeWidget() {
-              assert.ok(true, '`removeWidget` action is called when cleaning up');
-            }
-          }
-        });
+    class MockGridStack extends Component {
+      gridStackContainer = true;
+      addWidget() {
+        assert.ok(true, '`addWidget` action is called on init');
+      }
+      removeWidget() {
+        assert.ok(true, '`removeWidget` action is called when cleaning up');
+      }
+    }
 
-    this.owner.register('component:mock-grid-stack', mockGridStack);
+    this.owner.register('component:mock-grid-stack', MockGridStack);
 
     await render(hbs`
       {{#mock-grid-stack}}

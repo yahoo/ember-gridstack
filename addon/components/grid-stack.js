@@ -21,54 +21,54 @@
  * Full list of options:
  *   https://github.com/troolee/gridstack.js/tree/master/doc#options
  */
-import { assign } from '@ember/polyfills';
 import Component from '@ember/component';
 import { get, action } from '@ember/object';
 import { run } from '@ember/runloop';
 import { capitalize } from '@ember/string';
 import layout from '../templates/components/grid-stack';
 
-const GRID_STACK_EVENTS = [
-  'dragstart', 'dragstop', 'resizestart', 'resizestop', 'added', 'change', 'enable', 'removed'
+
+export const GRID_STACK_EVENTS = [
+  'dragstart',
+  'dragstop',
+  'resizestart',
+  'resizestop',
+  'added',
+  'change',
+  'enable',
+  'removed'
 ];
 
-export default class extends Component {
-  layout = layout
+
+export default class GridStackComponent extends Component {
+  layout = layout;
 
   /**
    * @property {Array} classNames
    */
-  classNames = ['grid-stack']
+  classNames = ['grid-stack'];
 
   /**
    * @property {Boolean} gridStackContainer - used by child components to find this component
    */
-  gridStackContainer = true
+  gridStackContainer = true;
 
   /**
    * https://github.com/troolee/gridstack.js/tree/master/doc#api
    * @property {Object} gridStack - reference to gridstack object
    */
-  get gridStack() {
-    if(this.$()) {
-      return this.$().data('gridstack');
-    } else {
-      return null;
-    }
-  }
+  gridStack = null;
 
   /**
-   * https://github.com/troolee/gridstack.js/tree/master/doc#events
-   * @property {Array} gridStackEvents - list of gridstack events
+   * @property {Array} subscribedEvents - List of events for which event handlers were set up
    */
-  gridStackEvents = undefined
+  subscribedEvents = [];
 
   /**
    * @method didInsertElement
    */
   didInsertElement() {
     super.didInsertElement(...arguments);
-    this.set('gridStackEvents', GRID_STACK_EVENTS);
     this._createGridStack();
   }
 
@@ -97,14 +97,13 @@ export default class extends Component {
     let grid = this.gridStack;
 
     if (grid) {
-
-      this.$().off('.grid-stack');
+      this.subscribedEvents.forEach(eventName => grid.off(eventName));
+      this.subscribedEvents = [];
 
       // Use `false` option to prevent removing dom elements, let Ember do that
       grid.destroy(false);
 
-      // Clean up gridstack reference in JQuery node
-      this.$().data('gridstack', null);
+      this.gridStack = null;
 
       // Remove 'grid-stack-instance-####' class left behind
       this.$().removeClass((index, css) => {
@@ -118,8 +117,7 @@ export default class extends Component {
    * @private
    */
   _createGridStack() {
-    let options = assign({}, this.options);
-    this.$().gridstack(options);
+    this.gridStack = window.GridStack.init({ ...this.options }, this.element);
 
     // Since destroying gridstack disables it,
     // we must manually enable it
@@ -143,14 +141,14 @@ export default class extends Component {
       });
     }
 
-    this.gridStackEvents.forEach(eventName => {
+    GRID_STACK_EVENTS.forEach(eventName => {
       let action = get(this, `attrs.on${capitalize(eventName)}`);
 
-
       if(action) {
-        this.$().on(`${eventName}.grid-stack`, function() {
+        this.gridStack.on(eventName, function() {
           run.scheduleOnce('afterRender', this, action, ...arguments);
         });
+        this.subscribedEvents.push(eventName);
       }
     });
   }

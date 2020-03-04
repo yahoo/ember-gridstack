@@ -75,7 +75,7 @@ export default class extends Component {
 
     if (gridStack) {
       // Register widget with grid
-      gridStack.send('addWidget', this.element);
+      gridStack.addWidget(this.element);
     }
   }
 
@@ -89,8 +89,7 @@ export default class extends Component {
     let gridStack = this.parentContainer;
 
     if (gridStack) {
-      // Make sure grid stack is updated
-      gridStack.send('removeWidget', this.element);
+      gridStack.removeWidget(this.element);
     }
   }
 }
