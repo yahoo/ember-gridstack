@@ -27,7 +27,6 @@ import { run } from '@ember/runloop';
 import { capitalize } from '@ember/string';
 import layout from '../templates/components/grid-stack';
 
-
 export const GRID_STACK_EVENTS = [
   'dragstart',
   'dragstop',
@@ -38,7 +37,6 @@ export const GRID_STACK_EVENTS = [
   'enable',
   'removed'
 ];
-
 
 export default class GridStackComponent extends Component {
   layout = layout;
@@ -84,10 +82,10 @@ export default class GridStackComponent extends Component {
   /**
    * @method willDestroyElement
    */
-   willDestroyElement() {
-     super.willDestroyElement(...arguments);
-     this._destroyGridStack();
-   }
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    this._destroyGridStack();
+  }
 
   /**
    * @method _destroyGridstack
@@ -124,27 +122,29 @@ export default class GridStackComponent extends Component {
     if (!(this.options && this.options.staticGrid)) {
       let grid = this.gridStack;
       let itemClass = grid.opts.itemClass;
-      this.$().children(`.${itemClass}`).each((i, el) => {
-        let $el = this.$(el);
+      this.$()
+        .children(`.${itemClass}`)
+        .each((i, el) => {
+          let $el = this.$(el);
 
-        // only enable items that are supposed to mobile
-        let noMove = $el.attr('data-gs-no-move');
-        let noResize = $el.attr('data-gs-no-resize');
+          // only enable items that are supposed to mobile
+          let noMove = $el.attr('data-gs-no-move');
+          let noResize = $el.attr('data-gs-no-resize');
 
-        if (!noMove) {
-          grid.movable(el, true);
-        }
+          if (!noMove) {
+            grid.movable(el, true);
+          }
 
-        if (!noResize) {
-          grid.resizable(el, true);
-        }
-      });
+          if (!noResize) {
+            grid.resizable(el, true);
+          }
+        });
     }
 
     GRID_STACK_EVENTS.forEach(eventName => {
       let action = get(this, `attrs.on${capitalize(eventName)}`);
 
-      if(action) {
+      if (action) {
         this.gridStack.on(eventName, function() {
           run.scheduleOnce('afterRender', this, action, ...arguments);
         });

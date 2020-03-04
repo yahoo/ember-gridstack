@@ -56,7 +56,7 @@ module('Integration | Component | grid stack item', function(hooks) {
     assert.dom('.grid-stack-item').hasAttribute('data-gs-min-height', '3', 'Data attributes are updated with options');
 
     this.set('options', {
-      minHeight: undefined,
+      minHeight: undefined
     });
 
     assert.dom('.grid-stack-item').doesNotHaveAttribute('data-gs-min-height', 'Data attributes can be removed');

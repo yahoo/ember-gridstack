@@ -3,7 +3,7 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 
 export default class extends Controller {
-  items = A([0, 1, 2])
+  items = A([0, 1, 2]);
 
   @action
   changeItems() {

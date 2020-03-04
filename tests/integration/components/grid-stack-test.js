@@ -24,8 +24,10 @@ module('Integration | Component | grid stack', function(hooks) {
       </GridStack>
     `);
 
-    assert.ok(this.$('.grid-stack .grid-stack-item').is('.ui-draggable.ui-resizable'),
-      'Dom elements with grid-stack-item class are initialized by gridstack');
+    assert.ok(
+      this.$('.grid-stack .grid-stack-item').is('.ui-draggable.ui-resizable'),
+      'Dom elements with grid-stack-item class are initialized by gridstack'
+    );
   });
 
   test('gridstack with items', async function(assert) {
@@ -45,19 +47,20 @@ module('Integration | Component | grid stack', function(hooks) {
       </GridStack>
     `);
 
-    assert.dom('.grid-stack .grid-stack-item.ui-draggable.ui-resizable').exists(
-      { count: 2 },
-      'initial grid-stack-item components are initialized by gridstack'
-    );
+    assert
+      .dom('.grid-stack .grid-stack-item.ui-draggable.ui-resizable')
+      .exists({ count: 2 }, 'initial grid-stack-item components are initialized by gridstack');
 
     run(() => {
       this.get('items').pushObject(3);
     });
 
-    assert.dom('.grid-stack .grid-stack-item.ui-draggable.ui-resizable').exists(
-      { count: 3 },
-      'new grid-stack-item components are initialized by gridstack when added through an each loop'
-    );
+    assert
+      .dom('.grid-stack .grid-stack-item.ui-draggable.ui-resizable')
+      .exists(
+        { count: 3 },
+        'new grid-stack-item components are initialized by gridstack when added through an each loop'
+      );
 
     // Since each gridstack item has height = 1,
     // we can check how many items are recognized by using the row property
@@ -67,11 +70,13 @@ module('Integration | Component | grid stack', function(hooks) {
       this.get('items').popObject();
     });
 
-    assert.dom('.grid-stack').hasAttribute(
-      'data-gs-current-row',
-      '2',
-      'gridstack updates its item count when one is removed through an each loop'
-    );
+    assert
+      .dom('.grid-stack')
+      .hasAttribute(
+        'data-gs-current-row',
+        '2',
+        'gridstack updates its item count when one is removed through an each loop'
+      );
   });
 
   test('gridstack options', async function(assert) {
@@ -94,25 +99,23 @@ module('Integration | Component | grid stack', function(hooks) {
       </GridStack>
     `);
 
-    assert.equal(this.$('.grid-stack-item').height(),
-      200,
-    'Cell height option is passed through to gridstack');
+    assert.equal(this.$('.grid-stack-item').height(), 200, 'Cell height option is passed through to gridstack');
 
     this.set('options', {
       cellHeight: '300px'
     });
 
-    assert.equal(this.$('.grid-stack-item').height(),
-      300,
-    'Gridstack updates with options');
+    assert.equal(this.$('.grid-stack-item').height(), 300, 'Gridstack updates with options');
 
     this.set('options', {
       cellHeight: '300px',
       staticGrid: true
     });
 
-    assert.ok(this.$('.grid-stack-static .grid-stack-item').is('.ui-draggable-disabled.ui-resizable-disabled'),
-      'staticGrid property can disable editing');
+    assert.ok(
+      this.$('.grid-stack-static .grid-stack-item').is('.ui-draggable-disabled.ui-resizable-disabled'),
+      'staticGrid property can disable editing'
+    );
   });
 
   test('grid stack item events', async function(assert) {
@@ -120,13 +123,15 @@ module('Integration | Component | grid stack', function(hooks) {
 
     // Create fake component for listening to events
     let eventListener = Component.extend({
-          didInsertElement() {
-            this._super(...arguments);
-            this.get('containerComponent').$().on('resizestop', () => {
-              assert.ok(true, 'resize action is called when item is resized');
-            });
-          }
-        });
+      didInsertElement() {
+        this._super(...arguments);
+        this.get('containerComponent')
+          .$()
+          .on('resizestop', () => {
+            assert.ok(true, 'resize action is called when item is resized');
+          });
+      }
+    });
 
     this.owner.register('component:event-listener', eventListener);
 
@@ -182,16 +187,9 @@ module('Integration | Component | grid stack', function(hooks) {
       this.set(onAttr, (event, items) => {
         assert.ok(`\`${onAttr}\` fires when gridstack \`${e}\` event fires`);
 
-        assert.equal(
-          event.type,
-          e,
-          `\`${onAttr}\` action provides the \`event\` argument`
-        );
+        assert.equal(event.type, e, `\`${onAttr}\` action provides the \`event\` argument`);
 
-        assert.ok(
-          isArray(items),
-          `\`${onAttr}\` action provides the \`items\` argument`
-        );
+        assert.ok(isArray(items), `\`${onAttr}\` action provides the \`items\` argument`);
       });
     });
 
@@ -232,9 +230,8 @@ module('Integration | Component | grid stack', function(hooks) {
       </GridStack>
     `);
 
-    assert.dom('.grid-stack .grid-stack-item.ui-draggable.ui-resizable.ui-draggable-disabled.ui-resizable-disabled').exists(
-      { count: 1 },
-      'grid-stack-item noResize and noMove properties are applied'
-    );
+    assert
+      .dom('.grid-stack .grid-stack-item.ui-draggable.ui-resizable.ui-draggable-disabled.ui-resizable-disabled')
+      .exists({ count: 1 }, 'grid-stack-item noResize and noMove properties are applied');
   });
 });
