@@ -25,12 +25,12 @@ import layout from '../templates/components/grid-stack-item';
 const GS_PREFIX = 'data-gs-';
 
 export default class extends Component {
-  layout = layout
+  layout = layout;
 
   /**
    * @property {Array} classNames
    */
-  classNames = ['grid-stack-item']
+  classNames = ['grid-stack-item'];
 
   /**
    * @property {Ember.Component} parentContainer - reference to the grid-stack component this component belongs to
@@ -52,7 +52,8 @@ export default class extends Component {
     if (options) {
       // Since attributeBindings cannot be a computed property,
       // it must be manually set when options changes
-      this.set('attributeBindings',
+      this.set(
+        'attributeBindings',
 
         // Convert each given option into a html data attribute
         Object.keys(options).map(key => {

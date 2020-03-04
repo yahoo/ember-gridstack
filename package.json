@@ -56,8 +56,11 @@
     "ember-try": "^1.4.0",
     "eslint-plugin-ember": "^7.7.2",
     "eslint-plugin-node": "^11.0.0",
+    "husky": "^4.2.3",
     "jquery-ui-touch-punch": "^0.2.3",
     "loader.js": "^4.7.0",
+    "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1",
     "qunit-dom": "^1.0.0"
   },
   "engines": {
@@ -68,5 +71,10 @@
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }
