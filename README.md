@@ -1,26 +1,19 @@
 # ember-gridstack
+
 [![Travis][build-badge]][build]
 
 Ember components to build drag-and-drop multi-column grids powered by [gridstack.js](https://troolee.github.io/gridstack.js/)
 
+## Compatibility
 
-Compatibility
-------------------------------------------------------------------------------
-
-* Ember.js v3.12 or above
-* Ember CLI v2.13 or above
-* Node.js v10 or above
-
+- Ember.js v3.12 or above
+- Ember CLI v2.13 or above
+- Node.js v10 or above
 
 Installation
 
 ```
 ember install ember-gridstack
-```
-
-Ember <= 2.4
-```
-ember install ember-assign-polyfill
 ```
 
 ## Basic Usage
@@ -44,6 +37,7 @@ ember install ember-assign-polyfill
 ```
 
 ## Components
+
 ### `{{grid-stack}}`
 
 Used to construct a grid-stack layout
@@ -53,6 +47,7 @@ Used to construct a grid-stack layout
 `{{grid-stack}}` can take an `options` object attribute to configure the grid. All gridstack grid options are valid and take the form `data-gs-{option}`. However, when using `{{grid-stack}}` the `data-gs` is omitted.
 
 **Example:**
+
 ```hbs
 {{#grid-stack
   options=(hash
@@ -72,6 +67,7 @@ The full list of options can be found here: https://github.com/troolee/gridstack
 All gridstack events can be handled as Ember actions. They take the form `on{Eventname}`.
 
 **Example:**
+
 ```hbs
 {{#grid-stack
   onDragstart=(action 'dragStart')
@@ -92,6 +88,7 @@ The full list of events can found here: https://github.com/troolee/gridstack.js/
 The `{{grid-stack}}` component uses the block form to yield `{{grid-stack-item}}` components. In addition, `{{grid-stack}}` yields a reference to itself in the case inner components need the reference or would like to listen to events triggered on the grid element.
 
 **Example:**
+
 ```hbs
 {{#grid-stack as |grid|}}
   {{#grid-stack-item
@@ -111,6 +108,7 @@ Used to construct a grid item inside a `{{grid-stack}}` component
 `{{grid-stack-item}}` can take an `options` object attribute to configure the grid item. All gridstack item options are valid and take the form `data-gs-{option}`. However, when using `{{grid-stack-item}}` the `data-gs` is omitted.
 
 **Example:**
+
 ```hbs
 {{#grid-stack-item
   options=(hash
@@ -132,6 +130,7 @@ The full list of options can be found here: https://github.com/troolee/gridstack
 The `{{grid-stack-item}}` component uses the block form to yield the content of the item. In addition, `{{grid-stack-item}}` yields a reference to itself in the case inner components need the reference or would like to listen to events triggered on the grid.
 
 **Example:**
+
 ```hbs
 {{#grid-stack-item
    options=(hash x=0 y=0 width=6 height=2)
@@ -148,7 +147,7 @@ The `{{grid-stack-item}}` component uses the block form to yield the content of 
 export default Ember.Component.extend({
   didInsertElement() {
     this._super(...arguments);
-    this.get('parentContainer').$().on('resizestop', () => {
+    this.parentContainer.element.addEventListener('resizestop', () => {
       //handle resize
     });
   }
@@ -163,38 +162,6 @@ For touch support do the following
 
 By default, the [bower dependencies for Gridstack](https://github.com/troolee/gridstack.js#requirements)
 will be installed automatically.
-
-#### Exclude Optional Dependencies
-
-You can exclude the optional [jquery.ui.touch-punch](https://github.com/furf/jquery-ui-touch-punch) dependency by using
-the following configuration in your `config/environment.js`:
-
-```js
-// config.environment.js
-module.exports = function(environment) {
-  return {
-    'ember-gridstack': {
-      // Exclude the optional jquery.ui.touch-punch dependency
-      exclude: ['jquery.ui.touch-punch']
-    }
-  };
-```
-
-### ember-grid-stack >= 2.x
-
-- Install [jquery.ui.touch-punch](https://www.npmjs.com/package/jquery-ui-touch-punch) through npm
-```js
-npm install jquery.ui.touch-punch
-```
-
-- Verify the installed path and include the package in your index.js
-```js
-// config.environment.js
-app.import({
-  development: 'node_modules/jquery.ui.touch-punch/jquery.ui.touch-punch.js',
-  production: 'node_modules/jquery.ui.touch-punch/jquery.ui.touch-punch.min.js'
-});
-```
 
 [build-badge]: https://travis-ci.org/yahoo/ember-gridstack.svg?branch=master
 [build]: https://travis-ci.org/yahoo/ember-gridstack
