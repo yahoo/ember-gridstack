@@ -66,6 +66,20 @@ export default class extends Component {
   }
 
   /**
+   * @method didUpdateAttrs
+   * @override
+   */
+  didUpdateAttrs() {
+    super.didUpdateAttrs(...arguments);
+
+    let parent = this.parentContainer;
+    if (parent && parent.gridStack) {
+      let { height, width, x, y } = this.options;
+      parent.gridStack.update(this.element, x, y, width, height);
+    }
+  }
+
+  /**
    * @method didInsertElement
    * @override
    */
