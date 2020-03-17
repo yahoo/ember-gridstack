@@ -241,4 +241,60 @@ module('Integration | Component | grid stack', function(hooks) {
       .dom('.grid-stack .grid-stack-item.ui-draggable.ui-resizable.ui-draggable-disabled.ui-resizable-disabled')
       .exists({ count: 1 }, 'grid-stack-item noResize and noMove properties are applied');
   });
+
+  test('gridstack is notified when items properties change', async function(assert) {
+    assert.expect(1);
+
+    this.set('onChange', () => assert.ok(true, '`onChange` was called'));
+    this.set('width', 6);
+
+    await render(hbs`
+      <GridStack @onChange={{this.onChange}}>
+        <GridStackItem @options={{hash x=0 y=0 width=this.width height=1}}>
+          Test
+        </GridStackItem>
+      </GridStack>
+    `);
+
+    this.set('width', 12);
+  });
+
+  test('gridstack updates the layout when items properties change', async function(assert) {
+    this.set('items', [
+      { id: 0, options: { x: 0, y: 0, width: 5, height: 1 } },
+      { id: 1, options: { x: 6, y: 0, width: 3, height: 1 } },
+      { id: 2, options: { x: 0, y: 1, width: 4, height: 1 } },
+      { id: 3, options: { x: 6, y: 1, width: 2, height: 1 } }
+    ]);
+
+    await render(hbs`
+      <GridStack>
+        {{#each this.items as |item|}}
+          <GridStackItem data-id={{item.id}} @options={{item.options}}>
+            {{item.id}}
+          </GridStackItem>
+        {{/each}}
+      </GridStack>
+    `);
+
+    this.items.forEach(({id, options}) => {
+      assert.dom(`[data-id="${id}"]`).hasAttribute('data-gs-x', `${options.x}`, 'Initial grid-stack-item layout is correct');
+      assert.dom(`[data-id="${id}"]`).hasAttribute('data-gs-y', `${options.y}`, 'Initial grid-stack-item layout is correct');
+    });
+
+    // Update the position of item 1
+    this.set('items.1.options', { x: 2, y: 1, width: 12, height: 1 });
+
+    assert.dom(`[data-id="0"]`).hasAttribute('data-gs-x', '0', 'Updating a grid-stack-item leaves unaffected items the same');
+    assert.dom(`[data-id="0"]`).hasAttribute('data-gs-y', '0', 'Updating a grid-stack-item leaves unaffected items the same');
+
+    assert.dom(`[data-id="1"]`).hasAttribute('data-gs-x', '2', 'Updating a grid-stack-item updates moves the item');
+    assert.dom(`[data-id="1"]`).hasAttribute('data-gs-y', '1', 'Updating a grid-stack-item updates moves the item');
+
+    assert.dom(`[data-id="2"]`).hasAttribute('data-gs-x', '0', 'Updating a grid-stack-item moves conflicting items to a different row');
+    assert.dom(`[data-id="2"]`).hasAttribute('data-gs-y', '2', 'Updating a grid-stack-item moves conflicting items to a different row');
+
+    assert.dom(`[data-id="3"]`).hasAttribute('data-gs-x', '6', 'Updating a grid-stack-item moves conflicting items to a different row');
+    assert.dom(`[data-id="3"]`).hasAttribute('data-gs-y', '2', 'Updating a grid-stack-item moves conflicting items to a different row');
+  });
 });
