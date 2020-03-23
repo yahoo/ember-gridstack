@@ -138,7 +138,7 @@ export default class GridStackComponent extends Component {
     }
 
     GRID_STACK_EVENTS.forEach(eventName => {
-      let action = get(this, `attrs.on${capitalize(eventName)}`);
+      let action = get(this, `on${capitalize(eventName)}`);
 
       if (action) {
         this.gridStack.on(eventName, function() {
