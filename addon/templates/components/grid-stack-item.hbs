@@ -1,3 +1,13 @@
-<div class='grid-stack-item-content'>
-  {{yield this}}
+{{! Copyright 2021, Yahoo Inc }}
+<div
+  id={{this.guid}}
+  class='grid-stack-item'
+  ...attributes
+  {{gs-item-attributes @options}}
+  {{did-insert this.setup}}
+  {{did-update this.updateGridStack @options}}
+>
+  <div class='grid-stack-item-content'>
+    {{yield this this.guid}}
+  </div>
 </div>

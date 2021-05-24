@@ -1,5 +1,7 @@
+/* eslint-disable ember/no-component-lifecycle-hooks */
+/* eslint-disable ember/no-classic-components */
 /**
- * Copyright 2020, Yahoo Inc.
+ * Copyright 2021, Yahoo Inc.
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Usage:
@@ -22,9 +24,10 @@
  *   https://github.com/troolee/gridstack.js/tree/master/doc#options
  */
 import Component from '@ember/component';
-import { get, action } from '@ember/object';
-import { run } from '@ember/runloop';
+import { action, set } from '@ember/object';
+import { scheduleOnce } from '@ember/runloop';
 import { capitalize } from '@ember/string';
+import { guidFor } from '@ember/object/internals';
 import layout from '../templates/components/grid-stack';
 
 export const GRID_STACK_EVENTS = [
@@ -35,16 +38,15 @@ export const GRID_STACK_EVENTS = [
   'added',
   'change',
   'enable',
-  'removed'
+  'removed',
 ];
 
 export default class GridStackComponent extends Component {
   layout = layout;
 
-  /**
-   * @property {Array} classNames
-   */
-  classNames = ['grid-stack'];
+  tagName = '';
+
+  guid = guidFor(this);
 
   /**
    * @property {Boolean} gridStackContainer - used by child components to find this component
@@ -62,87 +64,59 @@ export default class GridStackComponent extends Component {
    */
   subscribedEvents = [];
 
-  /**
-   * @method didInsertElement
-   */
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this._createGridStack();
-  }
-
-  /**
-   * @method didUpdateAttrs
-   */
-  didUpdateAttrs() {
-    // Reset gridstack to pick up latest option changes
-    this._destroyGridStack();
-    this._createGridStack();
-  }
-
-  /**
-   * @method willDestroyElement
-   */
   willDestroyElement() {
     super.willDestroyElement(...arguments);
     this._destroyGridStack();
   }
 
-  /**
-   * @method _destroyGridstack
-   * @private
-   */
   _destroyGridStack() {
-    let grid = this.gridStack;
+    const { gridStack } = this;
 
-    if (grid) {
-      this.subscribedEvents.forEach(eventName => grid.off(eventName));
+    if (gridStack) {
+      this.subscribedEvents.forEach((eventName) => gridStack.off(eventName));
       this.subscribedEvents = [];
 
       // Use `false` option to prevent removing dom elements, let Ember do that
-      grid.destroy(false);
+      gridStack.destroy(false);
 
       this.gridStack = null;
 
       // Remove 'grid-stack-instance-####' class left behind
-      [...this.element.classList]
-        .filter(x => /grid-stack-instance-\d*/.test(x))
-        .forEach(x => this.element.classList.remove(x));
+      [...this.elm.classList]
+        .filter((x) => /grid-stack-instance-\d*/.test(x))
+        .forEach((x) => this.elm.classList.remove(x));
     }
   }
 
-  /**
-   * @method _createGridStack
-   * @private
-   */
   _createGridStack() {
-    this.gridStack = window.GridStack.init({ ...this.options }, this.element);
+    this.gridStack = window.GridStack.init({ ...this.options }, this.elm);
 
     // Since destroying gridstack disables it,
     // we must manually enable it
     if (!(this.options && this.options.staticGrid)) {
-      let grid = this.gridStack;
+      const { gridStack } = this;
 
-      this.element.querySelectorAll(`.${grid.opts.itemClass}`).forEach(el => {
+      this.elm.querySelectorAll(`.${gridStack.opts.itemClass}`).forEach((el) => {
         // only enable items that are supposed to mobile
         let noMove = el.getAttribute('data-gs-no-move');
         let noResize = el.getAttribute('data-gs-no-resize');
 
         if (!noMove) {
-          grid.movable(el, true);
+          gridStack.movable(el, true);
         }
 
         if (!noResize) {
-          grid.resizable(el, true);
+          gridStack.resizable(el, true);
         }
       });
     }
 
-    GRID_STACK_EVENTS.forEach(eventName => {
-      let action = get(this, `on${capitalize(eventName)}`);
+    GRID_STACK_EVENTS.forEach((eventName) => {
+      const action = this[`on${capitalize(eventName)}`];
 
       if (action) {
-        this.gridStack.on(eventName, function() {
-          run.scheduleOnce('afterRender', this, action, ...arguments);
+        this.gridStack.on(eventName, function () {
+          scheduleOnce('afterRender', this, action, ...arguments);
         });
 
         this.subscribedEvents.push(eventName);
@@ -150,26 +124,26 @@ export default class GridStackComponent extends Component {
     });
   }
 
-  /**
-   * @action addWidget - add the provided widget element to the grid
-   */
   @action
-  addWidget(element) {
-    let grid = this.gridStack;
-    if (grid) {
-      grid.makeWidget(element);
-    }
+  setup(elm) {
+    set(this, 'elm', elm);
+    this._createGridStack();
   }
 
-  /**
-   * @action removeWidget - remove the provided widget element from the grid
-   */
+  @action
+  update() {
+    this._destroyGridStack();
+    this._createGridStack();
+  }
+
+  @action
+  addWidget(element) {
+    this.gridStack?.makeWidget(element);
+  }
+
   @action
   removeWidget(element) {
-    let grid = this.gridStack;
-    if (grid) {
-      // Use `false` option to prevent removing dom element, let Ember do that
-      grid.removeWidget(element, false);
-    }
+    // Use `false` option to prevent removing dom element, let Ember do that
+    this.gridStack?.removeWidget(element, false);
   }
 }

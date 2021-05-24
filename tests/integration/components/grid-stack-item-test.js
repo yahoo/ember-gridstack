@@ -1,13 +1,15 @@
+/* eslint-disable ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components */
 import Component from '@ember/component';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
-module('Integration | Component | grid stack item', function(hooks) {
+module('Integration | Component | grid stack item', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('item renders', async function(assert) {
+  test('item renders', async function (assert) {
     assert.expect(3);
 
     // Create a fake version of `grid-stack` component to test update actions
@@ -34,11 +36,11 @@ module('Integration | Component | grid stack item', function(hooks) {
     assert.dom('*').hasText('template block text', 'Inner template is yielded');
   });
 
-  test('item options', async function(assert) {
+  test('item options', async function (assert) {
     assert.expect(3);
 
     this.set('options', {
-      minHeight: 2
+      minHeight: 2,
     });
 
     await render(hbs`
@@ -50,13 +52,13 @@ module('Integration | Component | grid stack item', function(hooks) {
     assert.dom('.grid-stack-item').hasAttribute('data-gs-min-height', '2', 'Item options are added as data attributes');
 
     this.set('options', {
-      minHeight: 3
+      minHeight: 3,
     });
 
     assert.dom('.grid-stack-item').hasAttribute('data-gs-min-height', '3', 'Data attributes are updated with options');
 
     this.set('options', {
-      minHeight: undefined
+      minHeight: undefined,
     });
 
     assert.dom('.grid-stack-item').doesNotHaveAttribute('data-gs-min-height', 'Data attributes can be removed');
