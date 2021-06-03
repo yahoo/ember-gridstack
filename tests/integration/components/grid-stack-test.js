@@ -138,7 +138,7 @@ module('Integration | Component | grid stack', function (hooks) {
     let eventListener = Component.extend({
       didInsertElement() {
         this._super(...arguments);
-        document.querySelector(`#${this.containerComponent}`).addEventListener('resizestop', () => {
+        this.containerComponent.element.addEventListener('resizestop', () => {
           assert.ok(true, 'resize action is called when item is resized');
         });
       },
@@ -148,8 +148,8 @@ module('Integration | Component | grid stack', function (hooks) {
 
     await render(hbs`
       <GridStack>
-        <GridStackItem as |item id|>
-          <EventListener @containerComponent={{id}}/>
+        <GridStackItem as |item|>
+          <EventListener @containerComponent={{item}}/>
         </GridStackItem>
         <div class='a-different-item' />
       </GridStack>

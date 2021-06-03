@@ -31,6 +31,10 @@ export default class extends Component {
 
   guid = guidFor(this);
 
+  get element() {
+    return document.getElementById(this.guid);
+  }
+
   @computed
   get parentContainer() {
     return this.nearestWithProperty('gridStackContainer');
