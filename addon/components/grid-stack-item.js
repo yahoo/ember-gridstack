@@ -1,5 +1,8 @@
+/* eslint-disable ember/no-component-lifecycle-hooks */
+/* eslint-disable ember/no-computed-properties-in-native-classes */
+/* eslint-disable ember/no-classic-components */
 /**
- * Copyright 2020, Yahoo Inc.
+ * Copyright 2021, Yahoo Inc.
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Usage:
@@ -16,95 +19,41 @@
  * Full list of options:
  *   https://github.com/troolee/gridstack.js/tree/master/doc#item-attributes
  */
-import { dasherize } from '@ember/string';
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { action, computed, set } from '@ember/object';
 import layout from '../templates/components/grid-stack-item';
-
-// Common prefix shared by gridstack data attributes
-const GS_PREFIX = 'data-gs-';
+import { guidFor } from '@ember/object/internals';
 
 export default class extends Component {
   layout = layout;
 
-  /**
-   * @property {Array} classNames
-   */
-  classNames = ['grid-stack-item'];
+  tagName = '';
 
-  /**
-   * @property {Ember.Component} parentContainer - reference to the grid-stack component this component belongs to
-   */
+  guid = guidFor(this);
+
+  get element() {
+    return document.getElementById(this.guid);
+  }
+
   @computed
   get parentContainer() {
     return this.nearestWithProperty('gridStackContainer');
   }
 
-  /**
-   * @method didReceiveAttrs
-   * @override
-   */
-  didReceiveAttrs() {
-    super.didReceiveAttrs(...arguments);
-
-    let options = this.options;
-
-    if (options) {
-      // Since attributeBindings cannot be a computed property,
-      // it must be manually set when options changes
-      this.set(
-        'attributeBindings',
-
-        // Convert each given option into a html data attribute
-        Object.keys(options).map(key => {
-          let dataKey = GS_PREFIX + dasherize(key);
-
-          return `options.${key}:${dataKey}`;
-        })
-      );
-    }
+  @action
+  updateGridStack() {
+    const { height, width, x, y } = this.options;
+    this.parentContainer?.gridStack?.update(this.elm, x, y, width, height);
   }
 
-  /**
-   * @method didUpdateAttrs
-   * @override
-   */
-  didUpdateAttrs() {
-    super.didUpdateAttrs(...arguments);
-
-    let parent = this.parentContainer;
-    if (parent && parent.gridStack) {
-      let { height, width, x, y } = this.options;
-      parent.gridStack.update(this.element, x, y, width, height);
-    }
+  @action
+  setup(elm) {
+    set(this, 'elm', elm);
+    this.parentContainer?.addWidget(this.elm);
   }
 
-  /**
-   * @method didInsertElement
-   * @override
-   */
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    let gridStack = this.parentContainer;
-
-    if (gridStack) {
-      // Register widget with grid
-      gridStack.addWidget(this.element);
-    }
-  }
-
-  /**
-   * @method willDestroyElement
-   * @override
-   */
   willDestroyElement() {
     super.willDestroyElement(...arguments);
-
-    let gridStack = this.parentContainer;
-
-    if (gridStack) {
-      gridStack.removeWidget(this.element);
-    }
+    this.parentContainer?.removeWidget(this.elm);
   }
 }

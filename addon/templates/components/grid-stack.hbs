@@ -1,1 +1,4 @@
-{{yield this}}
+{{! Copyright 2021, Yahoo Inc }}
+<div id={{this.guid}} class='grid-stack' {{did-insert this.setup}} {{did-update this.update @options}}>
+  {{yield this}}
+</div>
