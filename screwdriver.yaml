@@ -23,7 +23,7 @@ jobs:
       - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git /tmp/ci
       - publish: |
           . /tmp/ci/git-ssh.sh
-          npx semantic-release --dry-run
+          npx semantic-release
     secrets:
       - NPM_TOKEN
       - GH_TOKEN
