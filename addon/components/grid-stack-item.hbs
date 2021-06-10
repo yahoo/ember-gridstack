@@ -6,6 +6,7 @@
   {{gs-item-attributes @options}}
   {{did-insert this.setup}}
   {{did-update this.updateGridStack @options}}
+  {{will-destroy this.willDestroyNode}}
 >
   <div class='grid-stack-item-content'>
     {{yield this}}

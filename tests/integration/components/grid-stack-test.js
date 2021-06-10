@@ -1,4 +1,3 @@
-/* eslint-disable ember/require-tagless-components */
 /* eslint-disable ember/no-classic-classes */
 /* eslint-disable ember/no-component-lifecycle-hooks */
 /* eslint-disable ember/no-classic-components */
@@ -7,7 +6,7 @@ import { run, next } from '@ember/runloop';
 import { A, isArray } from '@ember/array';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, triggerEvent, settled } from '@ember/test-helpers';
+import { render, triggerEvent, settled, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { camelize } from '@ember/string';
 
@@ -20,8 +19,8 @@ module('Integration | Component | grid stack', function (hooks) {
     await render(hbs`
       <GridStack>
         <div class='grid-stack-item'
-          data-gs-x='0' data-gs-y='0'
-          data-gs-width='1' data-gs-height='1'
+          gs-x='0' gs-y='0'
+          gs-w='1' gs-h='1'
         >
           <div class='grid-stack-item-content'>My Widget</div>
         </div>
@@ -40,14 +39,12 @@ module('Integration | Component | grid stack', function (hooks) {
   test('gridstack with items', async function (assert) {
     assert.expect(4);
 
-    this.set('items', A([1, 2]));
+    this.set('items', A([0, 1]));
 
     await render(hbs`
       <GridStack>
-        {{#each items as |item|}}
-          <GridStackItem
-            @options={{hash x=0 y=item}}
-          >
+        {{#each this.items as |item|}}
+          <GridStackItem @options={{hash x=0 y=item}}>
             {{item}}
           </GridStackItem>
         {{/each}}
@@ -59,7 +56,7 @@ module('Integration | Component | grid stack', function (hooks) {
       .exists({ count: 2 }, 'initial grid-stack-item components are initialized by gridstack');
 
     run(() => {
-      this.items.pushObject(3);
+      this.items.pushObject(2);
     });
 
     assert
@@ -71,7 +68,7 @@ module('Integration | Component | grid stack', function (hooks) {
 
     // Since each gridstack item has height = 1,
     // we can check how many items are recognized by using the row property
-    assert.dom('.grid-stack').hasAttribute('data-gs-current-row', '3', 'gridstack recognizes new items');
+    assert.dom('.grid-stack').hasAttribute('gs-current-row', '3', 'gridstack recognizes new items');
 
     run(() => {
       this.items.popObject();
@@ -79,11 +76,7 @@ module('Integration | Component | grid stack', function (hooks) {
 
     assert
       .dom('.grid-stack')
-      .hasAttribute(
-        'data-gs-current-row',
-        '2',
-        'gridstack updates its item count when one is removed through an each loop'
-      );
+      .hasAttribute('gs-current-row', '2', 'gridstack updates its item count when one is removed through an each loop');
   });
 
   test('gridstack options', async function (assert) {
@@ -95,11 +88,11 @@ module('Integration | Component | grid stack', function (hooks) {
 
     await render(hbs`
       <GridStack
-        @options={{options}}
+        @options={{this.options}}
       >
         <div class='grid-stack-item'
-          data-gs-x='0' data-gs-y='0'
-          data-gs-width='1' data-gs-height='1'
+          gs-x='0' gs-y='0'
+          gs-w='1' gs-h='1'
         >
           <div class='grid-stack-item-content'>My Widget</div>
         </div>
@@ -135,14 +128,14 @@ module('Integration | Component | grid stack', function (hooks) {
     assert.expect(1);
 
     // Create fake component for listening to events
-    let eventListener = Component.extend({
+    let eventListener = class extends Component {
       didInsertElement() {
-        this._super(...arguments);
+        super.didInsertElement(...arguments);
         this.containerComponent.element.addEventListener('resizestop', () => {
           assert.ok(true, 'resize action is called when item is resized');
         });
-      },
-    });
+      }
+    };
 
     this.owner.register('component:event-listener', eventListener);
 
@@ -166,8 +159,8 @@ module('Integration | Component | grid stack', function (hooks) {
   });
 
   test('onChange, onAdded, onRemove actions', async function (assert) {
-    // onAdded should run twice, onChange, onRemoved should each run once
-    assert.expect(12);
+    // onAdded should run twice, onChange once, onRemoved twice
+    assert.expect(15);
 
     this.set('items', A([1]));
 
@@ -176,9 +169,7 @@ module('Integration | Component | grid stack', function (hooks) {
     await render(hbs`
       <GridStack>
         {{#each this.items as |item|}}
-          <GridStackItem
-            @options={{hash x=0 y=item}}
-          >
+          <GridStackItem @options={{hash x=0 y=item h=1}}>
             {{item}}
           </GridStackItem>
         {{/each}}
@@ -196,7 +187,8 @@ module('Integration | Component | grid stack', function (hooks) {
     events.forEach((e) => {
       let onAttr = camelize(`on-${e}`);
       this.set(onAttr, (event, items) => {
-        assert.ok(`\`${onAttr}\` fires when gridstack \`${e}\` event fires`);
+        const ids = items.map((i) => i.y).join(',');
+        assert.ok(true, `\`${onAttr}\` fires for [${ids}] when gridstack \`${e}\` event fires`);
 
         assert.equal(event.type, e, `\`${onAttr}\` action provides the \`event\` argument`);
 
@@ -206,14 +198,12 @@ module('Integration | Component | grid stack', function (hooks) {
 
     await render(hbs`
       <GridStack
-        @onChange={{action this.onChange}}
-        @onAdded={{action this.onAdded}}
-        @onRemoved={{action this.onRemoved}}
+        @onChange={{this.onChange}}
+        @onAdded={{this.onAdded}}
+        @onRemoved={{this.onRemoved}}
       >
         {{#each this.items as |item|}}
-          <GridStackItem
-            @options={{hash x=0 y=item}}
-          >
+          <GridStackItem @options={{hash x=0 y=item}}>
             {{item}}
           </GridStackItem>
         {{/each}}
@@ -234,16 +224,18 @@ module('Integration | Component | grid stack', function (hooks) {
     await render(hbs`
       <GridStack>
         <GridStackItem
-          @options={{hash x=0 y=0 noMove='true' noResize='true'}}
+          @options={{hash x=0 y=0 noMove=true noResize=true}}
         >
           Test widget
         </GridStackItem>
       </GridStack>
     `);
 
-    assert
-      .dom('.grid-stack .grid-stack-item.ui-draggable.ui-resizable.ui-draggable-disabled.ui-resizable-disabled')
-      .exists({ count: 1 }, 'grid-stack-item noResize and noMove properties are applied');
+    assert.deepEqual(
+      [...find('.grid-stack-item').classList],
+      ['grid-stack-item', 'ui-draggable-disabled', 'ui-resizable-disabled'],
+      'grid-stack-item noResize and noMove properties are applied'
+    );
   });
 
   test('gridstack is notified when items properties change', async function (assert) {
@@ -251,7 +243,7 @@ module('Integration | Component | grid stack', function (hooks) {
 
     this.set('onChange', () => assert.ok(true, '`onChange` was called'));
 
-    this.set('options', { width: 6 });
+    this.set('options', { w: 6 });
 
     await render(hbs`
       <GridStack @onChange={{this.onChange}}>
@@ -261,16 +253,16 @@ module('Integration | Component | grid stack', function (hooks) {
       </GridStack>
     `);
 
-    this.set('options', { width: 12 });
+    this.set('options', { w: 12 });
     await settled();
   });
 
   test('gridstack updates the layout when items properties change', async function (assert) {
     this.set('items', [
-      { id: 0, options: { x: 0, y: 0, width: 5, height: 1 } },
-      { id: 1, options: { x: 6, y: 0, width: 3, height: 1 } },
-      { id: 2, options: { x: 0, y: 1, width: 4, height: 1 } },
-      { id: 3, options: { x: 6, y: 1, width: 2, height: 1 } },
+      { id: 0, options: { x: 0, y: 0, w: 5, h: 1 } },
+      { id: 1, options: { x: 6, y: 0, w: 3, h: 1 } },
+      { id: 2, options: { x: 0, y: 1, w: 4, h: 1 } },
+      { id: 3, options: { x: 6, y: 1, w: 2, h: 1 } },
     ]);
 
     await render(hbs`
@@ -284,39 +276,35 @@ module('Integration | Component | grid stack', function (hooks) {
     `);
 
     this.items.forEach(({ id, options }) => {
-      assert
-        .dom(`[data-id="${id}"]`)
-        .hasAttribute('data-gs-x', `${options.x}`, 'Initial grid-stack-item layout is correct');
-      assert
-        .dom(`[data-id="${id}"]`)
-        .hasAttribute('data-gs-y', `${options.y}`, 'Initial grid-stack-item layout is correct');
+      assert.dom(`[data-id="${id}"]`).hasAttribute('gs-x', `${options.x}`, 'Initial grid-stack-item layout is correct');
+      assert.dom(`[data-id="${id}"]`).hasAttribute('gs-y', `${options.y}`, 'Initial grid-stack-item layout is correct');
     });
 
     // Update the position of item 1
-    this.set('items.1.options', { x: 2, y: 1, width: 12, height: 1 });
+    this.set('items.1.options', { x: 2, y: 1, w: 12, h: 1 });
 
     assert
       .dom(`[data-id="0"]`)
-      .hasAttribute('data-gs-x', '0', 'Updating a grid-stack-item leaves unaffected items the same');
+      .hasAttribute('gs-x', '0', 'Updating a grid-stack-item leaves unaffected items the same');
     assert
       .dom(`[data-id="0"]`)
-      .hasAttribute('data-gs-y', '0', 'Updating a grid-stack-item leaves unaffected items the same');
+      .hasAttribute('gs-y', '0', 'Updating a grid-stack-item leaves unaffected items the same');
 
-    assert.dom(`[data-id="1"]`).hasAttribute('data-gs-x', '2', 'Updating a grid-stack-item updates moves the item');
-    assert.dom(`[data-id="1"]`).hasAttribute('data-gs-y', '1', 'Updating a grid-stack-item updates moves the item');
+    assert.dom(`[data-id="1"]`).hasAttribute('gs-x', '2', 'Updating a grid-stack-item updates moves the item');
+    assert.dom(`[data-id="1"]`).hasAttribute('gs-y', '1', 'Updating a grid-stack-item updates moves the item');
 
     assert
       .dom(`[data-id="2"]`)
-      .hasAttribute('data-gs-x', '0', 'Updating a grid-stack-item moves conflicting items to a different row');
+      .hasAttribute('gs-x', '0', 'Updating a grid-stack-item moves conflicting items to a different row');
     assert
       .dom(`[data-id="2"]`)
-      .hasAttribute('data-gs-y', '2', 'Updating a grid-stack-item moves conflicting items to a different row');
+      .hasAttribute('gs-y', '2', 'Updating a grid-stack-item moves conflicting items to a different row');
 
     assert
       .dom(`[data-id="3"]`)
-      .hasAttribute('data-gs-x', '6', 'Updating a grid-stack-item moves conflicting items to a different row');
+      .hasAttribute('gs-x', '6', 'Updating a grid-stack-item moves conflicting items to a different row');
     assert
       .dom(`[data-id="3"]`)
-      .hasAttribute('data-gs-y', '2', 'Updating a grid-stack-item moves conflicting items to a different row');
+      .hasAttribute('gs-y', '2', 'Updating a grid-stack-item moves conflicting items to a different row');
   });
 });

@@ -3,64 +3,62 @@
 import Component from '@ember/component';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, clearRender } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | grid stack item', function (hooks) {
   setupRenderingTest(hooks);
 
   test('item renders', async function (assert) {
-    assert.expect(3);
+    assert.expect(4);
 
     // Create a fake version of `grid-stack` component to test update actions
-    class MockGridStack extends Component {
-      gridStackContainer = true;
+    const MockGridStack = {
       addWidget() {
-        assert.ok(true, '`addWidget` action is called on init');
-      }
+        assert.step('addWidget');
+      },
       removeWidget() {
-        assert.ok(true, '`removeWidget` action is called when cleaning up');
-      }
-    }
+        assert.step('removeWidget');
+        assert.verifySteps(['addWidget', 'removeWidget'], 'widget is added and then removed');
+      },
+    };
 
-    this.owner.register('component:mock-grid-stack', MockGridStack);
+    const GridStackRegistry = this.owner.lookup('service:grid-stack-registry');
+
+    GridStackRegistry.registerGrid('fake-id', MockGridStack);
 
     await render(hbs`
-      {{#mock-grid-stack}}
-        {{#grid-stack-item}}
+      <div id="fake-id" class="grid-stack">
+        <GridStackItem>
           template block text
-        {{/grid-stack-item}}
-      {{/mock-grid-stack}}
+        </GridStackItem>
+      </div>
     `);
 
-    assert.dom('*').hasText('template block text', 'Inner template is yielded');
+    assert.dom().hasText('template block text', 'Inner template is yielded');
   });
 
   test('item options', async function (assert) {
     assert.expect(3);
 
     this.set('options', {
-      minHeight: 2,
+      minH: 2,
     });
 
-    await render(hbs`
-      {{grid-stack-item
-        options=options
-      }}
-    `);
+    await render(hbs`<GridStackItem @options={{this.options}} />`);
 
-    assert.dom('.grid-stack-item').hasAttribute('data-gs-min-height', '2', 'Item options are added as data attributes');
+    assert.dom('.grid-stack-item').hasAttribute('gs-min-h', '2', 'Item options are added as data attributes');
 
     this.set('options', {
-      minHeight: 3,
+      minH: 3,
     });
 
-    assert.dom('.grid-stack-item').hasAttribute('data-gs-min-height', '3', 'Data attributes are updated with options');
+    assert.dom('.grid-stack-item').hasAttribute('gs-min-h', '3', 'Data attributes are updated with options');
 
     this.set('options', {
-      minHeight: undefined,
+      minH: undefined,
     });
 
-    assert.dom('.grid-stack-item').doesNotHaveAttribute('data-gs-min-height', 'Data attributes can be removed');
+    assert.dom('.grid-stack-item').doesNotHaveAttribute('gs-min-h', 'Data attributes can be removed');
   });
 });

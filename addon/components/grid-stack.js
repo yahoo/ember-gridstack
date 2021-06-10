@@ -1,11 +1,9 @@
-/* eslint-disable ember/no-component-lifecycle-hooks */
-/* eslint-disable ember/no-classic-components */
 /**
  * Copyright 2021, Yahoo Inc.
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Usage:
- *   {{grid-stack
+ *   <Grid-stack
  *      options=(hash
  *        animate=true
  *      )
@@ -23,39 +21,53 @@
  * Full list of options:
  *   https://github.com/troolee/gridstack.js/tree/master/doc#options
  */
-import Component from '@ember/component';
-import { action, set } from '@ember/object';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 import { scheduleOnce } from '@ember/runloop';
 import { capitalize } from '@ember/string';
 import { guidFor } from '@ember/object/internals';
-import layout from '../templates/components/grid-stack';
+import { GridStackDDI } from 'gridstack';
+import GridStack from 'gridstack-h5';
+// import {GridStackDDI} from 'gridstack-ddi';
 
 export const GRID_STACK_EVENTS = [
-  'dragstart',
-  'dragstop',
-  'resizestart',
-  'resizestop',
   'added',
   'change',
+  'disable',
+  'dragstart',
+  'drag',
+  'dragstop',
+  'dropped',
   'enable',
   'removed',
+  'resizestart',
+  'resize',
+  'resizestop',
 ];
 
 export default class GridStackComponent extends Component {
-  layout = layout;
-
-  tagName = '';
+  @service gridStackRegistry;
 
   guid = guidFor(this);
+  @tracked elm;
+
+  constructor() {
+    super(...arguments);
+    this.gridStackRegistry.registerGrid(this.guid, this);
+  }
+
+  get options() {
+    return {
+      float: true,
+      ...this.args.options,
+    };
+  }
 
   /**
-   * @property {Boolean} gridStackContainer - used by child components to find this component
-   */
-  gridStackContainer = true;
-
-  /**
-   * https://github.com/troolee/gridstack.js/tree/master/doc#api
-   * @property {Object} gridStack - reference to gridstack object
+   * https://github.com/gridstack/gridstack.js/tree/master/doc#api
+   * @property {GridStack|null} gridStack - reference to gridstack object
    */
   gridStack = null;
 
@@ -63,11 +75,6 @@ export default class GridStackComponent extends Component {
    * @property {Array} subscribedEvents - List of events for which event handlers were set up
    */
   subscribedEvents = [];
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    this._destroyGridStack();
-  }
 
   _destroyGridStack() {
     const { gridStack } = this;
@@ -89,30 +96,10 @@ export default class GridStackComponent extends Component {
   }
 
   _createGridStack() {
-    this.gridStack = window.GridStack.init({ ...this.options }, this.elm);
-
-    // Since destroying gridstack disables it,
-    // we must manually enable it
-    if (!(this.options && this.options.staticGrid)) {
-      const { gridStack } = this;
-
-      this.elm.querySelectorAll(`.${gridStack.opts.itemClass}`).forEach((el) => {
-        // only enable items that are supposed to mobile
-        let noMove = el.getAttribute('data-gs-no-move');
-        let noResize = el.getAttribute('data-gs-no-resize');
-
-        if (!noMove) {
-          gridStack.movable(el, true);
-        }
-
-        if (!noResize) {
-          gridStack.resizable(el, true);
-        }
-      });
-    }
+    this.gridStack = GridStack.init({ ...this.options }, this.elm);
 
     GRID_STACK_EVENTS.forEach((eventName) => {
-      const action = this[`on${capitalize(eventName)}`];
+      const action = this.args[`on${capitalize(eventName)}`];
 
       if (action) {
         this.gridStack.on(eventName, function () {
@@ -126,7 +113,7 @@ export default class GridStackComponent extends Component {
 
   @action
   setup(elm) {
-    set(this, 'elm', elm);
+    this.elm = elm;
     this._createGridStack();
   }
 
@@ -137,13 +124,47 @@ export default class GridStackComponent extends Component {
   }
 
   @action
+  willDestroyNode() {
+    this.gridStackRegistry.unregisterGridComponent(this.guid, this);
+    this._destroyGridStack();
+  }
+
+  @action
   addWidget(element) {
     this.gridStack?.makeWidget(element);
   }
 
+  /**
+   * Custom removeWidget function that skips check to see if widget is in current grid
+   * @see https://github.com/gridstack/gridstack.js/blob/v4.2.5/src/gridstack.ts#L893
+   */
   @action
-  removeWidget(element) {
-    // Use `false` option to prevent removing dom element, let Ember do that
-    this.gridStack?.removeWidget(element, false);
+  removeWidget(element, removeDOM = false, triggerEvent = true) {
+    GridStack.getElements(element).forEach((el) => {
+      // The following line was causing issues because this hook is called correctly from
+      // child widgets, but after they are already removed from the dom
+      // if (el.parentElement !== this.el) return; // not our child!
+      let node = el.gridstackNode;
+      // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
+      if (!node) {
+        node = this.gridStack?.engine.nodes.find((n) => el === n.el);
+      }
+      if (!node) return;
+
+      // remove our DOM data (circular link) and drag&drop permanently
+      delete el.gridstackNode;
+      GridStackDDI.get().remove(el);
+
+      this.gridStack?.engine.removeNode(node, removeDOM, triggerEvent);
+
+      if (removeDOM && el.parentElement) {
+        el.remove(); // in batch mode engine.removeNode doesn't call back to remove DOM
+      }
+    });
+    if (triggerEvent) {
+      this.gridStack?._triggerRemoveEvent();
+      this.gridStack?._triggerChangeEvent();
+    }
+    return this;
   }
 }
