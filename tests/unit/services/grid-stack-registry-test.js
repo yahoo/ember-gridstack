@@ -41,7 +41,7 @@ module('Unit | Service | grid-stack-registry', function (hooks) {
       closest: () => ({ id: undefined }),
     };
     assert.throws(
-      () => Service.findGridComponent(mockElement),
+      () => Service.findGridComponent(mockElementNoId),
       /a/,
       'Throws error if a grid stack element is found but has no id'
     );

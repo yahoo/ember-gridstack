@@ -1,9 +1,8 @@
 /* eslint-disable ember/require-tagless-components */
 /* eslint-disable ember/no-classic-components */
-import Component from '@ember/component';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render, clearRender } from '@ember/test-helpers';
+import { render } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Component | grid stack item', function (hooks) {
