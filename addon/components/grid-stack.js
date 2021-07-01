@@ -3,23 +3,21 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Usage:
- *   <Grid-stack
- *      options=(hash
- *        animate=true
- *      )
- *      onDragstart=(action 'dragStart')
- *      onDragstop=(action 'dragStop')
- *      onResizestart=(action 'resizeStart')
- *      onResizestop=(action 'resizeStop')
- *      onAdded=(action 'added')
- *      onChange=(action 'change')
- *      onEnable=(action 'enable')
- *      onRemoved=(action 'remove')
+ *   <GridStack
+ *      @options={{hash animate=true}}
+ *      @onDragstart={{this.dragStart}}
+ *      @onDragstop={{this.dragStop}}
+ *      @onResizestart={{this.resizeStart}}
+ *      @onResizestop={{this.resizeStop}}
+ *      @onAdded={{this.added}}
+ *      @onChange={{this.change}}
+ *      @onEnable={{this.enable}}
+ *      @onRemoved={{this.remove}}
  *      as |grid|
- *   }}
+ *   />
  *
  * Full list of options:
- *   https://github.com/troolee/gridstack.js/tree/master/doc#options
+ *   https://github.com/gridstack/gridstack.js/tree/master/doc#grid-options
  */
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
@@ -30,7 +28,6 @@ import { capitalize } from '@ember/string';
 import { guidFor } from '@ember/object/internals';
 import { GridStackDDI } from 'gridstack';
 import GridStack from 'gridstack-h5';
-// import {GridStackDDI} from 'gridstack-ddi';
 
 export const GRID_STACK_EVENTS = [
   'added',
