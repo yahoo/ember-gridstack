@@ -1,8 +1,6 @@
-# ember-gridstack
+# ember-gridstack [![Pipeline Status][status-image]][status-url]
 
-[![Travis][build-badge]][build]
-
-Ember components to build drag-and-drop multi-column grids powered by [gridstack.js](https://troolee.github.io/gridstack.js/)
+Ember components to build drag-and-drop multi-column grids powered by [gridstack.js](https://gridstackjs.com/)
 
 ## Compatibility
 
@@ -19,48 +17,35 @@ ember install ember-gridstack
 ## Basic Usage
 
 ```hbs
-{{#grid-stack
-  options=(hash animate=true)
-  onChange=(action 'change')
-}}
-  {{#grid-stack-item
-     options=(hash x=0 y=0 width=6 height=2)
-  }}
+<GridStack @options={{hash animate=true}} @onChange={{this.change}}>
+  <GridStackItem @options={{hash x=0 y=0 w=6 h=2}}>
     Widget #1
-  {{/grid-stack-item}}
-  {{#grid-stack-item
-     options=(hash x=6 y=0 width=6 height=2)
-  }}
+  </GridStackItem>
+  <GridStackItem @options={{hash x=6 y=0 w=6 h=2}}>
     Widget #2
-  {{/grid-stack-item}}
-{{/grid-stack}}
+  </GridStackItem>
+</GridStack>
 ```
 
 ## Components
 
-### `{{grid-stack}}`
+### `<GridStack>`
 
 Used to construct a grid-stack layout
 
 #### Options
 
-`{{grid-stack}}` can take an `options` object attribute to configure the grid. All gridstack grid options are valid and take the form `data-gs-{option}`. However, when using `{{grid-stack}}` the `data-gs` is omitted.
+`<GridStack>` can take an `options` object attribute to configure the grid. All gridstack grid options are valid and take the form `gs-{option}`. However, when using `<GridStack>` the `data-gs` is omitted.
 
 **Example:**
 
 ```hbs
-{{#grid-stack
-  options=(hash
-    animate=true
-    column=12
-    maxRow=10
-  )
-}}
+<GridStack @options={{hash animate=true column=12 maxRow=10 }}>
   ...
-{{/grid-stack}}
+</GridStack>
 ```
 
-The full list of options can be found here: https://github.com/troolee/gridstack.js/tree/master/doc#grid-attributes
+The full list of options can be found here: https://github.com/gridstack/gridstack.js/tree/master/doc#grid-options
 
 #### Actions
 
@@ -69,89 +54,78 @@ All gridstack events can be handled as Ember actions. They take the form `on{Eve
 **Example:**
 
 ```hbs
-{{#grid-stack
-  onDragstart=(action 'dragStart')
-  onDragstop=(action 'dragStop')
-  onResizestart=(action 'resizeStart')
-  onResizestop=(action 'resizeStop')
-  onAdded=(action 'added')
-  onChange=(action 'change')
-  onEnable=(action 'enable')
-  onRemoved=(action 'remove')
-}}
+<GridStack
+  @onAdded={{this.added}}
+  @onChange={{this.change}}
+  @onDisable={{this.disabled}}
+  @onDragstart={{this.dragStart}}
+  @onDrag={{this.drag}}
+  @onDragstop={{this.dragStop}}
+  @onDropped={{this.dropped}}
+  @onEnable={{this.enabled}}
+  @onRemoved={{this.removed}}
+  @onResizestart={{this.resizeStart}}
+  @onResize={{this.resize}}
+  @onResizestop={{this.resizeStop}}
+>
 ```
 
-The full list of events can found here: https://github.com/troolee/gridstack.js/tree/master/doc#events
+The full list of events can found here: https://github.com/gridstack/gridstack.js/tree/master/doc#events
 
 #### Block Form
 
-The `{{grid-stack}}` component uses the block form to yield `{{grid-stack-item}}` components. In addition, `{{grid-stack}}` yields a reference to itself in the case inner components need the reference or would like to listen to events triggered on the grid element.
+The `<GridStack>` component uses the block form to yield `<GridStackItem>` components. In addition, `<GridStack>` yields a reference to itself in the case inner components need the reference or would like to listen to events triggered on the grid element.
 
 **Example:**
 
 ```hbs
-{{#grid-stack as |grid|}}
-  {{#grid-stack-item
-     options=(hash x=0 y=0 width=6 height=2)
-  }}
+<GridStack as |grid|>
+  <GridStackItem @options={{hash x=0 y=0 w=6 h=2}}>
     Widget #1
-  {{/grid-stack-item}}
-{{/grid-stack}}
+  </GridStackItem>
+</GridStack>
 ```
 
-### `{{grid-stack-item}}`
+### `<GridStackItem>`
 
-Used to construct a grid item inside a `{{grid-stack}}` component
+Used to construct a grid item inside a `<GridStack>` component
 
 #### Options
 
-`{{grid-stack-item}}` can take an `options` object attribute to configure the grid item. All gridstack item options are valid and take the form `data-gs-{option}`. However, when using `{{grid-stack-item}}` the `data-gs` is omitted.
+`<GridStackItem>` can take an `options` object attribute to configure the grid item. All gridstack item options are valid and take the form `gs-{option}`. However, when using `<GridStackItem>` the `gs` is omitted.
 
 **Example:**
 
 ```hbs
-{{#grid-stack-item
-  options=(hash
-    width=4
-    height=4
-    x=0
-    y=0
-    noMove=true
-  )
-}}
+<GridStackItem @options={{hash w=4 h=4 x=0 y=0 noMove=true}}>
   ...
-{{/grid-stack}}
+</GridStackItem>
 ```
 
-The full list of options can be found here: https://github.com/troolee/gridstack.js/tree/master/doc#item-attributes
+The full list of options can be found here: https://github.com/gridstack/gridstack.js/tree/master/doc#item-options
 
 #### Block Form
 
-The `{{grid-stack-item}}` component uses the block form to yield the content of the item. In addition, `{{grid-stack-item}}` yields a reference to itself in the case inner components need the reference or would like to listen to events triggered on the grid.
+The `<GridStackItem>` component uses the block form to yield the content of the item. In addition, `<GridStackItem>` yields a reference to itself in the case inner components need the reference or would like to listen to events triggered on the grid.
 
 **Example:**
 
 ```hbs
-{{#grid-stack-item
-   options=(hash x=0 y=0 width=6 height=2)
-   as |item|
-}}
-  {{custom-component
-    parentContainer=item
-  }}
-{{/grid-stack-item}}
+<GridStackItem @options={{hash x=0 y=0 w=6 h=2}} as |item|>
+  <CustomComponent @parentContainer={{item}} />
+</GridStackItem>
 ```
 
 ```js
 //custom-component.js
-export default Ember.Component.extend({
+export default class CustomComponent extends Component {
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.parentContainer.element.addEventListener('resizestop', () => {
       //handle resize
     });
   }
-});
+}
 ```
 
 ## Touch Support
@@ -163,5 +137,5 @@ For touch support do the following
 By default, the [bower dependencies for Gridstack](https://github.com/troolee/gridstack.js#requirements)
 will be installed automatically.
 
-[build-badge]: https://travis-ci.org/yahoo/ember-gridstack.svg?branch=master
-[build]: https://travis-ci.org/yahoo/ember-gridstack
+[status-image]: https://cd.screwdriver.cd/pipelines/6102/badge
+[status-url]: https://cd.screwdriver.cd/pipelines/6102
