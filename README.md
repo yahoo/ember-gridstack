@@ -137,5 +137,5 @@ For touch support do the following
 By default, the [bower dependencies for Gridstack](https://github.com/troolee/gridstack.js#requirements)
 will be installed automatically.
 
-[status-image]: https://cd.screwdriver.cd/pipelines/6102/badge
-[status-url]: https://cd.screwdriver.cd/pipelines/6102
+[status-image]: https://cd.screwdriver.cd/pipelines/7366/badge
+[status-url]: https://cd.screwdriver.cd/pipelines/7366
