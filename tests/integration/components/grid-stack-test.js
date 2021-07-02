@@ -1,7 +1,7 @@
-/* eslint-disable ember/no-classic-classes */
 /* eslint-disable ember/no-component-lifecycle-hooks */
 /* eslint-disable ember/no-classic-components */
 import Component from '@ember/component';
+import { action } from '@ember/object';
 import { run, next } from '@ember/runloop';
 import { A, isArray } from '@ember/array';
 import { module, test } from 'qunit';
@@ -18,11 +18,8 @@ module('Integration | Component | grid stack', function (hooks) {
 
     await render(hbs`
       <GridStack>
-        <div class='grid-stack-item'
-          gs-x='0' gs-y='0'
-          gs-w='1' gs-h='1'
-        >
-          <div class='grid-stack-item-content'>My Widget</div>
+        <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="1" gs-h="1">
+          <div class="grid-stack-item-content">My Widget</div>
         </div>
       </GridStack>
     `);
@@ -87,14 +84,9 @@ module('Integration | Component | grid stack', function (hooks) {
     });
 
     await render(hbs`
-      <GridStack
-        @options={{this.options}}
-      >
-        <div class='grid-stack-item'
-          gs-x='0' gs-y='0'
-          gs-w='1' gs-h='1'
-        >
-          <div class='grid-stack-item-content'>My Widget</div>
+      <GridStack @options={{this.options}}>
+        <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="1" gs-h="1">
+          <div class="grid-stack-item-content">My Widget</div>
         </div>
       </GridStack>
     `);
@@ -144,7 +136,7 @@ module('Integration | Component | grid stack', function (hooks) {
         <GridStackItem as |item|>
           <EventListener @containerComponent={{item}}/>
         </GridStackItem>
-        <div class='a-different-item' />
+        <div class="a-different-item" />
       </GridStack>
     `);
 
@@ -223,9 +215,7 @@ module('Integration | Component | grid stack', function (hooks) {
   test('gridstack items with noMove/Resize', async function (assert) {
     await render(hbs`
       <GridStack>
-        <GridStackItem
-          @options={{hash x=0 y=0 noMove=true noResize=true}}
-        >
+        <GridStackItem @options={{hash x=0 y=0 noMove=true noResize=true}}>
           Test widget
         </GridStackItem>
       </GridStack>
@@ -239,7 +229,7 @@ module('Integration | Component | grid stack', function (hooks) {
   });
 
   test('gridstack is notified when items properties change', async function (assert) {
-    assert.expect(1);
+    assert.expect(2);
 
     this.set('onChange', () => assert.ok(true, '`onChange` was called'));
 
@@ -254,6 +244,18 @@ module('Integration | Component | grid stack', function (hooks) {
     `);
 
     this.set('options', { w: 12 });
+    await settled();
+
+    class GlimmerActionListener {
+      @action
+      onChange() {
+        assert.ok(true, '`onChange` was called from glimmer action');
+      }
+    }
+    const listener = new GlimmerActionListener();
+    this.set('onChange', listener.onChange);
+
+    this.set('options', { w: 10 });
     await settled();
   });
 
