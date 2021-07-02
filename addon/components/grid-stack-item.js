@@ -1,59 +1,46 @@
-/* eslint-disable ember/no-component-lifecycle-hooks */
-/* eslint-disable ember/no-computed-properties-in-native-classes */
-/* eslint-disable ember/no-classic-components */
 /**
  * Copyright 2021, Yahoo Inc.
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Usage:
- *   {{#grid-stack-item
- *      options=(hash
- *        minWidth=2
- *        maxWidth=4
- *      )
- *      as |item|
- *   }}
+ *   <GridStackItem @options={{hash minW=2 maxW=4}} as |item|>
  *     My widget content
- *   {{/grid-stack-item}}
+ *   </GridStackItem>
  *
  * Full list of options:
- *   https://github.com/troolee/gridstack.js/tree/master/doc#item-attributes
+ *   https://github.com/gridstack/gridstack.js/tree/master/doc#item-options
  */
-import Component from '@ember/component';
-import { action, computed, set } from '@ember/object';
-import layout from '../templates/components/grid-stack-item';
+import Component from '@glimmer/component';
+import { tracked } from '@glimmer/tracking';
+import { inject as service } from '@ember/service';
+import { action } from '@ember/object';
 import { guidFor } from '@ember/object/internals';
 
-export default class extends Component {
-  layout = layout;
-
-  tagName = '';
+export default class GridStackItem extends Component {
+  @service gridStackRegistry;
 
   guid = guidFor(this);
+  @tracked elm;
+  @tracked gridStackComponent;
 
   get element() {
     return document.getElementById(this.guid);
   }
 
-  @computed
-  get parentContainer() {
-    return this.nearestWithProperty('gridStackContainer');
+  @action
+  setup(elm) {
+    this.elm = elm;
+    this.gridStackComponent = this.gridStackRegistry.findGridComponent(this.elm);
+    this.gridStackComponent?.addWidget(this.elm);
   }
 
   @action
   updateGridStack() {
-    const { height, width, x, y } = this.options;
-    this.parentContainer?.gridStack?.update(this.elm, x, y, width, height);
+    this.gridStackComponent?.gridStack?.update(this.elm, { ...this.args.options });
   }
 
   @action
-  setup(elm) {
-    set(this, 'elm', elm);
-    this.parentContainer?.addWidget(this.elm);
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-    this.parentContainer?.removeWidget(this.elm);
+  willDestroyNode() {
+    this.gridStackComponent?.removeWidget(this.elm);
   }
 }

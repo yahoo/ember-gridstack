@@ -3,7 +3,9 @@
 
 <button class='new-item-btn' type='button' {{on 'click' this.changeItems}}>+ New Item</button>
 
-<GridStack @onChange={{fn (mut this.test) true}}>
+<GridStack @onChange={{fn (mut this.test) true}} @options={{hash staticGrid=false}}>
+    <GridStackItem @options={{hash x=2 y=3 noMove=true}} />
+    <GridStackItem @options={{hash x=3 y=3 noResize=true}} />
   {{#each this.items as |item|}}
     <GridStackItem @options={{hash x=0 y=item}} />
   {{/each}}

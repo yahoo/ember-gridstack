@@ -6,7 +6,7 @@ import { modifier } from 'ember-modifier';
 import { dasherize } from '@ember/string';
 import { isBlank } from '@ember/utils';
 
-const GS_PREFIX = 'data-gs-';
+const GS_PREFIX = 'gs-';
 
 export default modifier(function itemAttributes(element, opt) {
   const [options = {}] = opt || [];
