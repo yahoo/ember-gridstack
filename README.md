@@ -4,11 +4,9 @@ Ember components to build drag-and-drop multi-column grids powered by [gridstack
 
 ## Compatibility
 
-- Ember.js v3.16 or above
-- Ember CLI v2.13 or above
-- Node.js v10 or above
-
-## Installation
+- Ember.js v3.20 or above
+- Ember CLI v3.20 or above
+- Node.js v12 or above
 
 ```
 ember install ember-gridstack
@@ -40,7 +38,7 @@ Used to construct a grid-stack layout
 **Example:**
 
 ```hbs
-<GridStack @options={{hash animate=true column=12 maxRow=10 }}>
+<GridStack @options={{hash animate=true column=12 maxRow=10}}>
   ...
 </GridStack>
 ```
