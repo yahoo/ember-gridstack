@@ -57,7 +57,6 @@ export default class GridStackComponent extends Component {
 
   get options() {
     return {
-      float: true,
       ...this.args.options,
     };
   }
@@ -140,7 +139,9 @@ export default class GridStackComponent extends Component {
     GridStack.getElements(element).forEach((el) => {
       // The following line was causing issues because this hook is called correctly from
       // child widgets, but after they are already removed from the dom
+      // --- SKIP ---
       // if (el.parentElement !== this.el) return; // not our child!
+      // --- SKIP ---
       let node = el.gridstackNode;
       // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
       if (!node) {

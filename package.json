@@ -33,11 +33,11 @@
   },
   "dependencies": {
     "@ember/render-modifiers": "^1.0.2",
-    "ember-auto-import": "^1.11.2",
-    "ember-cli-babel": "^7.26.3",
+    "ember-auto-import": "^1.5.3",
+    "ember-cli-babel": "^7.26.6",
     "ember-cli-htmlbars": "^5.7.1",
     "ember-modifier": "^2.1.2",
-    "gridstack": "^4.2.5"
+    "gridstack": "^4.2.7"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",

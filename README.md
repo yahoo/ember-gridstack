@@ -14,6 +14,10 @@ Ember components to build drag-and-drop multi-column grids powered by [gridstack
 ember install ember-gridstack
 ```
 
+## Migrating to v3
+
+View the full [v3.0.0 release notes](./CHANGELOG.md#300) for updates and breaking changes.
+
 ## Basic Usage
 
 ```hbs
@@ -35,17 +39,17 @@ Used to construct a grid-stack layout
 
 #### Options
 
-`<GridStack>` can take an `options` object attribute to configure the grid. All gridstack grid options are valid and take the form `gs-{option}`. However, when using `<GridStack>` the `data-gs` is omitted.
+`<GridStack>` can take an `options` object attribute to configure the grid. All gridstack grid options are valid and take the form `gs-{option}`. However, when using `<GridStack>` the `gs-{option}` is omitted.
 
 **Example:**
 
 ```hbs
-<GridStack @options={{hash animate=true column=12 maxRow=10 }}>
+<GridStack @options={{hash animate=true column=12 maxRow=10}}>
   ...
 </GridStack>
 ```
 
-The full list of options can be found here: https://github.com/gridstack/gridstack.js/tree/master/doc#grid-options
+The full list of options can be found here: https://github.com/gridstack/gridstack.js/tree/v4.2.7/doc#grid-options
 
 #### Actions
 
@@ -70,7 +74,7 @@ All gridstack events can be handled as Ember actions. They take the form `on{Eve
 >
 ```
 
-The full list of events can found here: https://github.com/gridstack/gridstack.js/tree/master/doc#events
+The full list of events can found here: https://github.com/gridstack/gridstack.js/tree/v4.2.7/doc#events
 
 #### Block Form
 
@@ -102,7 +106,7 @@ Used to construct a grid item inside a `<GridStack>` component
 </GridStackItem>
 ```
 
-The full list of options can be found here: https://github.com/gridstack/gridstack.js/tree/master/doc#item-options
+The full list of options can be found here: https://github.com/gridstack/gridstack.js/tree/v4.2.7/doc#item-options
 
 #### Block Form
 

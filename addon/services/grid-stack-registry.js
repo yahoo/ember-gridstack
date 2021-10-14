@@ -5,7 +5,7 @@ export default class GridstackService extends Service {
   _grids = {};
 
   /**
-   *
+   * Registers a GridStack grid
    * @param {string} id - the string id of the GridStack element
    * @param {GridStack} grid - A Gridstack instance
    * @returns {void}
