@@ -11,13 +11,8 @@ jobs:
       screwdriver.cd/cpu: TURBO
     steps:
       - install-chrome: ./build-scripts/setup-chrome.sh
-      - install-ember-cli: npm install -g ember-cli
-      - cd-to-parent: cd ..
-      - new-addon: ember addon testme --yarn
-      - cd-to-addon: cd testme
-      - ember-try: yarn run test:ember-compatibility
-      # - install: yarn install --frozen-lockfile
-      # - test: yarn test
+      - install: yarn install --frozen-lockfile
+      - test: yarn test
     requires:
       - ~pr
       - ~commit
