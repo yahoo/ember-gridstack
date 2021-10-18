@@ -80,9 +80,6 @@
     "qunit-dom": "^1.6.0",
     "semantic-release": "^17.4.2"
   },
-  "resolutions": {
-    "socket.io": "2.4.1"
-  },
   "engines": {
     "node": "10.* || >= 12"
   },
