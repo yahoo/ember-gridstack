@@ -1,13 +1,14 @@
 {{! Copyright 2021, Yahoo Inc }}
 <div
   id={{this.guid}}
-  class='grid-stack-item'
+  class="grid-stack-item"
   ...attributes
   {{gs-item-attributes @options}}
   {{did-insert this.setup}}
   {{did-update this.updateGridStack @options}}
+  {{will-destroy this.willDestroyNode}}
 >
-  <div class='grid-stack-item-content'>
+  <div class="grid-stack-item-content">
     {{yield this}}
   </div>
 </div>
