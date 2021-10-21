@@ -1,5 +1,3 @@
-/* eslint-disable ember/require-tagless-components */
-/* eslint-disable ember/no-classic-components */
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';

@@ -1,6 +1,4 @@
-/* eslint-disable ember/no-component-lifecycle-hooks */
-/* eslint-disable ember/no-classic-components */
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { run, next } from '@ember/runloop';
 import { A, isArray } from '@ember/array';
@@ -121,8 +119,8 @@ module('Integration | Component | grid stack', function (hooks) {
 
     // Create fake component for listening to events
     this.EventListener = class EventListener extends Component {
-      didInsertElement() {
-        super.didInsertElement(...arguments);
+      constructor() {
+        super(...arguments);
         this.containerComponent.element.addEventListener('resizestop', () => {
           assert.ok(true, 'resize action is called when item is resized');
         });
