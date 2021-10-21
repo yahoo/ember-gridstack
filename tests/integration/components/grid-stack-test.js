@@ -121,7 +121,7 @@ module('Integration | Component | grid stack', function (hooks) {
     this.EventListener = class EventListener extends Component {
       constructor() {
         super(...arguments);
-        this.containerComponent.element.addEventListener('resizestop', () => {
+        this.args.containerComponent.element.addEventListener('resizestop', () => {
           assert.ok(true, 'resize action is called when item is resized');
         });
       }
