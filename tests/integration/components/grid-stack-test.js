@@ -120,7 +120,7 @@ module('Integration | Component | grid stack', function (hooks) {
     assert.expect(1);
 
     // Create fake component for listening to events
-    let eventListener = class extends Component {
+    this.EventListener = class EventListener extends Component {
       didInsertElement() {
         super.didInsertElement(...arguments);
         this.containerComponent.element.addEventListener('resizestop', () => {
@@ -129,12 +129,10 @@ module('Integration | Component | grid stack', function (hooks) {
       }
     };
 
-    this.owner.register('component:event-listener', eventListener);
-
     await render(hbs`
       <GridStack>
         <GridStackItem as |item|>
-          <EventListener @containerComponent={{item}}/>
+          <this.EventListener @containerComponent={{item}}/>
         </GridStackItem>
         <div class="a-different-item" />
       </GridStack>
