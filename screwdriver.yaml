@@ -1,5 +1,5 @@
 cache:
-  pipeline: [~/.npm]
+  pipeline: [~/.yarn]
 
 shared:
   image: node:14
@@ -11,11 +11,14 @@ jobs:
       screwdriver.cd/cpu: TURBO
     steps:
       - install-chrome: ./build-scripts/setup-chrome.sh
+      - yarn-cache: yarn config set cache-folder ~/.yarn
       - install: yarn install --frozen-lockfile
       - test: yarn test
     requires:
       - ~pr
       - ~commit
+    environment:
+      JOBS: 2
 
   publish:
     requires: main
