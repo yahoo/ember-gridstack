@@ -1,4 +1,3 @@
-import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { run, next } from '@ember/runloop';
 import { A, isArray } from '@ember/array';
@@ -115,22 +114,21 @@ module('Integration | Component | grid stack', function (hooks) {
   });
 
   test('grid stack item events', async function (assert) {
+    const done = assert.async();
     assert.expect(1);
 
     // Create fake component for listening to events
-    this.EventListener = class EventListener extends Component {
-      constructor() {
-        super(...arguments);
-        this.args.containerComponent.element.addEventListener('resizestop', () => {
-          assert.ok(true, 'resize action is called when item is resized');
-        });
-      }
+    this.init = (containerComponent) => {
+      containerComponent.element.addEventListener('resizestop', () => {
+        assert.ok(true, 'resize action is called when item is resized');
+        done();
+      });
     };
 
     await render(hbs`
       <GridStack>
         <GridStackItem as |item|>
-          <this.EventListener @containerComponent={{item}}/>
+          <EventListener @init={{fn this.init item}}/>
         </GridStackItem>
         <div class="a-different-item" />
       </GridStack>
