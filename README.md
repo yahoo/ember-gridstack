@@ -1,4 +1,4 @@
-# ember-gridstack [![Pipeline Status][status-image]][status-url]
+# ember-gridstack [![Pipeline Status][status-image]][status-url] [![Latest NPM release][npm-badge]][npm-badge-url] [![Ember Observer Score][ember-observer-badge]][ember-observer-badge-url]
 
 Ember components to build drag-and-drop multi-column grids powered by [gridstack.js](https://gridstackjs.com/)
 
@@ -143,3 +143,7 @@ will be installed automatically.
 
 [status-image]: https://cd.screwdriver.cd/pipelines/7366/badge
 [status-url]: https://cd.screwdriver.cd/pipelines/7366
+[npm-badge]: https://img.shields.io/npm/v/ember-gridstack.svg
+[npm-badge-url]: https://www.npmjs.com/package/ember-gridstack
+[ember-observer-badge]: https://emberobserver.com/badges/ember-gridstack.svg
+[ember-observer-badge-url]: https://emberobserver.com/addons/ember-gridstack
