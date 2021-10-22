@@ -1,0 +1,27 @@
+/* Use `zoom` over `transform` since some tests depend on reading height and width */
+
+@import 'denali/denali';
+
+#ember-testing {
+  transform: none !important;
+  zoom: 50%;
+}
+
+.nav-responsive.is-active {
+  z-index: 1;
+}
+
+.switch-control {
+  .switch {
+    height: 100%;
+    margin: 0;
+  }
+}
+
+.grid-stack-item-content {
+  @extend .box;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
