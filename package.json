@@ -14,8 +14,9 @@
   },
   "authors": [
     "Balaji Manoharan<balajim1@verizonmedia.com>",
-    "Jon Kilroy<kilroy@verizonmedia.com>",
-    "Mike Musson"
+    "Jon Kilroy<jkilroy@gmail.com>",
+    "Mike Musson",
+    "Kevin Hinterlong<kevinhinterlong@gmail.com>"
   ],
   "scripts": {
     "build": "ember build --environment=production",
