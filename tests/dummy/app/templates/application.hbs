@@ -1,28 +1,28 @@
-{{page-title 'Ember Gridstack'}}
+{{page-title "Ember Gridstack"}}
 
-<DenaliNavbar @isResponsive={{true}} class='top-bar' as |Nav|>
+<DenaliNavbar @isResponsive={{true}} class="top-bar" as |Nav|>
   <Nav.Left as |Left|>
     <Left.Item><span>yahoo/ember-gridstack</span></Left.Item>
   </Nav.Left>
   <Nav.Right as |Right|>
-    <Right.Icon @icon='dashboard-tile-add' @name='Add Item' role='button' {{on 'click' this.changeItems}} />
-    <Right.Control class='switch-control'>
+    <Right.Icon @icon="dashboard-tile-add" @name="Add Item" role="button" {{on "click" this.changeItems}} />
+    <Right.Control class="switch-control">
       <DenaliSwitch
-        @onLabel='Float On'
-        @offLabel='Float Off'
+        @onLabel="Float On"
+        @offLabel="Float Off"
         @onChange={{this.toggleFloat}}
         checked={{this.shouldFloat}}
-        class='m-0 h-full'
+        class="m-0 h-full"
       />
     </Right.Control>
-    <a href='https://github.com/yahoo/ember-gridstack'>
-      <Right.Icon @icon='github' @name='Github' />
+    <a href="https://github.com/yahoo/ember-gridstack">
+      <Right.Icon @icon="github" @name="Github" />
     </a>
   </Nav.Right>
 </DenaliNavbar>
 
-<div class='flex h-minus-nav overflow-y-auto'>
-  <div class='container-full m-t-60 w-full overflow-auto'>
+<div class="flex h-minus-nav overflow-y-auto">
+  <div class="container-full m-t-60 w-full overflow-auto">
     <GridStack
       @onChange={{fn (mut this.test) true}}
       @options={{hash float=this.shouldFloat staticGrid=false doAnimate=true}}
@@ -32,7 +32,7 @@
       </GridStackItem>
 
       <GridStackItem @options={{hash x=3 y=1 w=3 h=2}}>
-        <img src='{{this.rootURL}}img/ember-logo.svg' alt='ember' />
+        <img src="{{this.rootURL}}img/ember-logo.svg" alt="ember">
       </GridStackItem>
 
       <GridStackItem @options={{hash x=6 y=2 w=3 h=2}}>
@@ -40,38 +40,38 @@
       </GridStackItem>
 
       <GridStackItem @options={{hash x=0 y=0 w=2 h=2}}>
-        <img src='{{this.rootURL}}img/ember-icon.svg' alt='ember icon' />
+        <img src="{{this.rootURL}}img/ember-icon.svg" alt="ember icon">
       </GridStackItem>
 
       <GridStackItem @options={{hash x=10 y=3 w=2 h=2}}>
-        <img src='{{this.rootURL}}img/ember-tomster-lockup.svg' alt='tomster' />
+        <img src="{{this.rootURL}}img/ember-tomster-lockup.svg" alt="tomster">
       </GridStackItem>
 
       <GridStackItem @options={{hash x=10 y=0 w=2 h=2}}>
-        <img src='{{this.rootURL}}img/gridstack-logo.svg' alt='gridstack' />
+        <img src="{{this.rootURL}}img/gridstack-logo.svg" alt="gridstack">
       </GridStackItem>
 
       <GridStackItem @options={{hash x=0 y=3 w=4 h=2}}>
-        <pre><code class='htmlbars' {{highlight}}>
+        <pre><code class="htmlbars" {{highlight}}>
 &lt;GridStack&gt;
   &lt;GridStackItem @options=\{{hash w=4 h=1}}&gt;
     Item Content
   &lt;/GridStackItem&gt;
 &lt;/GridStack&gt;
-        </code></pre>
+          </code></pre>
       </GridStackItem>
 
       <GridStackItem @options={{hash x=1 y=2 w=2 h=1}}>
-        <a href='https://gridstackjs.com/'>gridstackjs.com</a>
+        <a href="https://gridstackjs.com/">gridstackjs.com</a>
       </GridStackItem>
 
       <GridStackItem @options={{hash x=9 y=1 w=1 h=1}}>
-        <a href='https://github.com/yahoo/ember-gridstack'><DenaliIcon @icon='github' /></a>
+        <a href="https://github.com/yahoo/ember-gridstack"><DenaliIcon @icon="github" /></a>
       </GridStackItem>
 
       {{#each this.items as |item|}}
         <GridStackItem @options={{hash w=1 h=1}}>
-          <DenaliButton @iconOnly={{true}} @icon='trash' @style='text' {{on 'click' (fn this.removeItem item)}} />
+          <DenaliButton @iconOnly={{true}} @icon="trash" @style="text" {{on "click" (fn this.removeItem item)}} />
         </GridStackItem>
       {{/each}}
     </GridStack>
