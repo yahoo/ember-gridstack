@@ -14,7 +14,7 @@ module('Integration | Component | grid stack', function (hooks) {
     assert.expect(2);
 
     await render(hbs`
-      <GridStack>
+      <GridStack class="test-grid">
         <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="1" gs-h="1">
           <div class="grid-stack-item-content">My Widget</div>
         </div>
@@ -22,11 +22,11 @@ module('Integration | Component | grid stack', function (hooks) {
     `);
 
     assert
-      .dom('.grid-stack .grid-stack-item')
+      .dom('.test-grid.grid-stack .grid-stack-item')
       .hasClass('ui-draggable', 'Dom elements with grid-stack-item class are initialized by gridstack');
 
     assert
-      .dom('.grid-stack .grid-stack-item')
+      .dom('.test-grid.grid-stack .grid-stack-item')
       .hasClass('ui-resizable', 'Dom elements with grid-stack-item class are initialized by gridstack');
   });
 
