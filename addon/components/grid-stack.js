@@ -50,9 +50,15 @@ export default class GridStackComponent extends Component {
   guid = guidFor(this);
   @tracked elm;
 
+  initialize(){
+    this.elm=document.getElementById(this.guid);
+    this._createGridStack();
+  }
+
   constructor() {
     super(...arguments);
     this.gridStackRegistry.registerGrid(this.guid, this);
+    scheduleOnce('afterRender', this, this.initialize);
   }
 
   get options() {
@@ -107,11 +113,15 @@ export default class GridStackComponent extends Component {
     });
   }
 
-  @action
-  setup(elm) {
-    this.elm = elm;
-    this._createGridStack();
-  }
+  //To create nested grids with ember grid-stack the grids should be initialised using the 'GridStack.init()' in the order it is present in the DOM 
+  //after rendering, so it makes sense to call the '_createGridStack()' in the constructor rather than the 'setup()' function of the 'did-insert' hook 
+  //The 'setup()' fucntion of the 'did-insert' hook is called first on the child grids then on the parent grids which is a wrong way to initailise nested grids
+  //----------Also use gridstack v5.0 for creating nested grids, lower version other tha this breaks the behavior of nested grids---------
+  //Note; If the nested grids are not initialized in the order they were nested, saving the grids with 'save()' won't save the nested grids as 'subGrids'
+  // setup(elm) {
+  //   this.elm = elm;
+  //   this._createGridStack();
+  // }
 
   @action
   update() {
