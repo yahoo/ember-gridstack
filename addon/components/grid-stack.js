@@ -159,7 +159,7 @@ export default class GridStackComponent extends Component {
         el.remove(); // in batch mode engine.removeNode doesn't call back to remove DOM
       }
     });
-    if (triggerEvent) {
+    if (triggerEvent && !this.isDestroying && !this.isDestroyed) {
       this.gridStack?._triggerRemoveEvent();
       this.gridStack?._triggerChangeEvent();
     }
