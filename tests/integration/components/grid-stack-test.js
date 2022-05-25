@@ -145,8 +145,7 @@ module('Integration | Component | grid stack', function (hooks) {
   });
 
   test('onChange, onAdded, onRemove actions', async function (assert) {
-    // onAdded should run twice, onChange once, onRemoved twice
-    assert.expect(15);
+    assert.expect(12);
 
     this.set('items', A([1]));
 
@@ -302,5 +301,38 @@ module('Integration | Component | grid stack', function (hooks) {
     assert
       .dom(`[data-id="3"]`)
       .hasAttribute('gs-y', '2', 'Updating a grid-stack-item moves conflicting items to a different row');
+  });
+
+  test('do not fire `onChange` or `onRemoved` during teardown', async function (assert) {
+    assert.expect(1);
+
+    this.set('shouldRender', true);
+    this.set('items', [
+      { id: 0, options: { x: 0, y: 0, w: 5, h: 1 } },
+      { id: 1, options: { x: 6, y: 0, w: 3, h: 1 } },
+      { id: 2, options: { x: 0, y: 1, w: 4, h: 1 } },
+      { id: 3, options: { x: 6, y: 1, w: 2, h: 1 } },
+    ]);
+
+    this.onChange = () => assert.notOk(true, '`onChange` should not fire on teardown');
+    this.onRemoved = () => assert.notOk(true, '`onRemoved` should not fire on teardown');
+
+    await render(hbs`
+      {{#if this.shouldRender}}
+        <GridStack
+          onChange={{this.onChange}}
+          onRemoved={{this.onChange}}
+        >
+          {{#each this.items as |item|}}
+            <GridStackItem data-id={{item.id}} @options={{item.options}}>
+              {{item.id}}
+            </GridStackItem>
+          {{/each}}
+        </GridStack>
+      {{/if}}
+    `);
+
+    this.set('shouldRender', false);
+    assert.ok(true, 'all is good');
   });
 });
