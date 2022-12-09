@@ -132,7 +132,7 @@ export default class CustomComponent extends Component {
 
 ## Touch Support
 
-For touch support do the following
+For touch support do the following:
 
 ### ember-grid-stack < 2.x
 
