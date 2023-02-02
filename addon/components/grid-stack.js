@@ -26,8 +26,7 @@ import { inject as service } from '@ember/service';
 import { scheduleOnce } from '@ember/runloop';
 import { capitalize } from '@ember/string';
 import { guidFor } from '@ember/object/internals';
-import { GridStackDDI } from 'gridstack';
-import GridStack from 'gridstack-h5';
+import { GridStack } from 'gridstack';
 
 export const GRID_STACK_EVENTS = [
   'added',
@@ -151,7 +150,7 @@ export default class GridStackComponent extends Component {
 
       // remove our DOM data (circular link) and drag&drop permanently
       delete el.gridstackNode;
-      GridStackDDI.get().remove(el);
+      this.gridStack?._removeDD(el);
 
       this.gridStack?.engine.removeNode(node, removeDOM, triggerEvent);
 
