@@ -131,16 +131,12 @@ export default class GridStackComponent extends Component {
 
   /**
    * Custom removeWidget function that skips check to see if widget is in current grid
-   * @see https://github.com/gridstack/gridstack.js/blob/v4.2.5/src/gridstack.ts#L893
+   * @see https://github.com/gridstack/gridstack.js/blob/v7.2.2/src/gridstack.ts#L1052
    */
   @action
   removeWidget(element, removeDOM = false, triggerEvent = true) {
     GridStack.getElements(element).forEach((el) => {
-      // The following line was causing issues because this hook is called correctly from
-      // child widgets, but after they are already removed from the dom
-      // --- SKIP ---
-      // if (el.parentElement !== this.el) return; // not our child!
-      // --- SKIP ---
+      if (el.parentElement && el.parentElement !== this.el) return; // not our child!
       let node = el.gridstackNode;
       // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
       if (!node) {
