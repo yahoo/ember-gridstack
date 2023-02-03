@@ -129,35 +129,9 @@ export default class GridStackComponent extends Component {
     this.gridStack?.makeWidget(element);
   }
 
-  /**
-   * Custom removeWidget function that skips check to see if widget is in current grid
-   * @see https://github.com/gridstack/gridstack.js/blob/v7.2.2/src/gridstack.ts#L1052
-   */
   @action
   removeWidget(element, removeDOM = false, triggerEvent = true) {
-    GridStack.getElements(element).forEach((el) => {
-      if (el.parentElement && el.parentElement !== this.el) return; // not our child!
-      let node = el.gridstackNode;
-      // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
-      if (!node) {
-        node = this.gridStack?.engine.nodes.find((n) => el === n.el);
-      }
-      if (!node) return;
-
-      // remove our DOM data (circular link) and drag&drop permanently
-      delete el.gridstackNode;
-      this.gridStack?._removeDD(el);
-
-      this.gridStack?.engine.removeNode(node, removeDOM, triggerEvent);
-
-      if (removeDOM && el.parentElement) {
-        el.remove(); // in batch mode engine.removeNode doesn't call back to remove DOM
-      }
-    });
-    if (triggerEvent && !this.isDestroying && !this.isDestroyed) {
-      this.gridStack?._triggerRemoveEvent();
-      this.gridStack?._triggerChangeEvent();
-    }
-    return this;
+    triggerEvent = triggerEvent && !this.isDestroying && !this.isDestroyed;
+    this.gridStack?.removeWidget(element, removeDOM, triggerEvent);
   }
 }
