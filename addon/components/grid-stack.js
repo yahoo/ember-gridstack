@@ -26,8 +26,7 @@ import { inject as service } from '@ember/service';
 import { scheduleOnce } from '@ember/runloop';
 import { capitalize } from '@ember/string';
 import { guidFor } from '@ember/object/internals';
-import { GridStackDDI } from 'gridstack';
-import GridStack from 'gridstack-h5';
+import { GridStack } from 'gridstack';
 
 export const GRID_STACK_EVENTS = [
   'added',
@@ -130,39 +129,9 @@ export default class GridStackComponent extends Component {
     this.gridStack?.makeWidget(element);
   }
 
-  /**
-   * Custom removeWidget function that skips check to see if widget is in current grid
-   * @see https://github.com/gridstack/gridstack.js/blob/v4.2.5/src/gridstack.ts#L893
-   */
   @action
   removeWidget(element, removeDOM = false, triggerEvent = true) {
-    GridStack.getElements(element).forEach((el) => {
-      // The following line was causing issues because this hook is called correctly from
-      // child widgets, but after they are already removed from the dom
-      // --- SKIP ---
-      // if (el.parentElement !== this.el) return; // not our child!
-      // --- SKIP ---
-      let node = el.gridstackNode;
-      // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
-      if (!node) {
-        node = this.gridStack?.engine.nodes.find((n) => el === n.el);
-      }
-      if (!node) return;
-
-      // remove our DOM data (circular link) and drag&drop permanently
-      delete el.gridstackNode;
-      GridStackDDI.get().remove(el);
-
-      this.gridStack?.engine.removeNode(node, removeDOM, triggerEvent);
-
-      if (removeDOM && el.parentElement) {
-        el.remove(); // in batch mode engine.removeNode doesn't call back to remove DOM
-      }
-    });
-    if (triggerEvent && !this.isDestroying && !this.isDestroyed) {
-      this.gridStack?._triggerRemoveEvent();
-      this.gridStack?._triggerChangeEvent();
-    }
-    return this;
+    triggerEvent = triggerEvent && !this.isDestroying && !this.isDestroyed;
+    this.gridStack?.removeWidget(element, removeDOM, triggerEvent);
   }
 }
