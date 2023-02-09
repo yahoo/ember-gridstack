@@ -88,7 +88,7 @@ module('Integration | Component | grid stack', function (hooks) {
       </GridStack>
     `);
 
-    assert.equal(
+    assert.strictEqual(
       this.element.querySelector('.grid-stack-item').clientHeight,
       200,
       'Cell height option is passed through to gridstack'
@@ -98,7 +98,11 @@ module('Integration | Component | grid stack', function (hooks) {
       cellHeight: '300px',
     });
 
-    assert.equal(this.element.querySelector('.grid-stack-item').clientHeight, 300, 'Gridstack updates with options');
+    assert.strictEqual(
+      this.element.querySelector('.grid-stack-item').clientHeight,
+      300,
+      'Gridstack updates with options'
+    );
 
     this.set('options', {
       cellHeight: '300px',
@@ -175,7 +179,7 @@ module('Integration | Component | grid stack', function (hooks) {
         const ids = items.map((i) => i.y).join(',');
         assert.ok(true, `\`${onAttr}\` fires for [${ids}] when gridstack \`${e}\` event fires`);
 
-        assert.equal(event.type, e, `\`${onAttr}\` action provides the \`event\` argument`);
+        assert.strictEqual(event.type, e, `\`${onAttr}\` action provides the \`event\` argument`);
 
         assert.ok(isArray(items), `\`${onAttr}\` action provides the \`items\` argument`);
       });
