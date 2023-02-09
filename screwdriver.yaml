@@ -28,7 +28,7 @@ jobs:
       - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git /tmp/ci
       - publish: |
           . /tmp/ci/git-ssh.sh
-          ./node_modules/.bin/semantic-release
+          yarn semantic-release
     secrets:
       - NPM_TOKEN
       - GH_TOKEN
