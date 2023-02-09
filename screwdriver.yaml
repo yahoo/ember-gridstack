@@ -23,10 +23,12 @@ jobs:
   publish:
     requires: main
     steps:
+      - yarn-cache: yarn config set cache-folder ~/.yarn
+      - install: yarn install --frozen-lockfile
       - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git /tmp/ci
       - publish: |
           . /tmp/ci/git-ssh.sh
-          npx semantic-release
+          yarn semantic-release
     secrets:
       - NPM_TOKEN
       - GH_TOKEN
