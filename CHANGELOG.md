@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.0.0](https://github.com/yahoo/ember-gridstack/compare/v3.2.0...v4.0.0) (2023-03-08)
+
+### Features
+
+- update to ember 4.8.0
+
+- BREAKING: update to ember-auto-import v2
+
 ## [3.2.0](https://github.com/yahoo/ember-gridstack/compare/v3.1.1...v3.2.0) (2023-02-06)
 
 ### Features
