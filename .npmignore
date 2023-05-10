@@ -14,10 +14,13 @@
 /.gitignore
 /.prettierignore
 /.prettierrc.js
+/.stylelintignore
+/.stylelintrc.js
 /.template-lintrc.js
 /.travis.yml
 /.watchmanconfig
-/config/ember-try.js
+/bower.json
+/CONTRIBUTING.md
 /ember-cli-build.js
 /testem.js
 /tests/
