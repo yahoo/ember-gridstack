@@ -125,7 +125,7 @@ The `<GridStackItem>` component uses the block form to yield the content of the 
 export default class CustomComponent extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
-    this.parentContainer.element.addEventListener("resizestop", () => {
+    this.parentContainer.element.addEventListener('resizestop', () => {
       //handle resize
     });
   }
