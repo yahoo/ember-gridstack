@@ -29,7 +29,7 @@
     "lint:js": "eslint . --cache",
     "lint:js:fix": "eslint . --fix",
     "start": "ember serve",
-    "test": "concurrently \"npm:lint\" \"npm:test:*\" --names \"lint,test:\"",
+    "test": "concurrently \"npm:lint\" \"npm:test:ember\" --names \"lint,test:\" && yarn run test:ember-compatibility",
     "test:ember": "ember test",
     "test:ember-compatibility": "ember try:each",
     "semantic-release": "semantic-release"
@@ -45,6 +45,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.21.3",
     "@babel/plugin-proposal-decorators": "^7.21.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@commitlint/prompt-cli": "^11.0.0",
@@ -55,6 +56,7 @@
     "@embroider/test-setup": "^2.1.1",
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
+    "babel-plugin-dynamic-import-node": "^2.3.3",
     "broccoli-asset-rev": "^3.0.0",
     "concurrently": "^8.0.1",
     "ember-cli": "~4.12.1",
@@ -71,7 +73,7 @@
     "ember-source": "~4.12.0",
     "ember-source-channel-url": "^3.0.0",
     "ember-template-lint": "^5.7.2",
-    "ember-try": "^2.0.0",
+    "ember-try": "^3.0.0-beta.1",
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-ember": "^11.5.0",
