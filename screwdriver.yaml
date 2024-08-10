@@ -2,7 +2,7 @@ cache:
   pipeline: [~/.yarn]
 
 shared:
-  image: node:14
+  image: node:18
 
 jobs:
   main:

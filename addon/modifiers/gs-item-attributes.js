@@ -3,10 +3,11 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import { modifier } from 'ember-modifier';
-import { dasherize } from '@ember/string';
 import { isBlank } from '@ember/utils';
 
 const GS_PREFIX = 'gs-';
+
+const dasherize = (str) => str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 
 export default modifier(function itemAttributes(element, opt) {
   const [options = {}] = opt || [];
