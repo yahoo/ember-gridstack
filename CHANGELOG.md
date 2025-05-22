@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.0.0](https://github.com/yahoo/ember-gridstack/compare/v4.0.1...v5.0.0) (2025-05-22)
+
+### Features
+
+- BREAKING: update to gridstack v12.1.2 see https://github.com/gridstack/gridstack.js?tab=readme-ov-file#migrating-to-v8 for migration guides
+
 ## [4.0.0](https://github.com/yahoo/ember-gridstack/compare/v3.2.0...v4.0.0) (2023-03-08)
 
 ### Features

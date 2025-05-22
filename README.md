@@ -14,9 +14,9 @@ Ember components to build drag-and-drop multi-column grids powered by [gridstack
 ember install ember-gridstack
 ```
 
-## Migrating to v3
+## Migrating to v5
 
-View the full [v3.0.0 release notes](./CHANGELOG.md#300) for updates and breaking changes.
+View the full [v5.0.0 release notes](./CHANGELOG.md#500-2025-05-22) for updates and breaking changes.
 
 ## Basic Usage
 
@@ -125,7 +125,7 @@ The `<GridStackItem>` component uses the block form to yield the content of the 
 export default class CustomComponent extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
-    this.parentContainer.element.addEventListener('resizestop', () => {
+    this.parentContainer.element.addEventListener("resizestop", () => {
       //handle resize
     });
   }
