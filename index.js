@@ -9,6 +9,5 @@ module.exports = {
     this._super.included.apply(this, arguments);
 
     app.import(`${GRIDSTACK_DIR}/gridstack.css`);
-    app.import(`${GRIDSTACK_DIR}/gridstack-extra.css`);
   },
 };

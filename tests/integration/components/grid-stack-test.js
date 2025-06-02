@@ -11,7 +11,7 @@ module('Integration | Component | grid stack', function (hooks) {
   setupRenderingTest(hooks);
 
   test('gridstack renders', async function (assert) {
-    assert.expect(2);
+    assert.expect(1);
 
     await render(hbs`
       <GridStack class="test-grid">
@@ -22,12 +22,8 @@ module('Integration | Component | grid stack', function (hooks) {
     `);
 
     assert
-      .dom('.test-grid.grid-stack .grid-stack-item')
-      .hasClass('ui-draggable', 'Dom elements with grid-stack-item class are initialized by gridstack');
-
-    assert
-      .dom('.test-grid.grid-stack .grid-stack-item')
-      .hasClass('ui-resizable', 'Dom elements with grid-stack-item class are initialized by gridstack');
+      .dom('.test-grid.grid-stack .grid-stack-item > .ui-resizable-handle.ui-resizable-se')
+      .exists('Dom elements with grid-stack-item class are initialized by gridstack');
   });
 
   test('gridstack with items', async function (assert) {
@@ -46,7 +42,7 @@ module('Integration | Component | grid stack', function (hooks) {
     `);
 
     assert
-      .dom('.grid-stack .grid-stack-item.ui-draggable.ui-resizable')
+      .dom('.grid-stack .grid-stack-item > .ui-resizable-handle.ui-resizable-se')
       .exists({ count: 2 }, 'initial grid-stack-item components are initialized by gridstack');
 
     run(() => {
@@ -54,7 +50,7 @@ module('Integration | Component | grid stack', function (hooks) {
     });
 
     assert
-      .dom('.grid-stack .grid-stack-item.ui-draggable.ui-resizable')
+      .dom('.grid-stack .grid-stack-item > .ui-resizable-handle.ui-resizable-se')
       .exists(
         { count: 3 },
         'new grid-stack-item components are initialized by gridstack when added through an each loop'
@@ -275,26 +271,38 @@ module('Integration | Component | grid stack', function (hooks) {
     `);
 
     this.items.forEach(({ id, options }) => {
-      assert.dom(`[data-id="${id}"]`).hasAttribute('gs-x', `${options.x}`, 'Initial grid-stack-item layout is correct');
-      assert.dom(`[data-id="${id}"]`).hasAttribute('gs-y', `${options.y}`, 'Initial grid-stack-item layout is correct');
+      if (options.x === 0) {
+        assert.dom(`[data-id="${id}"]`).doesNotHaveAttribute('gs-x', 'Initial grid-stack-item layout is correct');
+      } else {
+        assert
+          .dom(`[data-id="${id}"]`)
+          .hasAttribute('gs-x', `${options.x}`, 'Initial grid-stack-item layout is correct');
+      }
+
+      if (options.y === 0) {
+        assert.dom(`[data-id="${id}"]`).doesNotHaveAttribute('gs-y', 'Initial grid-stack-item layout is correct');
+      } else {
+        assert
+          .dom(`[data-id="${id}"]`)
+          .hasAttribute('gs-y', `${options.y}`, 'Initial grid-stack-item layout is correct');
+      }
     });
 
     // Update the position of item 1
     this.set('items.1.options', { x: 2, y: 1, w: 12, h: 1 });
-
     assert
       .dom(`[data-id="0"]`)
-      .hasAttribute('gs-x', '0', 'Updating a grid-stack-item leaves unaffected items the same');
+      .doesNotHaveAttribute('gs-x', 'Updating a grid-stack-item leaves unaffected items the same');
     assert
       .dom(`[data-id="0"]`)
-      .hasAttribute('gs-y', '0', 'Updating a grid-stack-item leaves unaffected items the same');
+      .doesNotHaveAttribute('gs-y', 'Updating a grid-stack-item leaves unaffected items the same');
 
-    assert.dom(`[data-id="1"]`).hasAttribute('gs-x', '2', 'Updating a grid-stack-item updates moves the item');
+    assert.dom(`[data-id="1"]`).doesNotHaveAttribute('gs-x', 'Updating a grid-stack-item updates moves the item');
     assert.dom(`[data-id="1"]`).hasAttribute('gs-y', '1', 'Updating a grid-stack-item updates moves the item');
 
     assert
       .dom(`[data-id="2"]`)
-      .hasAttribute('gs-x', '0', 'Updating a grid-stack-item moves conflicting items to a different row');
+      .doesNotHaveAttribute('gs-x', 'Updating a grid-stack-item moves conflicting items to a different row');
     assert
       .dom(`[data-id="2"]`)
       .hasAttribute('gs-y', '2', 'Updating a grid-stack-item moves conflicting items to a different row');
