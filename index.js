@@ -15,8 +15,8 @@ module.exports = {
 
     // jquery-ui dependencies needed by gridstack.js
     // https://github.com/gridstack/gridstack.js/blob/v0.2.6/src/gridstack.js#L10
-    [ 'version', 'data', 'disable-selection', 'focusable', 'escape-selector', 'form',
-      'ie', 'keycode', 'labels', 'jquery-1-7', 'plugin', 'safe-active-element',
+    [ 'version', 'data', 'disable-selection', 'focusable', 'form',
+      'ie', 'keycode', 'labels', 'plugin', 'safe-active-element',
       'safe-blur', 'scroll-parent', 'tabbable', 'unique-id', 'widget'
     ].forEach(function(module) {
       app.import('node_modules/jquery-ui/ui/' + module + '.js');
