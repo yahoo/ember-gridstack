@@ -7,6 +7,14 @@ import { render, triggerEvent, settled, find } from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 import { camelize } from '@ember/string';
 
+/**
+ * Read an item's gs-x/gs-y position. Older gridstack 12.x releases omit the attribute
+ * for a 0 position, newer releases always write it (gridstack#3181).
+ */
+function gsPos(selector, attr) {
+  return Number(find(selector).getAttribute(attr) ?? 0);
+}
+
 module('Integration | Component | grid stack', function (hooks) {
   setupRenderingTest(hooks);
 
@@ -253,6 +261,7 @@ module('Integration | Component | grid stack', function (hooks) {
   });
 
   test('gridstack updates the layout when items properties change', async function (assert) {
+    assert.expect(16);
     this.set('items', [
       { id: 0, options: { x: 0, y: 0, w: 5, h: 1 } },
       { id: 1, options: { x: 6, y: 0, w: 3, h: 1 } },
@@ -271,38 +280,31 @@ module('Integration | Component | grid stack', function (hooks) {
     `);
 
     this.items.forEach(({ id, options }) => {
-      if (options.x === 0) {
-        assert.dom(`[data-id="${id}"]`).doesNotHaveAttribute('gs-x', 'Initial grid-stack-item layout is correct');
-      } else {
-        assert
-          .dom(`[data-id="${id}"]`)
-          .hasAttribute('gs-x', `${options.x}`, 'Initial grid-stack-item layout is correct');
-      }
-
-      if (options.y === 0) {
-        assert.dom(`[data-id="${id}"]`).doesNotHaveAttribute('gs-y', 'Initial grid-stack-item layout is correct');
-      } else {
-        assert
-          .dom(`[data-id="${id}"]`)
-          .hasAttribute('gs-y', `${options.y}`, 'Initial grid-stack-item layout is correct');
-      }
+      assert.strictEqual(gsPos(`[data-id="${id}"]`, 'gs-x'), options.x, 'Initial grid-stack-item layout is correct');
+      assert.strictEqual(gsPos(`[data-id="${id}"]`, 'gs-y'), options.y, 'Initial grid-stack-item layout is correct');
     });
 
     // Update the position of item 1
     this.set('items.1.options', { x: 2, y: 1, w: 12, h: 1 });
-    assert
-      .dom(`[data-id="0"]`)
-      .doesNotHaveAttribute('gs-x', 'Updating a grid-stack-item leaves unaffected items the same');
-    assert
-      .dom(`[data-id="0"]`)
-      .doesNotHaveAttribute('gs-y', 'Updating a grid-stack-item leaves unaffected items the same');
+    assert.strictEqual(
+      gsPos(`[data-id="0"]`, 'gs-x'),
+      0,
+      'Updating a grid-stack-item leaves unaffected items the same'
+    );
+    assert.strictEqual(
+      gsPos(`[data-id="0"]`, 'gs-y'),
+      0,
+      'Updating a grid-stack-item leaves unaffected items the same'
+    );
 
-    assert.dom(`[data-id="1"]`).doesNotHaveAttribute('gs-x', 'Updating a grid-stack-item updates moves the item');
+    assert.strictEqual(gsPos(`[data-id="1"]`, 'gs-x'), 0, 'Updating a grid-stack-item updates moves the item');
     assert.dom(`[data-id="1"]`).hasAttribute('gs-y', '1', 'Updating a grid-stack-item updates moves the item');
 
-    assert
-      .dom(`[data-id="2"]`)
-      .doesNotHaveAttribute('gs-x', 'Updating a grid-stack-item moves conflicting items to a different row');
+    assert.strictEqual(
+      gsPos(`[data-id="2"]`, 'gs-x'),
+      0,
+      'Updating a grid-stack-item moves conflicting items to a different row'
+    );
     assert
       .dom(`[data-id="2"]`)
       .hasAttribute('gs-y', '2', 'Updating a grid-stack-item moves conflicting items to a different row');
