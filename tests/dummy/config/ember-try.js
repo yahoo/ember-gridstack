@@ -27,6 +27,8 @@ module.exports = async function () {
       },
       {
         name: 'ember-release',
+        // ember-cli 4.12 can't build Ember 7.x; remove once the Ember upgrade lands.
+        allowedToFail: true,
         npm: {
           dependencies: {
             'ember-auto-import': '^2.0.0',
@@ -39,6 +41,8 @@ module.exports = async function () {
       },
       {
         name: 'ember-beta',
+        // ember-cli 4.12 can't build Ember 7.x; remove once the Ember upgrade lands.
+        allowedToFail: true,
         npm: {
           dependencies: {
             'ember-auto-import': '^2.0.0',
@@ -51,6 +55,8 @@ module.exports = async function () {
       },
       {
         name: 'ember-canary',
+        // ember-cli 4.12 can't build Ember 7.x; remove once the Ember upgrade lands.
+        allowedToFail: true,
         npm: {
           dependencies: {
             'ember-auto-import': '^2.0.0',
