@@ -33,6 +33,8 @@ module.exports = async function () {
       },
       {
         name: 'ember-release',
+        // fails via demo-only @denali-design/ember deps (ember-cli-htmlbars 5), not the addon
+        allowedToFail: true,
         npm: {
           devDependencies: {
             'ember-source': await getChannelURL('release'),
@@ -41,6 +43,8 @@ module.exports = async function () {
       },
       {
         name: 'ember-beta',
+        // fails via demo-only @denali-design/ember deps (ember-cli-htmlbars 5), not the addon
+        allowedToFail: true,
         npm: {
           devDependencies: {
             'ember-source': await getChannelURL('beta'),
