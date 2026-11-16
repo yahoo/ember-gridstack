@@ -120,7 +120,14 @@
     ]
   },
   "release": {
-    "repositoryUrl": "https://github.com/yahoo/ember-gridstack.git"
+    "repositoryUrl": "https://github.com/yahoo/ember-gridstack.git",
+    "branches": [
+      "master",
+      {
+        "name": "alpha",
+        "prerelease": true
+      }
+    ]
   },
   "publishConfig": {
     "access": "public"

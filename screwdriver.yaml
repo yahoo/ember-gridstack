@@ -17,6 +17,7 @@ jobs:
     requires:
       - ~pr
       - ~commit
+      - ~commit:/^alpha$/
     environment:
       JOBS: 2
 
@@ -37,12 +38,15 @@ jobs:
   gh-pages:
     requires: publish
     steps:
-      - setup-ci: git clone https://github.com/screwdriver-cd/toolbox.git /tmp/ci
-      - yarn-cache: yarn config set cache-folder ~/.yarn
-      - install: yarn install --frozen-lockfile
-      - build-pages: |
-          npx ember github-pages:commit --message "Deploy gh-pages from $SD_BUILD_SHA"
       - deploy: |
+          case "$GIT_BRANCH" in
+            */master) ;;
+            *) echo "gh-pages deploys only from master (branch: $GIT_BRANCH)"; exit 0 ;;
+          esac
+          git clone https://github.com/screwdriver-cd/toolbox.git /tmp/ci
+          yarn config set cache-folder ~/.yarn
+          yarn install --frozen-lockfile
+          npx ember github-pages:commit --message "Deploy gh-pages from $SD_BUILD_SHA"
           . /tmp/ci/git-ssh.sh
           git push origin gh-pages:gh-pages
     secrets:
