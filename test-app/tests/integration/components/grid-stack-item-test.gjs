@@ -1,15 +1,10 @@
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-import { render, settled } from '@ember/test-helpers';
-import { tracked } from '@glimmer/tracking';
+import { render } from '@ember/test-helpers';
 import GridStackItem from 'ember-gridstack/components/grid-stack-item';
-
-class State {
-  @tracked options;
-}
+import { setupGridTest } from '../../helpers/setup-grid-test';
 
 module('Integration | Component | grid stack item', function (hooks) {
-  setupRenderingTest(hooks);
+  setupGridTest(hooks);
 
   test('item renders', async function (assert) {
     assert.expect(2);
@@ -46,14 +41,14 @@ module('Integration | Component | grid stack item', function (hooks) {
   });
 
   test('item options', async function (assert) {
-    assert.expect(3);
-
-    const state = new State();
-    state.options = { minH: 2 };
-
-    await render(
-      <template><GridStackItem @options={{state.options}} /></template>,
-    );
+    await this.grid.render({
+      template: (d) => <template>
+        {{#each d.items key="id" as |item|}}
+          <GridStackItem @options={{item.options}} />
+        {{/each}}
+      </template>,
+      items: [{ id: 'a', minH: 2 }],
+    });
 
     assert
       .dom('.grid-stack-item')
@@ -63,8 +58,7 @@ module('Integration | Component | grid stack item', function (hooks) {
         'Item options are added as data attributes',
       );
 
-    state.options = { minH: 3 };
-    await settled();
+    await this.grid.update('a', { minH: 3 });
 
     assert
       .dom('.grid-stack-item')
@@ -74,8 +68,7 @@ module('Integration | Component | grid stack item', function (hooks) {
         'Data attributes are updated with options',
       );
 
-    state.options = { minH: undefined };
-    await settled();
+    await this.grid.update('a', { minH: undefined });
 
     assert
       .dom('.grid-stack-item')

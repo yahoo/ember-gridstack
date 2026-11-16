@@ -1,41 +1,4 @@
-import { tracked } from '@glimmer/tracking';
-import { find, settled } from '@ember/test-helpers';
-
-export class State {
-  @tracked items = [];
-  @tracked options;
-  @tracked onChange;
-  @tracked onAdded;
-  @tracked onRemoved;
-  @tracked shouldRender = true;
-  @tracked width = '1000px';
-}
-
-export class Item {
-  @tracked options;
-
-  constructor(id, options) {
-    this.id = id;
-    this.options = options;
-  }
-}
-
-/** gs-x/gs-y may be absent for 0 */
-export function gsPos(target, attr) {
-  const el = typeof target === 'string' ? find(target) : target;
-  return Number(el.getAttribute(attr) ?? 0);
-}
-
-export function gridFor(owner, target) {
-  const el = typeof target === 'string' ? find(target) : target;
-  return owner.lookup('service:grid-stack-registry').findGridComponent(el);
-}
-
-export function itemTexts(root = document) {
-  return [...root.querySelectorAll('.grid-stack-item')].map((el) =>
-    el.querySelector('.grid-stack-item-content').textContent.trim(),
-  );
-}
+import { settled } from '@ember/test-helpers';
 
 function fire(target, type, x, y) {
   target.dispatchEvent(

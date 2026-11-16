@@ -1,82 +1,49 @@
 import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-import { render, find } from '@ember/test-helpers';
-import { hash } from '@ember/helper';
-import GridStack from 'ember-gridstack/components/grid-stack';
-import GridStackItem from 'ember-gridstack/components/grid-stack-item';
-import { gsPos, pointerDrag, resizeDrag } from '../../helpers/grid';
-
-const EVENTS = [
-  'dragstart',
-  'drag',
-  'dragstop',
-  'resizestart',
-  'resize',
-  'resizestop',
-  'change',
-];
+import { setupGridTest } from '../../helpers/setup-grid-test';
 
 module('Integration | Component | grid stack interaction', function (hooks) {
-  setupRenderingTest(hooks);
+  setupGridTest(hooks);
 
   hooks.beforeEach(async function () {
-    const calls = (this.calls = {});
-    const h = (this.h = {});
-    EVENTS.forEach((name) => {
-      calls[name] = [];
-      h[name] = (...args) => calls[name].push(args);
+    await this.grid.render({
+      width: '1200px',
+      options: { cellHeight: 50, column: 12, mode: 'float' },
+      items: [{ id: 'target', x: 0, y: 0, w: 2, h: 2 }],
     });
-    await render(
-      <template>
-        {{! template-lint-disable no-inline-styles }}
-        <GridStack
-          style="width: 1200px"
-          @options={{hash cellHeight=50 column=12 mode="float"}}
-          @onDragstart={{h.dragstart}}
-          @onDrag={{h.drag}}
-          @onDragstop={{h.dragstop}}
-          @onResizestart={{h.resizestart}}
-          @onResize={{h.resize}}
-          @onResizestop={{h.resizestop}}
-          @onChange={{h.change}}
-        >
-          <GridStackItem
-            class="target"
-            @options={{hash x=0 y=0 w=2 h=2}}
-          >A</GridStackItem>
-        </GridStack>
-      </template>,
-    );
   });
 
   test('drag moves the item and fires drag events', async function (assert) {
-    const el = find('.target');
-    await pointerDrag(el, 300, 160);
+    const el = this.grid.el('target');
+    await this.grid.drag('target', 300, 160);
 
-    assert.ok(gsPos(el, 'gs-x') > 0, 'gs-x changed');
-    assert.ok(gsPos(el, 'gs-y') > 0, 'gs-y changed');
+    const { x, y } = this.grid.node('target');
+    assert.ok(x > 0, 'x changed');
+    assert.ok(y > 0, 'y changed');
+    assert.events(['dragstart', 'drag', 'dragstop', 'change']);
     for (const name of ['dragstart', 'dragstop', 'change']) {
-      assert.strictEqual(this.calls[name].length, 1, `${name} fired once`);
+      assert.strictEqual(this.events.of(name).length, 1, `${name} fired once`);
     }
-    assert.ok(this.calls.drag.length >= 1, 'drag fired');
-    assert.strictEqual(this.calls.dragstart[0][1], el, 'dragstart gets el');
-    assert.strictEqual(this.calls.dragstop[0][1], el, 'dragstop gets el');
-    assert.strictEqual(this.calls.change[0][1][0].el, el, 'change gets node');
-    assert.strictEqual(this.calls.resizestart.length, 0);
+    assert.strictEqual(this.events.of('dragstart')[0].args[1], el);
+    assert.strictEqual(this.events.of('dragstop')[0].args[1], el);
+    assert.strictEqual(
+      this.events.of('change')[0].args[1][0].el,
+      el,
+      'change gets node',
+    );
   });
 
   test('resize changes the size and fires resize events', async function (assert) {
-    const el = find('.target');
-    await resizeDrag(el, 300, 160);
+    const el = this.grid.el('target');
+    await this.grid.resize('target', 3, 3);
 
-    assert.ok(gsPos(el, 'gs-w') > 2, 'gs-w changed');
-    assert.ok(gsPos(el, 'gs-h') > 2, 'gs-h changed');
+    const { w, h } = this.grid.node('target');
+    assert.ok(w > 2, 'w changed');
+    assert.ok(h > 2, 'h changed');
+    assert.events(['resizestart', 'resize', 'resizestop', 'change']);
     for (const name of ['resizestart', 'resizestop', 'change']) {
-      assert.strictEqual(this.calls[name].length, 1, `${name} fired once`);
+      assert.strictEqual(this.events.of(name).length, 1, `${name} fired once`);
     }
-    assert.ok(this.calls.resize.length >= 1, 'resize fired');
-    assert.strictEqual(this.calls.resizestart[0][1], el);
-    assert.strictEqual(this.calls.resizestop[0][1], el);
-    assert.strictEqual(this.calls.dragstart.length, 0);
+    assert.strictEqual(this.events.of('resizestart')[0].args[1], el);
+    assert.strictEqual(this.events.of('resizestop')[0].args[1], el);
   });
 });

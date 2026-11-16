@@ -1,4 +1,5 @@
 import { tracked } from '@glimmer/tracking';
+import { htmlSafe } from '@ember/template';
 import { render, settled, find } from '@ember/test-helpers';
 import { setupRenderingTest } from './index';
 import GridStack, {
@@ -62,7 +63,7 @@ const defaultTemplate = (d) => {
   return <template>
     {{! template-lint-disable no-inline-styles }}
     {{#if d.visible}}
-      <div style="width: {{d.width}}">
+      <div style={{d.style}}>
         <GridStack
           @options={{d.gridOptions}}
           @onAdded={{h.onAdded}}
@@ -108,6 +109,10 @@ export class GridDriver {
     this.usesDefaultTemplate = !template;
     await render((template ?? defaultTemplate)(this));
     this.events.clear();
+  }
+
+  get style() {
+    return htmlSafe(`width: ${this.width}`);
   }
 
   get element() {
