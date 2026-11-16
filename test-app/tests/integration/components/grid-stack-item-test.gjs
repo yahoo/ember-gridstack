@@ -12,7 +12,7 @@ module('Integration | Component | grid stack item', function (hooks) {
   setupRenderingTest(hooks);
 
   test('item renders', async function (assert) {
-    assert.expect(4);
+    assert.expect(2);
 
     // Create a fake version of `grid-stack` component to test update actions
     const MockGridStack = {

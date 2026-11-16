@@ -221,7 +221,7 @@ importers:
         version: 9.1.0
       ember-qunit:
         specifier: ^9.2.0
-        version: 9.2.0(@ember/test-helpers@5.8.0(@babel/core@8.1.2))(qunit@2.26.0)
+        version: 9.2.0(@ember/test-helpers@5.8.0(@babel/core@8.1.2))(qunit@3.0.0)
       ember-resolver:
         specifier: ^13.2.0
         version: 13.2.0
@@ -262,10 +262,10 @@ importers:
         specifier: ^2.1.8
         version: 2.1.8(prettier@3.10.1)
       qunit:
-        specifier: ^2.25.0
-        version: 2.26.0
+        specifier: ^3.0.0
+        version: 3.0.0
       qunit-dom:
-        specifier: ^3.5.0
+        specifier: ^3.6.0
         version: 3.6.0
       stylelint:
         specifier: ^18.0.0
@@ -2883,16 +2883,16 @@ packages:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/combined-stream/-/combined-stream-1.0.8.tgz}
     engines: {node: '>= 0.8'}
 
+  commander@12.1.0:
+    resolution: {integrity: sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/commander/-/commander-12.1.0.tgz}
+    engines: {node: '>=18'}
+
   commander@14.0.3:
     resolution: {integrity: sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/commander/-/commander-14.0.3.tgz}
     engines: {node: '>=20'}
 
   commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/commander/-/commander-2.20.3.tgz}
-
-  commander@7.2.0:
-    resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/commander/-/commander-7.2.0.tgz}
-    engines: {node: '>= 10'}
 
   comment-parser@1.4.9:
     resolution: {integrity: sha512-+2AvZKjJaNq9GQljm3tr0utwrig5BL+jgJGvz5rDpGKNIp+ojcRXWUwBbh/sGIi1QCprR6PsKFakub+w1v+4hQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/comment-parser/-/comment-parser-1.4.9.tgz}
@@ -5137,8 +5137,8 @@ packages:
     resolution: {integrity: sha512-zAPCKqMcnqs2nGy6nlkm7JduFseiBJy3EXHGLh+8pFR+TxGCBxxiEN21+UROU5CKwX/f4TlUcYjiM+vs/tsyxw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/node-releases/-/node-releases-2.0.64.tgz}
     engines: {node: '>=18'}
 
-  node-watch@0.7.3:
-    resolution: {integrity: sha512-3l4E8uMPY1HdMMryPRUAl+oIHtXtyiTlIiESNSVSNxcPfzAFzeTbXFQkZfAwBbo0B1qMSG8nUABx+Gd+YrbKrQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/node-watch/-/node-watch-0.7.3.tgz}
+  node-watch@0.7.4:
+    resolution: {integrity: sha512-RinNxoz4W1cep1b928fuFhvAQ5ag/+1UlMDV7rbyGthBIgsiEouS4kvRayvvboxii4m8eolKOIBo3OjDqbc+uQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/node-watch/-/node-watch-0.7.4.tgz}
     engines: {node: '>=6'}
 
   nopt@3.0.6:
@@ -5661,9 +5661,9 @@ packages:
   qunit-theme-ember@1.0.0:
     resolution: {integrity: sha512-vdMVVo6ecdCkWttMTKeyq1ZTLGHcA6zdze2zhguNuc3ritlJMhOXY5RDseqazOwqZVfCg3rtlmL3fMUyIzUyFQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/qunit-theme-ember/-/qunit-theme-ember-1.0.0.tgz}
 
-  qunit@2.26.0:
-    resolution: {integrity: sha512-KSv16YomcYmiK90qTOJl3Bm5IvTf2upqQDdBQWCvSQWe94FWobnUgKOpvpvZdG7VkDt3TJSI8k8g9+GGGEd7Fw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/qunit/-/qunit-2.26.0.tgz}
-    engines: {node: '>=10'}
+  qunit@3.0.0:
+    resolution: {integrity: sha512-g4Fgw3uhqwdjzhUDa0bYGQyGzs1xRcIY/32c5zUydnnrgzcA8updYF9nIeUis+PfwuqX6UB/4JpCNMnrVBY6iA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/qunit/-/qunit-3.0.0.tgz}
+    engines: {node: '>=18'}
     hasBin: true
 
   range-parser@1.3.0:
@@ -10561,11 +10561,11 @@ snapshots:
     dependencies:
       delayed-stream: 1.0.0
 
+  commander@12.1.0: {}
+
   commander@14.0.3: {}
 
   commander@2.20.3: {}
-
-  commander@7.2.0: {}
 
   comment-parser@1.4.9: {}
 
@@ -11172,11 +11172,11 @@ snapshots:
       '@embroider/addon-shim': 1.11.0
       '@simple-dom/document': 1.4.0
 
-  ember-qunit@9.2.0(@ember/test-helpers@5.8.0(@babel/core@8.1.2))(qunit@2.26.0):
+  ember-qunit@9.2.0(@ember/test-helpers@5.8.0(@babel/core@8.1.2))(qunit@3.0.0):
     dependencies:
       '@ember/test-helpers': 5.8.0(@babel/core@8.1.2)
       '@embroider/addon-shim': 1.11.0
-      qunit: 2.26.0
+      qunit: 3.0.0
       qunit-theme-ember: 1.0.0
 
   ember-resolver@13.2.0: {}
@@ -13139,7 +13139,7 @@ snapshots:
 
   node-releases@2.0.64: {}
 
-  node-watch@0.7.3: {}
+  node-watch@0.7.4: {}
 
   nopt@3.0.6:
     dependencies:
@@ -13584,10 +13584,10 @@ snapshots:
 
   qunit-theme-ember@1.0.0: {}
 
-  qunit@2.26.0:
+  qunit@3.0.0:
     dependencies:
-      commander: 7.2.0
-      node-watch: 0.7.3
+      commander: 12.1.0
+      node-watch: 0.7.4
       tiny-glob: 0.2.9
 
   range-parser@1.3.0: {}
