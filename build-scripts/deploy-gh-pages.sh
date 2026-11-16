@@ -5,19 +5,19 @@ set -euo pipefail
 message="${1:-Deploy gh-pages}"
 root="$(git rev-parse --show-toplevel)"
 worktree="$(mktemp -d)"
+trap 'git -C "$root" worktree remove --force "$worktree" 2>/dev/null || rm -rf "$worktree"' EXIT
 
 (cd "$root/test-app" && yarn ember build --environment=production)
-
-rmdir "$worktree"
 
 if git -C "$root" show-ref --verify --quiet refs/heads/gh-pages; then
   git -C "$root" worktree add "$worktree" gh-pages
 elif git -C "$root" show-ref --verify --quiet refs/remotes/origin/gh-pages; then
   git -C "$root" worktree add -b gh-pages "$worktree" origin/gh-pages
 else
-  git -C "$root" worktree add --orphan -b gh-pages "$worktree"
+  # worktree add --orphan needs git >= 2.42; node:22 (bookworm) ships 2.39
+  git -C "$root" worktree add --detach "$worktree"
+  git -C "$worktree" checkout --orphan gh-pages
 fi
-trap 'git -C "$root" worktree remove --force "$worktree"' EXIT
 
 find "$worktree" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
 cp -R "$root/test-app/dist/." "$worktree/"
