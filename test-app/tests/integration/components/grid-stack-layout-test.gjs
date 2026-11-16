@@ -105,6 +105,11 @@ module('Integration | Component | grid stack layout', function (hooks) {
     await click('[gs-id="b"] .inc');
     const saved = api.save();
     assert.deepEqual(
+      saved.find((w) => w.id === 'a'),
+      { id: 'a', x: 0, y: 0, w: 2, component: 'text', props: { text: 'A' } },
+      'save() with no args includes component and props',
+    );
+    assert.deepEqual(
       saved.find((w) => w.id === 'b').props,
       { count: 3 },
       'serializer state lands in save().props',
@@ -126,6 +131,10 @@ module('Integration | Component | grid stack layout', function (hooks) {
     assert.deepEqual(domIds().sort(), ['b', 'c']);
     assert.deepEqual(nodeIds(api.instance), ['b', 'c']);
 
+    // re-create b so its count can only come from saved.props
+    api.removeWidget('b');
+    await settled();
+    assert.dom('[gs-id="b"]').doesNotExist();
     api.load(saved);
     await settled();
     assert.deepEqual(nodeIds(api.instance), ['a', 'b'], 'load adds/removes');
