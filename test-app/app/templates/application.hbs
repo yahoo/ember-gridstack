@@ -98,7 +98,7 @@
             </div>
           </GridStackItem>
 
-          <GridStackItem @options={{hash x=0 y=2 w=6 h=3}}>
+          <GridStackItem @options={{hash x=0 y=2 w=5 h=3}}>
             <div class="widget">
               <div class="widget-label">Weekly traffic (k sessions)</div>
               <svg
@@ -115,7 +115,7 @@
             </div>
           </GridStackItem>
 
-          <GridStackItem @options={{hash x=6 y=2 w=6 h=3}}>
+          <GridStackItem @options={{hash x=5 y=2 w=4 h=3}}>
             <div class="widget">
               <div class="widget-label">Recent deploys</div>
               <ul class="list">
@@ -124,6 +124,28 @@
                     <span class="list-main">{{d.service}}
                       <code>{{d.version}}</code></span>
                     <span class="list-aside">{{d.when}}</span>
+                  </li>
+                {{/each}}
+              </ul>
+            </div>
+          </GridStackItem>
+
+          <GridStackItem @options={{hash x=9 y=2 w=3 h=3}}>
+            <div class="widget">
+              <div class="widget-label">Status, 30-day uptime</div>
+              <ul class="list status-list">
+                {{#each this.services as |s|}}
+                  <li>
+                    <span class="list-main">
+                      <span
+                        class="status-dot {{if s.degraded 'is-degraded'}}"
+                      ></span>
+                      {{s.name}}
+                      {{#if s.degraded}}<span
+                          class="status-note"
+                        >degraded</span>{{/if}}
+                    </span>
+                    <span class="list-aside">{{s.uptime}}</span>
                   </li>
                 {{/each}}
               </ul>

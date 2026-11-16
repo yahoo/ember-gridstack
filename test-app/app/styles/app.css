@@ -483,6 +483,28 @@ h3 code {
   white-space: nowrap;
 }
 
+.status-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.375rem;
+  border: 1px solid var(--muted);
+  border-radius: 50%;
+  background: transparent;
+  vertical-align: 0.05em;
+}
+
+.status-dot.is-degraded {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.status-note {
+  color: var(--accent);
+  font-size: 0.75rem;
+  margin-left: 0.25rem;
+}
+
 @container (width < 140px) {
   .widget {
     padding: 0.5rem;

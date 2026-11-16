@@ -30,6 +30,13 @@ export default class ApplicationController extends Controller {
     { service: 'web', version: 'v5.0.2', when: 'yesterday' },
   ];
 
+  services = [
+    { name: 'API', uptime: '99.99%', degraded: false },
+    { name: 'Auth', uptime: '99.98%', degraded: false },
+    { name: 'Search', uptime: '99.71%', degraded: true },
+    { name: 'Webhooks', uptime: '99.95%', degraded: false },
+  ];
+
   get bars() {
     const max = Math.max(...TRAFFIC.map((d) => d.value));
     return TRAFFIC.map((d, i) => {
