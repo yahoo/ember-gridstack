@@ -1,25 +1,34 @@
 # How To Contribute
 
+This repo is a yarn workspace with two packages:
+
+- `ember-gridstack/` – the v2 addon (built with rollup)
+- `test-app/` – the test suite and the demo published to gh-pages
+
 ## Installation
 
-- `git clone <repository-url>`
-- `cd my-addon`
-- `npm install`
+- `git clone https://github.com/yahoo/ember-gridstack.git`
+- `cd ember-gridstack`
+- `yarn install`
 
 ## Linting
 
 - `yarn lint`
 - `yarn lint:fix`
 
+## Building the addon
+
+- `yarn build`
+
 ## Running tests
 
-- `ember test` – Runs the test suite on the current Ember version
-- `ember test --server` – Runs the test suite in "watch mode"
-- `ember try:each` – Runs the test suite against multiple Ember versions
+- `yarn test` – Lints and runs the test suite on the current Ember version
+- `yarn test:ember` – Runs the test suite on the current Ember version
+- `yarn test:ember-compatibility` – Runs the test suite against multiple Ember versions
 
-## Running the dummy application
+## Running the demo application
 
-- `ember serve`
-- Visit the dummy application at [http://localhost:4200](http://localhost:4200).
+- `yarn start` – Watches the addon and serves the test-app
+- Visit the demo at [http://localhost:4200](http://localhost:4200).
 
 For more information on using ember-cli, visit [https://cli.emberjs.com/release/](https://cli.emberjs.com/release/).

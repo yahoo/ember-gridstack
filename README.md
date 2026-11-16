@@ -4,15 +4,24 @@ Ember components to build drag-and-drop multi-column grids powered by [gridstack
 
 ## Compatibility
 
-- Ember.js v4.4 or above
-- Ember CLI v4.4 or above
-- Node.js v14 or above
+- Ember.js (`ember-source`) v4.12 or above
+- Ember CLI v4.12 or above, with ember-auto-import v2 or Embroider
+- Node.js v20.19 or above
+- Published as a v2 (Embroider) addon
 
 ## Installation
 
 ```
 ember install ember-gridstack
 ```
+
+or add it with your package manager, e.g. `yarn add -D ember-gridstack` or `pnpm add -D ember-gridstack`.
+
+## Migrating to v6
+
+- ember-gridstack is now a v2 (Embroider) addon. Your app needs `ember-source` >= 4.12 and ember-auto-import >= 2 (or Embroider).
+- gridstack is a regular dependency that your app's bundler resolves; it is no longer copied into the vendor tree.
+- `gridstack/dist/gridstack.css` is imported by the addon automatically, so remove any manual import of it.
 
 ## Migrating to v5
 
@@ -125,7 +134,7 @@ The `<GridStackItem>` component uses the block form to yield the content of the 
 export default class CustomComponent extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
-    this.parentContainer.element.addEventListener("resizestop", () => {
+    this.parentContainer.element.addEventListener('resizestop', () => {
       //handle resize
     });
   }
