@@ -193,8 +193,8 @@ export default class GridStackLayoutComponent extends Component {
   }
 
   @action
-  save(saveContent = false, ...args) {
-    return this.gridStack?.save(saveContent, ...args);
+  save(...args) {
+    return this.gridStack?.save(...args);
   }
 
   @action
