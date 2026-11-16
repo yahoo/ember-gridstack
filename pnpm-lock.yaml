@@ -42,17 +42,17 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
       '@embroider/addon-shim':
-        specifier: ^1.8.9
+        specifier: ^1.11.0
         version: 1.11.0
       decorator-transforms:
-        specifier: ^2.2.2
+        specifier: ^2.4.0
         version: 2.4.0(@babel/core@8.1.2)
       ember-modifier:
-        specifier: ^4.2.2
+        specifier: ^4.3.0
         version: 4.3.0(@babel/core@8.1.2)
       gridstack:
-        specifier: ^12.1.2
-        version: 12.6.0
+        specifier: ^14.1.0
+        version: 14.1.0
     devDependencies:
       '@babel/core':
         specifier: ^8.1.2
@@ -209,7 +209,7 @@ importers:
         version: 0.16.1(@babel/eslint-parser@8.1.2(@babel/core@8.1.2)(eslint@10.15.0(jiti@2.7.0)))(typescript@6.0.3)
       ember-gridstack:
         specifier: workspace:*
-        version: link:../ember-gridstack
+        version: file:ember-gridstack(@babel/core@8.1.2)(@glimmer/component@2.2.1)(@glimmer/tracking@1.1.2)(ember-source@7.4.0(@glimmer/component@2.2.1))
       ember-load-initializers:
         specifier: ^3.0.1
         version: 3.0.1(ember-source@7.4.0(@glimmer/component@2.2.1))
@@ -3378,6 +3378,13 @@ packages:
   ember-estree@0.9.0:
     resolution: {integrity: sha512-CExL0d6FbbffZaQkD0+zA5PaIgle3fbpzapuLVQ+QZfI2KLalnhuof0e85Zvfy/fh8+q9liw7dqUhQX4gibMBA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-estree/-/ember-estree-0.9.0.tgz}
 
+  ember-gridstack@file:ember-gridstack:
+    resolution: {directory: ember-gridstack, type: directory}
+    peerDependencies:
+      '@glimmer/component': ^1.1.2 || ^2.0.0
+      '@glimmer/tracking': ^1.1.2
+      ember-source: '>= 4.12.0'
+
   ember-load-initializers@3.0.1:
     resolution: {integrity: sha512-qV3vxJKw5+7TVDdtdLPy8PhVsh58MlK8jwzqh5xeOwJPNP7o0+BlhvwoIlLYTPzGaHdfjEIFCgVSyMRGd74E1g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-load-initializers/-/ember-load-initializers-3.0.1.tgz}
     engines: {node: '>= 18.*'}
@@ -4104,6 +4111,9 @@ packages:
 
   gridstack@12.6.0:
     resolution: {integrity: sha512-dUrqsormSybFn/2P4Dz8AgprftKD5e/IiV7UmC0XLQU+G+/WtkAeFiCSNLoAGhPDXoJ/O61Xtj3gljY/Ds83yQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/gridstack/-/gridstack-12.6.0.tgz}
+
+  gridstack@14.1.0:
+    resolution: {integrity: sha512-nF6asbGVnIJH7N9pa+DCaSBGAoEvTNS7jYHUJfcNN+5bTD3a4pLEKvGia7W/6NbjiJWms9e3Zih1YuU4coT3QA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/gridstack/-/gridstack-14.1.0.tgz}
 
   growly@1.3.0:
     resolution: {integrity: sha512-+xGQY0YyAWCnqy7Cd++hc2JqMYzlm0dG30Jd0beaA64sROr8C4nt8Yc9V5Ro3avlSUDTN0ulqP/VBKi1/lLygw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/growly/-/growly-1.3.0.tgz}
@@ -11129,6 +11139,19 @@ snapshots:
       content-tag: 4.2.1
       oxc-parser: 0.130.0
 
+  ember-gridstack@file:ember-gridstack(@babel/core@8.1.2)(@glimmer/component@2.2.1)(@glimmer/tracking@1.1.2)(ember-source@7.4.0(@glimmer/component@2.2.1)):
+    dependencies:
+      '@ember/render-modifiers': 4.0.0
+      '@embroider/addon-shim': 1.11.0
+      '@glimmer/component': 2.2.1
+      '@glimmer/tracking': 1.1.2
+      decorator-transforms: 2.4.0(@babel/core@8.1.2)
+      ember-modifier: 4.3.0(@babel/core@8.1.2)
+      ember-source: 7.4.0(@glimmer/component@2.2.1)
+      gridstack: 12.6.0
+    transitivePeerDependencies:
+      - '@babel/core'
+
   ember-load-initializers@3.0.1(ember-source@7.4.0(@glimmer/component@2.2.1)):
     dependencies:
       ember-source: 7.4.0(@glimmer/component@2.2.1)
@@ -12127,6 +12150,8 @@ snapshots:
   graceful-fs@4.2.12: {}
 
   gridstack@12.6.0: {}
+
+  gridstack@14.1.0: {}
 
   growly@1.3.0: {}
 

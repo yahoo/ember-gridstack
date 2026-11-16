@@ -44,10 +44,10 @@
   },
   "dependencies": {
     "@ember/render-modifiers": "^4.0.0",
-    "@embroider/addon-shim": "^1.8.9",
-    "decorator-transforms": "^2.2.2",
-    "ember-modifier": "^4.2.2",
-    "gridstack": "^12.1.2"
+    "@embroider/addon-shim": "^1.11.0",
+    "decorator-transforms": "^2.4.0",
+    "ember-modifier": "^4.3.0",
+    "gridstack": "^14.1.0"
   },
   "devDependencies": {
     "@babel/core": "^8.1.2",
