@@ -280,10 +280,13 @@
         {{highlight}}
       >{{this.snippets.modifier}}</code></pre>
 
-    <h3><code>grid-stack-registry</code> service</h3>
-    <p>Maps grid element ids to their
+    <h3><code>grid-stack-registry</code> service (deprecated)</h3>
+    <p>Finds the
       <code>&lt;GridStack&gt;</code>
-      components.</p>
+      component for an element. Deprecated: use the yielded
+      <code>grid.Item</code>
+      or
+      <code>item.grid</code>.</p>
     <pre class="code"><code
         class="language-javascript"
         {{highlight}}
@@ -384,7 +387,7 @@
       element. Content is wrapped in
       <code>.grid-stack-item-content</code>.</p>
 
-    <h3><code>grid-stack-registry</code></h3>
+    <h3><code>grid-stack-registry</code> (deprecated)</h3>
     <div class="table-wrap">
       <table>
         <thead>

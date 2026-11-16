@@ -79,18 +79,15 @@ export const demoClassic = `<GridStack
 </GridStack>`;
 
 export const templateTag = `import { hash } from '@ember/helper';
-import GridStack from
-  'ember-gridstack/components/grid-stack';
-import GridStackItem from
-  'ember-gridstack/components/grid-stack-item';
+import { GridStack } from 'ember-gridstack';
 
 <template>
-  <GridStack @options={{hash cellHeight=80}}>
-    <GridStackItem
+  <GridStack @options={{hash cellHeight=80}} as |grid|>
+    <grid.Item
       @options={{hash w=4 h=2 minW=2}}
     >
       Widget content
-    </GridStackItem>
+    </grid.Item>
   </GridStack>
 </template>`;
 
@@ -123,7 +120,8 @@ export const modifier = `{{! Sets gs-* attributes from options }}
 </div>
 {{! renders <div gs-w="4" gs-min-w="2"> }}`;
 
-export const service = `import Component from '@glimmer/component';
+export const service = `// Deprecated: use the yielded grid.Item / item.grid
+import Component from '@glimmer/component';
 import { service } from '@ember/service';
 
 export default class Toolbar extends Component {

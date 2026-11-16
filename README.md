@@ -30,6 +30,16 @@ or add it with your package manager, e.g. `pnpm add -D ember-gridstack` or `npm 
 - Changed `@options` are applied in place with `updateOptions()` instead of re-creating the grid. Only the options listed under [Options](#options) re-create it.
 - DOM order is owned by Ember: the addon turns off gridstack's re-sorting of `.grid-stack-item` elements, so `{{#each}}` keeps working after items move. Tab order follows your template, not the visual layout.
 - New `@onResizecontent` action.
+- Contextual components: `<GridStack as |grid|>` yields `grid.Item`, a `<GridStackItem>` bound to that grid. Plain `<GridStackItem>` still works and joins the closest `<GridStack>`.
+- No generated element ids: grids are found through their element, so you can set your own `id` on `<GridStack>` and `<GridStackItem>`.
+- `item.element` is `undefined` until the item is inserted.
+- Event delivery is no longer coalesced: every gridstack event reaches its `@on*` action, in order, with its own arguments, even several in one run loop.
+- The `grid-stack-registry` service is deprecated (no runtime warning). Its methods still work; use `grid.Item` instead.
+- `@ember/render-modifiers` is no longer a dependency. Add it to your app yourself if you used it through this addon.
+- `package.json` `exports` is explicit: only the package root, `components/grid-stack`, `components/grid-stack-item`, `modifiers/gs-item-attributes` and `services/grid-stack-registry` (with or without `.js`) can be imported. Deep imports of any other path break.
+- New root named exports: `import { GridStack, GridStackItem, gsItemAttributes, GridStackRegistry, GRID_STACK_EVENTS } from 'ember-gridstack'`.
+- TypeScript / Glint types ship in `declarations/`: `GridStackSignature`, `GridStackItemSignature`, `GsItemAttributesSignature`. They change nothing for JavaScript users.
+- The yielded grid and item have new members, see [Yields](#yields).
 
 ## Migrating to v5
 
@@ -38,13 +48,13 @@ View the full [v5.0.0 release notes](./CHANGELOG.md#500-2025-05-22) for updates 
 ## Basic Usage
 
 ```hbs
-<GridStack @options={{hash mode='float'}} @onChange={{this.change}}>
-  <GridStackItem @options={{hash x=0 y=0 w=6 h=2}}>
+<GridStack @options={{hash mode='float'}} @onChange={{this.change}} as |grid|>
+  <grid.Item @options={{hash x=0 y=0 w=6 h=2}}>
     Widget #1
-  </GridStackItem>
-  <GridStackItem @options={{hash x=6 y=0 w=6 h=2}}>
+  </grid.Item>
+  <grid.Item @options={{hash x=6 y=0 w=6 h=2}}>
     Widget #2
-  </GridStackItem>
+  </grid.Item>
 </GridStack>
 ```
 
@@ -52,19 +62,18 @@ View the full [v5.0.0 release notes](./CHANGELOG.md#500-2025-05-22) for updates 
 
 ```gjs
 import { hash } from '@ember/helper';
-import GridStack from 'ember-gridstack/components/grid-stack';
-import GridStackItem from 'ember-gridstack/components/grid-stack-item';
+import { GridStack } from 'ember-gridstack';
 
 <template>
-  <GridStack @options={{hash mode='float'}} @onChange={{@onChange}}>
-    <GridStackItem @options={{hash x=0 y=0 w=6 h=2}}>
+  <GridStack @options={{hash mode='float'}} @onChange={{@onChange}} as |grid|>
+    <grid.Item @options={{hash x=0 y=0 w=6 h=2}}>
       Widget #1
-    </GridStackItem>
+    </grid.Item>
   </GridStack>
 </template>
 ```
 
-The modifier and service are available as `ember-gridstack/modifiers/gs-item-attributes` and `ember-gridstack/services/grid-stack-registry`.
+`<GridStackItem>` without the contextual form still works and joins the closest `<GridStack>`. See [Exports](#exports) for every import path.
 
 A live demo with every component, the modifier and the service is at https://yahoo.github.io/ember-gridstack/.
 
@@ -73,6 +82,14 @@ A live demo with every component, the modifier and the service is at https://yah
 ### `<GridStack>`
 
 Used to construct a grid-stack layout
+
+#### Args
+
+| Arg        | Type               | Description                                                     |
+| ---------- | ------------------ | --------------------------------------------------------------- |
+| `@options` | `GridStackOptions` | gridstack grid options, see [Options](#options)                 |
+| `@on*`     | function per event | one action per gridstack event, see [Events](#events)           |
+| attributes | `HTMLDivElement`   | `...attributes` go on the `.grid-stack` element (`id` is yours) |
 
 #### Options
 
@@ -94,9 +111,9 @@ DOM order is owned by Ember: the addon disables gridstack's `_sortDom()` on its 
 
 The full list of options can be found here: https://github.com/gridstack/gridstack.js/tree/master/doc#grid-options
 
-#### Actions
+#### Events
 
-All 13 gridstack events can be handled as Ember actions. They take the form `on{Eventname}`, run after render, and are read when the event fires, so changing an `@on*` argument needs no re-init.
+All 13 gridstack events can be handled as Ember actions. They take the form `on{Eventname}`, run after render, and are read when the event fires, so changing an `@on*` argument needs no re-init. Every event is delivered, in order, with its own arguments.
 
 | Event           | Action             | Arguments                    |
 | --------------- | ------------------ | ---------------------------- |
@@ -136,23 +153,43 @@ All 13 gridstack events can be handled as Ember actions. They take the form `on{
 
 The full list of events can found here: https://github.com/gridstack/gridstack.js/tree/master/doc#events
 
-#### Block Form
+#### Yields
 
-The `<GridStack>` component uses the block form to yield `<GridStackItem>` components. In addition, `<GridStack>` yields a reference to itself in the case inner components need the reference or would like to listen to events triggered on the grid element.
+`<GridStack as |grid|>` yields the component itself. Every method is bound, so it can be passed straight to `{{on}}` or `fn`. They do nothing (return `undefined`) before the grid is inserted.
+
+| Member                                      | Description                                                                   |
+| ------------------------------------------- | ----------------------------------------------------------------------------- |
+| `grid.Item`                                 | `<GridStackItem>` bound to this grid                                          |
+| `grid.instance`                             | the `GridStack` instance (`null` before insert / after destroy)               |
+| `grid.compact(layout?, doSort?)`            | `GridStack.compact()`                                                         |
+| `grid.save(saveContent?, saveGridOpt?, …)`  | `GridStack.save()`                                                            |
+| `grid.load(layout, addRemove?)`             | `GridStack.load()`                                                            |
+| `grid.enableMove(doEnable, recurse?)`       | `GridStack.enableMove()`                                                      |
+| `grid.enableResize(doEnable, recurse?)`     | `GridStack.enableResize()`                                                    |
+| `grid.setMode(mode)`                        | `GridStack.mode()`: `'top'`, `'float'`, `'list'` or `'compact'`               |
+| `grid.removeAll(removeDOM?, triggerEvent?)` | `GridStack.removeAll()`; `removeDOM` defaults to `false` (Ember owns the DOM) |
 
 **Example:**
 
 ```hbs
 <GridStack as |grid|>
-  <GridStackItem @options={{hash x=0 y=0 w=6 h=2}}>
+  <button type='button' {{on 'click' (fn grid.compact 'list')}}>Compact</button>
+  <grid.Item @options={{hash x=0 y=0 w=6 h=2}}>
     Widget #1
-  </GridStackItem>
+  </grid.Item>
 </GridStack>
 ```
 
 ### `<GridStackItem>`
 
-Used to construct a grid item inside a `<GridStack>` component
+Used to construct a grid item inside a `<GridStack>` component. Prefer the yielded `grid.Item`; a plain `<GridStackItem>` joins the closest `<GridStack>`.
+
+#### Args
+
+| Arg        | Type              | Description                                                          |
+| ---------- | ----------------- | -------------------------------------------------------------------- |
+| `@options` | `GridStackWidget` | gridstack item options (`x`, `y`, `w`, `h`, `minW`, `noMove`, …)     |
+| attributes | `HTMLDivElement`  | `...attributes` go on the `.grid-stack-item` element (`id` is yours) |
 
 #### Options
 
@@ -168,29 +205,52 @@ Used to construct a grid item inside a `<GridStack>` component
 
 The full list of options can be found here: https://github.com/gridstack/gridstack.js/tree/master/doc#item-options
 
-#### Block Form
+Changing `@options` calls `GridStack.update()` once; an option set to a blank value removes its `gs-*` attribute.
 
-The `<GridStackItem>` component uses the block form to yield the content of the item. In addition, `<GridStackItem>` yields a reference to itself in the case inner components need the reference or would like to listen to events triggered on the grid.
+#### Yields
+
+`<GridStackItem as |item|>` (and `<grid.Item as |item|>`) yields the component itself.
+
+| Member                   | Description                                                                        |
+| ------------------------ | ---------------------------------------------------------------------------------- |
+| `item.element`           | the `.grid-stack-item` element; `undefined` until the item is inserted (tracked)   |
+| `item.grid`              | the owning `<GridStack>` component                                                 |
+| `item.resizeToContent()` | `GridStack.resizeToContent()` for this item (needs a child element in the content) |
 
 **Example:**
 
 ```hbs
-<GridStackItem @options={{hash x=0 y=0 w=6 h=2}} as |item|>
-  <CustomComponent @parentContainer={{item}} />
-</GridStackItem>
+<grid.Item @options={{hash x=0 y=0 w=6 h=2}} as |item|>
+  <div>
+    <button type='button' {{on 'click' item.resizeToContent}}>Fit</button>
+  </div>
+</grid.Item>
 ```
 
-```js
-//custom-component.js
-export default class CustomComponent extends Component {
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this.parentContainer.element.addEventListener('resizestop', () => {
-      //handle resize
-    });
-  }
-}
+### `{{gs-item-attributes}}`
+
+Sets `gs-*` attributes from an options hash on any element (blank values remove the attribute):
+
+```hbs
+<div {{gs-item-attributes (hash w=4 minW=2)}}></div>
+{{! renders <div gs-w="4" gs-min-w="2"> }}
 ```
+
+### `grid-stack-registry` service (deprecated)
+
+`registerGrid(id, grid)`, `findGridComponent(element)` and `unregisterGridComponent(id)` keep working, and `findGridComponent` finds every `<GridStack>` by its element. Use `grid.Item` or `item.grid` instead; the service will be removed in a future major.
+
+## Exports
+
+| Import                                         | Exports                                                                                                                                                                                              |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ember-gridstack`                              | `GridStack`, `GridStackItem`, `gsItemAttributes`, `applyItemAttributes`, `GridStackRegistry`, `GRID_STACK_EVENTS`; types `GridStackSignature`, `GridStackItemSignature`, `GsItemAttributesSignature` |
+| `ember-gridstack/components/grid-stack`        | default `GridStack`, `GRID_STACK_EVENTS`, `REINIT_OPTIONS`, `capitalize`                                                                                                                             |
+| `ember-gridstack/components/grid-stack-item`   | default `GridStackItem`                                                                                                                                                                              |
+| `ember-gridstack/modifiers/gs-item-attributes` | default modifier, `applyItemAttributes(element, options)`                                                                                                                                            |
+| `ember-gridstack/services/grid-stack-registry` | default service class (deprecated)                                                                                                                                                                   |
+
+Each deep path also resolves with a `.js` suffix. Types ship in `declarations/` and are picked up through `exports`.
 
 ## Touch Support
 
