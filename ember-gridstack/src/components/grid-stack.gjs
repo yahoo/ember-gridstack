@@ -23,13 +23,15 @@ import 'gridstack/dist/gridstack.css';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { service } from '@ember/service';
 import { scheduleOnce } from '@ember/runloop';
-import { guidFor } from '@ember/object/internals';
 import { GridStack } from 'gridstack';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import willDestroy from '@ember/render-modifiers/modifiers/will-destroy';
+import {
+  registerGridElement,
+  unregisterGridElement,
+} from '../utils/grid-elements.js';
 
 export const GRID_STACK_EVENTS = [
   'added',
@@ -83,15 +85,7 @@ const sameOption = (a, b) =>
     JSON.stringify(a) === JSON.stringify(b));
 
 export default class GridStackComponent extends Component {
-  @service gridStackRegistry;
-
-  guid = guidFor(this);
   @tracked elm;
-
-  constructor() {
-    super(...arguments);
-    this.gridStackRegistry.registerGrid(this.guid, this);
-  }
 
   get options() {
     return {
@@ -159,6 +153,7 @@ export default class GridStackComponent extends Component {
   @action
   setup(elm) {
     this.elm = elm;
+    registerGridElement(elm, this);
     this._createGridStack();
   }
 
@@ -190,8 +185,8 @@ export default class GridStackComponent extends Component {
 
   @action
   willDestroyNode() {
-    this.gridStackRegistry.unregisterGridComponent(this.guid, this);
     this._destroyGridStack();
+    unregisterGridElement(this.elm);
   }
 
   @action
@@ -207,7 +202,6 @@ export default class GridStackComponent extends Component {
 
   <template>
     <div
-      id={{this.guid}}
       class="grid-stack"
       {{didInsert this.setup}}
       {{didUpdate this.update @options}}

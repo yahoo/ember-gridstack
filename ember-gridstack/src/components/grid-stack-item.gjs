@@ -14,29 +14,38 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
-import { guidFor } from '@ember/object/internals';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import willDestroy from '@ember/render-modifiers/modifiers/will-destroy';
 import gsItemAttributes from '../modifiers/gs-item-attributes.js';
+import { gridForElement } from '../utils/grid-elements.js';
 
 export default class GridStackItem extends Component {
   @service gridStackRegistry;
 
-  guid = guidFor(this);
   @tracked elm;
-  @tracked gridStackComponent;
 
   get element() {
-    return document.getElementById(this.guid);
+    return this.elm;
+  }
+
+  // Resolved lazily: an initial item is inserted before its grid exists.
+  get gridStackComponent() {
+    if (!this.elm) return undefined;
+    const legacyId = this.elm.closest('.grid-stack')?.id;
+    return (
+      gridForElement(this.elm) ??
+      // detached on removal: gridstack still knows its grid
+      gridForElement(this.elm.gridstackNode?.grid?.el) ??
+      (legacyId && legacyId in this.gridStackRegistry._grids
+        ? this.gridStackRegistry.findGridComponent(this.elm)
+        : undefined)
+    );
   }
 
   @action
   setup(elm) {
     this.elm = elm;
-    this.gridStackComponent = this.gridStackRegistry.findGridComponent(
-      this.elm,
-    );
     this.gridStackComponent?.addWidget(this.elm);
   }
 
@@ -54,7 +63,6 @@ export default class GridStackItem extends Component {
 
   <template>
     <div
-      id={{this.guid}}
       class="grid-stack-item"
       ...attributes
       {{gsItemAttributes @options}}

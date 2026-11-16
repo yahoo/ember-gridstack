@@ -123,13 +123,8 @@ module('Integration | Component | grid stack', function (hooks) {
     const done = assert.async();
     assert.expect(1);
 
-    // Create fake component for listening to events
-    const init = (containerComponent) => {
-      containerComponent.element.addEventListener('resizestop', () => {
-        assert.ok(true, 'resize action is called when item is resized');
-        done();
-      });
-    };
+    let containerComponent;
+    const init = (item) => (containerComponent = item);
 
     await this.grid.render({
       template: () => <template>
@@ -140,6 +135,12 @@ module('Integration | Component | grid stack', function (hooks) {
           <div class="a-different-item" />
         </GridStack>
       </template>,
+    });
+
+    // item.element is set once the item is inserted
+    containerComponent.element.addEventListener('resizestop', () => {
+      assert.ok(true, 'resize action is called when item is resized');
+      done();
     });
 
     next(async () => {

@@ -1,5 +1,6 @@
 import Service from '@ember/service';
 import { assert } from '@ember/debug';
+import { gridForElement } from '../utils/grid-elements.js';
 
 export default class GridstackService extends Service {
   _grids = {};
@@ -24,6 +25,10 @@ export default class GridstackService extends Service {
     const gridStack = element.closest('.grid-stack');
     if (!gridStack) {
       return undefined;
+    }
+    const found = gridForElement(element);
+    if (found) {
+      return found;
     }
     const { id } = gridStack;
     assert('The grid should have an id', id);
