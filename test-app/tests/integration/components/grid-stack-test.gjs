@@ -178,8 +178,8 @@ module('Integration | Component | grid stack', function (hooks) {
     await this.grid.add({ id: '2b', x: 0, y: 2 });
     await this.grid.setItems(this.grid.items.filter((i) => i.id === '1'));
 
-    assert.events(['added', 'removed', 'change']);
-    assert.strictEqual(this.events.length, 4, 'added twice');
+    assert.events(['added', 'removed', 'change', 'removed']);
+    assert.strictEqual(this.events.length, 5, 'added and removed twice');
     this.events.forEach(({ name, args: [event, items] }) => {
       assert.strictEqual(
         event.type,

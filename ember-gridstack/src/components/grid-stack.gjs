@@ -23,7 +23,7 @@ import 'gridstack/dist/gridstack.css';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { scheduleOnce } from '@ember/runloop';
+import { schedule } from '@ember/runloop';
 import { GridStack } from 'gridstack';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import didUpdate from '@ember/render-modifiers/modifiers/did-update';
@@ -142,7 +142,7 @@ export default class GridStackComponent extends Component {
       gridStack.on(eventName, (...args) => {
         const action = this.args[argName];
         if (action) {
-          scheduleOnce('afterRender', gridStack, action, ...args);
+          schedule('afterRender', gridStack, action, ...args);
         }
       });
 
