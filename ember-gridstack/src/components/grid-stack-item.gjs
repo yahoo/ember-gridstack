@@ -15,7 +15,7 @@ import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
 import lifecycle from '../utils/lifecycle.js';
-import gsItemAttributes from '../modifiers/gs-item-attributes.js';
+import { applyItemAttributes } from '../modifiers/gs-item-attributes.js';
 import { gridForElement } from '../utils/grid-elements.js';
 
 export default class GridStackItem extends Component {
@@ -49,14 +49,19 @@ export default class GridStackItem extends Component {
   @action
   setup(elm) {
     this.elm = elm;
+    applyItemAttributes(elm, this.args.options);
     this.gridStackComponent?.addWidget(this.elm);
   }
 
   @action
   updateGridStack() {
-    this.gridStackComponent?.gridStack?.update(this.elm, {
-      ...this.args.options,
-    });
+    const gridStack = this.gridStackComponent?.gridStack;
+    if (!gridStack) {
+      applyItemAttributes(this.elm, this.args.options);
+      return;
+    }
+    gridStack.update(this.elm, { ...this.args.options });
+    applyItemAttributes(this.elm, this.args.options, { onlyRemovals: true });
   }
 
   @action
@@ -68,7 +73,6 @@ export default class GridStackItem extends Component {
     <div
       class="grid-stack-item"
       ...attributes
-      {{gsItemAttributes @options}}
       {{lifecycle
         setup=this.setup
         update=this.updateGridStack

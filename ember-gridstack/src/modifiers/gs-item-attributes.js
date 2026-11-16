@@ -15,14 +15,21 @@ const isBlank = (value) =>
 const dasherize = (str) =>
   str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 
-export default modifier(function itemAttributes(element, opt) {
-  const [options = {}] = opt || [];
-  Object.entries(options).forEach(([key, value]) => {
+export function applyItemAttributes(
+  element,
+  options = {},
+  { onlyRemovals = false } = {},
+) {
+  Object.entries(options ?? {}).forEach(([key, value]) => {
     const attribute = `${GS_PREFIX}${dasherize(key)}`;
     if (isBlank(value)) {
       element.removeAttribute(attribute);
-    } else {
+    } else if (!onlyRemovals) {
       element.setAttribute(attribute, value);
     }
   });
+}
+
+export default modifier(function itemAttributes(element, [options] = []) {
+  applyItemAttributes(element, options);
 });
