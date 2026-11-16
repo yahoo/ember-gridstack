@@ -38,6 +38,59 @@ module('Integration | Component | grid stack options', function (hooks) {
     this.state.options = { cellHeight: 50, column: 12, mode: 'top' };
   });
 
+  [
+    ['mode', { mode: 'float' }, (gs) => gs.opts.mode === 'float'],
+    ['column', { column: 6 }, (gs) => gs.getColumn() === 6],
+    ['cellHeight', { cellHeight: 80 }, (gs) => gs.getCellHeight() === 80],
+    [
+      'columnOpts',
+      { columnOpts: { breakpoints: [{ w: 700, c: 1 }] } },
+      (gs) => gs.opts.columnOpts?.breakpoints?.[0]?.c === 1,
+    ],
+    ['legacy float', { float: true }, (gs) => gs.opts.mode === 'float'],
+  ].forEach(([key, change, applied]) => {
+    test(`changing ${key} keeps the GridStack instance`, async function (assert) {
+      await renderGrid(this.state);
+      const grid = gridFor(this.owner, '.grid-stack');
+      const before = grid.gridStack;
+      const addedBefore = this.added;
+
+      this.state.options = { ...this.state.options, ...change };
+      await settled();
+
+      assert.strictEqual(grid.gridStack, before, 'same instance');
+      assert.true(applied(grid.gridStack), `${key} applied`);
+      assert.strictEqual(this.added, addedBefore, 'onAdded not re-fired');
+      assert.strictEqual(grid.gridStack.engine.nodes.length, 2);
+    });
+  });
+
+  test('a REINIT_OPTIONS change re-creates the GridStack instance', async function (assert) {
+    await renderGrid(this.state);
+    const grid = gridFor(this.owner, '.grid-stack');
+    const before = grid.gridStack;
+    this.state.options = { ...this.state.options, handle: '.handle' };
+    await settled();
+    assert.notStrictEqual(grid.gridStack, before);
+    assert.strictEqual(grid.gridStack.opts.handle, '.handle');
+    assert.strictEqual(grid.gridStack.engine.nodes.length, 2);
+  });
+
+  test('changed @on* handlers apply without re-init', async function (assert) {
+    await renderGrid(this.state);
+    const grid = gridFor(this.owner, '.grid-stack');
+    const before = grid.gridStack;
+    let second = 0;
+    this.state.onAdded = () => second++;
+    this.state.items = [
+      ...this.state.items,
+      new Item('c', { x: 4, y: 0, w: 1, h: 1 }),
+    ];
+    await settled();
+    assert.strictEqual(grid.gridStack, before);
+    assert.strictEqual(second, 1, 'new handler fired');
+  });
+
   test('item @options move and resize the item', async function (assert) {
     await renderGrid(this.state);
     this.state.items[1].options = { x: 3, y: 2, w: 4, h: 2 };

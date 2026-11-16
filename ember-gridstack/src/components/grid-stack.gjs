@@ -47,8 +47,40 @@ export const GRID_STACK_EVENTS = [
   'resizecontent',
 ];
 
+/**
+ * Options gridstack's `updateOptions()` cannot apply; changing any of these, or
+ * removing any option, destroys and re-creates the GridStack instance.
+ */
+export const REINIT_OPTIONS = [
+  'alwaysShowResizeHandle',
+  'draggable',
+  'handle',
+  'handleClass',
+  'itemClass',
+  'layout',
+  'placeholderClass',
+  'placeholderText',
+  'resizable',
+  'removable',
+  'children',
+  'disableOneColumnMode',
+  'marginTop',
+  'marginRight',
+  'marginBottom',
+  'marginLeft',
+  'marginUnit',
+];
+
 export const capitalize = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
+
+const sameOption = (a, b) =>
+  a === b ||
+  (typeof a === 'object' &&
+    typeof b === 'object' &&
+    a !== null &&
+    b !== null &&
+    JSON.stringify(a) === JSON.stringify(b));
 
 export default class GridStackComponent extends Component {
   @service gridStackRegistry;
@@ -98,18 +130,22 @@ export default class GridStackComponent extends Component {
   }
 
   _createGridStack() {
-    this.gridStack = GridStack.init({ ...this.options }, this.elm);
+    this._appliedOptions = this.options;
+    this.gridStack = GridStack.init({ ...this._appliedOptions }, this.elm);
 
+    // resolve @on* at fire time so changed handlers need no re-init
     GRID_STACK_EVENTS.forEach((eventName) => {
-      const action = this.args[`on${capitalize(eventName)}`];
+      const argName = `on${capitalize(eventName)}`;
+      const gridStack = this.gridStack;
 
-      if (action) {
-        this.gridStack.on(eventName, function () {
-          scheduleOnce('afterRender', this, action, ...arguments);
-        });
+      gridStack.on(eventName, (...args) => {
+        const action = this.args[argName];
+        if (action) {
+          scheduleOnce('afterRender', gridStack, action, ...args);
+        }
+      });
 
-        this.subscribedEvents.push(eventName);
-      }
+      this.subscribedEvents.push(eventName);
     });
   }
 
@@ -121,8 +157,28 @@ export default class GridStackComponent extends Component {
 
   @action
   update() {
-    this._destroyGridStack();
-    this._createGridStack();
+    const prev = this._appliedOptions ?? {};
+    const next = this.options;
+    const keys = new Set([...Object.keys(prev), ...Object.keys(next)]);
+    const changed = {};
+    let reinit = !this.gridStack;
+
+    for (const key of keys) {
+      if (sameOption(prev[key], next[key])) continue;
+      if (!(key in next) || REINIT_OPTIONS.includes(key)) {
+        reinit = true;
+        break;
+      }
+      changed[key] = next[key];
+    }
+
+    if (reinit) {
+      this._destroyGridStack();
+      this._createGridStack();
+    } else if (Object.keys(changed).length) {
+      this._appliedOptions = next;
+      this.gridStack.updateOptions(changed);
+    }
   }
 
   @action

@@ -124,7 +124,8 @@ module('Integration | Component | grid stack', function (hooks) {
     assert.expect(4);
 
     const state = new State();
-    state.options = { cellHeight: '200px' };
+    // options are applied in place now, so skip the height transition
+    state.options = { cellHeight: '200px', animate: false };
 
     await render(
       <template>
@@ -142,7 +143,7 @@ module('Integration | Component | grid stack', function (hooks) {
       'Cell height option is passed through to gridstack',
     );
 
-    state.options = { cellHeight: '300px' };
+    state.options = { cellHeight: '300px', animate: false };
     await settled();
 
     assert.strictEqual(
@@ -151,7 +152,7 @@ module('Integration | Component | grid stack', function (hooks) {
       'Gridstack updates with options',
     );
 
-    state.options = { cellHeight: '300px', staticGrid: true };
+    state.options = { cellHeight: '300px', animate: false, staticGrid: true };
     await settled();
 
     assert
