@@ -24,8 +24,8 @@
     "@commitlint/prompt-cli": "^21.2.4",
     "concurrently": "^9.1.2",
     "husky": "^9.1.7",
-    "prettier": "^3.4.2",
-    "prettier-plugin-ember-template-tag": "^2.0.4",
+    "prettier": "^3.10.1",
+    "prettier-plugin-ember-template-tag": "^2.1.8",
     "pretty-quick": "^4.2.2",
     "semantic-release": "^25.0.6"
   },
