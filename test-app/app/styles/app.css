@@ -575,7 +575,7 @@ td:first-child {
   white-space: nowrap;
 }
 
-@media (width <= 960px) {
+@media (width <= 1200px) {
   .example {
     grid-template-columns: minmax(0, 1fr);
   }
