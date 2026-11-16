@@ -3,6 +3,7 @@ export {
   GRID_STACK_EVENTS,
 } from './components/grid-stack.gjs';
 export { default as GridStackItem } from './components/grid-stack-item.gjs';
+export { default as GridStackLayout } from './components/grid-stack-layout.gjs';
 export {
   default as gsItemAttributes,
   applyItemAttributes,

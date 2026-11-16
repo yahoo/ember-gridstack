@@ -5,6 +5,12 @@ export {
 export type { GridStackSignature } from './components/grid-stack';
 export { default as GridStackItem } from './components/grid-stack-item';
 export type { GridStackItemSignature } from './components/grid-stack-item';
+export { default as GridStackLayout } from './components/grid-stack-layout';
+export type {
+  GridStackLayoutSignature,
+  LayoutWidget,
+  LayoutWidgetContext,
+} from './components/grid-stack-layout';
 export {
   default as gsItemAttributes,
   applyItemAttributes,

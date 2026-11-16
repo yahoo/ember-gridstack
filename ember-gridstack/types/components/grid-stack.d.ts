@@ -25,6 +25,10 @@ type DroppedHandler = (
 export interface GridStackSignature {
   Args: {
     options?: GridStackOptions;
+    /** data mode: see `grid-stack-layout` */
+    layout?: GridStackWidget[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    components?: Record<string, any>;
     onAdded?: NodesHandler;
     onChange?: NodesHandler;
     onRemoved?: NodesHandler;

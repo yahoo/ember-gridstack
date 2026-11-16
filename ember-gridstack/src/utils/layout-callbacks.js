@@ -47,7 +47,8 @@ export function layoutAddRemove(parent, w, add, isGrid) {
         if (entry.isIntersecting) {
           el._lazyObserver?.disconnect();
           delete el._lazyObserver;
-          el._gridItemRef?.gridComp.registerWidget(id, w, el);
+          const comp = el._gridItemRef?.gridComp;
+          if (isOurs(comp)) comp.registerWidget(id, w, el);
         }
       });
       // observe once gridstack has positioned the element
@@ -59,7 +60,7 @@ export function layoutAddRemove(parent, w, add, isGrid) {
   }
 
   const el = w.el;
-  if (!el?._gridItemRef) {
+  if (!isOurs(el?._gridItemRef?.gridComp)) {
     return previous?.addRemoveCB?.(parent, w, add, isGrid);
   }
   if (el._lazyObserver) {
@@ -75,7 +76,7 @@ export function layoutAddRemove(parent, w, add, isGrid) {
 
 export function layoutSave(node, w) {
   const ref = node.el?._gridItemRef;
-  if (!ref) return previous?.saveCB?.(node, w);
+  if (!isOurs(ref?.gridComp)) return previous?.saveCB?.(node, w);
   if (node.component != null) w.component = node.component;
   if (node.props != null) w.props = { ...node.props };
   ref.gridComp.mergeWidgetPropsForSave(ref.id, w);
@@ -83,7 +84,7 @@ export function layoutSave(node, w) {
 
 export function layoutUpdate(node) {
   const ref = node.el?._gridItemRef;
-  if (!ref) return previous?.updateCB?.(node);
+  if (!isOurs(ref?.gridComp)) return previous?.updateCB?.(node);
   ref.gridComp.requestUpdate(ref.id, node);
 }
 

@@ -27,26 +27,15 @@ import { schedule } from '@ember/runloop';
 import { GridStack } from 'gridstack';
 import lifecycle from '../utils/lifecycle.js';
 import GridStackItem from './grid-stack-item.gjs';
+import GridStackLayout from './grid-stack-layout.gjs';
 import {
   registerGridElement,
   unregisterGridElement,
 } from '../utils/grid-elements.js';
 
-export const GRID_STACK_EVENTS = [
-  'added',
-  'change',
-  'disable',
-  'dragstart',
-  'drag',
-  'dragstop',
-  'dropped',
-  'enable',
-  'removed',
-  'resizestart',
-  'resize',
-  'resizestop',
-  'resizecontent',
-];
+import { GRID_STACK_EVENTS, capitalize } from '../utils/events.js';
+
+export { GRID_STACK_EVENTS, capitalize };
 
 /**
  * Options gridstack's `updateOptions()` cannot apply; changing any of these, or
@@ -71,9 +60,6 @@ export const REINIT_OPTIONS = [
   'marginLeft',
   'marginUnit',
 ];
-
-export const capitalize = (string) =>
-  string.charAt(0).toUpperCase() + string.slice(1);
 
 const sameOption = (a, b) =>
   a === b ||
@@ -254,18 +240,47 @@ export default class GridStackComponent extends Component {
     this.gridStack?.removeWidget(element, removeDOM, triggerEvent);
   }
 
+  get isLayoutMode() {
+    return this.args.layout !== undefined || this.args.components !== undefined;
+  }
+
   <template>
-    <div
-      class="grid-stack"
-      {{lifecycle
-        setup=this.setup
-        update=this.update
-        teardown=this.willDestroyNode
-        options=@options
-      }}
-      ...attributes
-    >
-      {{yield this}}
-    </div>
+    {{#if this.isLayoutMode}}
+      <GridStackLayout
+        @layout={{@layout}}
+        @options={{@options}}
+        @components={{@components}}
+        @onAdded={{@onAdded}}
+        @onChange={{@onChange}}
+        @onDisable={{@onDisable}}
+        @onDragstart={{@onDragstart}}
+        @onDrag={{@onDrag}}
+        @onDragstop={{@onDragstop}}
+        @onDropped={{@onDropped}}
+        @onEnable={{@onEnable}}
+        @onRemoved={{@onRemoved}}
+        @onResizestart={{@onResizestart}}
+        @onResize={{@onResize}}
+        @onResizestop={{@onResizestop}}
+        @onResizecontent={{@onResizecontent}}
+        ...attributes
+        as |widget grid|
+      >
+        {{yield widget grid}}
+      </GridStackLayout>
+    {{else}}
+      <div
+        class="grid-stack"
+        {{lifecycle
+          setup=this.setup
+          update=this.update
+          teardown=this.willDestroyNode
+          options=@options
+        }}
+        ...attributes
+      >
+        {{yield this}}
+      </div>
+    {{/if}}
   </template>
 }

@@ -40,6 +40,14 @@
       "types": "./declarations/components/grid-stack-item.d.ts",
       "default": "./dist/components/grid-stack-item.js"
     },
+    "./components/grid-stack-layout": {
+      "types": "./declarations/components/grid-stack-layout.d.ts",
+      "default": "./dist/components/grid-stack-layout.js"
+    },
+    "./components/grid-stack-layout.js": {
+      "types": "./declarations/components/grid-stack-layout.d.ts",
+      "default": "./dist/components/grid-stack-layout.js"
+    },
     "./modifiers/gs-item-attributes": {
       "types": "./declarations/modifiers/gs-item-attributes.d.ts",
       "default": "./dist/modifiers/gs-item-attributes.js"
@@ -126,6 +134,7 @@
     "main": "addon-main.cjs",
     "app-js": {
       "./components/grid-stack-item.js": "./dist/_app_/components/grid-stack-item.js",
+      "./components/grid-stack-layout.js": "./dist/_app_/components/grid-stack-layout.js",
       "./components/grid-stack.js": "./dist/_app_/components/grid-stack.js",
       "./modifiers/gs-item-attributes.js": "./dist/_app_/modifiers/gs-item-attributes.js",
       "./services/grid-stack-registry.js": "./dist/_app_/services/grid-stack-registry.js"
