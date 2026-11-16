@@ -27,8 +27,8 @@ test-app lists the addon as an injected dependency. It stays a symlink unless a 
 ## Running tests
 
 - `pnpm test` – Lints and runs the test suite on the current Ember version
-- `pnpm test:ember` – Runs the test suite on the current Ember version
-- `pnpm test:try` – Runs the test suite against every scenario in `test-app/.try.mjs` (via [`@embroider/try`](https://github.com/embroider-build/embroider/tree/main/packages/try)). Pass scenario names to run a subset, e.g. `pnpm test:try ember-lts-4.12`. It resets `test-app/` and `pnpm-lock.yaml` after each scenario, so commit your work first.
+- `pnpm test:ember` – Runs the test suite on the current Ember version (test-app builds with Vite and Embroider)
+- `pnpm test:try` – Runs the test suite against every `ember-lts-*`, release and beta scenario in `test-app/.try.mjs` (via [`@embroider/try`](https://github.com/embroider-build/embroider/tree/main/packages/try)). Pass scenario names to run a subset, e.g. `pnpm test:try ember-lts-4.12`. It resets `test-app/` and `pnpm-lock.yaml` after each scenario, so commit your work first.
 
 ## Continuous integration and releases
 

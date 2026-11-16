@@ -5,7 +5,3 @@ packages:
 # test-app injects ember-gridstack so the addon's ember-source peer resolves to test-app's copy
 syncInjectedDepsAfterScripts:
   - build
-
-# core-js@2 postinstall only prints a banner
-ignoredBuiltDependencies:
-  - core-js

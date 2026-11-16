@@ -8,7 +8,7 @@ Ember components to build drag-and-drop multi-column grids powered by [gridstack
 - Ember CLI v4.12 or above, with ember-auto-import v2 or Embroider
 - Node.js v20.19 or above
 - Published as a v2 (Embroider) addon
-- Tested against Ember 4.12, 5.12, 6.12 (LTS), release and beta, plus Embroider safe and optimized
+- Tested against Ember 4.12, 5.12, 6.12 (LTS), release and beta, in a Vite + Embroider app
 
 ## Installation
 
