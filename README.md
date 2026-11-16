@@ -8,6 +8,7 @@ Ember components to build drag-and-drop multi-column grids powered by [gridstack
 - Ember CLI v4.12 or above, with ember-auto-import v2 or Embroider
 - Node.js v20.19 or above
 - Published as a v2 (Embroider) addon
+- Tested against Ember 4.12, 5.12, 6.12 (LTS), release and beta, plus Embroider safe and optimized
 
 ## Installation
 
@@ -15,7 +16,7 @@ Ember components to build drag-and-drop multi-column grids powered by [gridstack
 ember install ember-gridstack
 ```
 
-or add it with your package manager, e.g. `yarn add -D ember-gridstack` or `pnpm add -D ember-gridstack`.
+or add it with your package manager, e.g. `pnpm add -D ember-gridstack` or `npm install -D ember-gridstack`.
 
 ## Migrating to v6
 
@@ -39,6 +40,26 @@ View the full [v5.0.0 release notes](./CHANGELOG.md#500-2025-05-22) for updates 
   </GridStackItem>
 </GridStack>
 ```
+
+### Template tag (`.gjs` / `.gts`)
+
+```gjs
+import { hash } from '@ember/helper';
+import GridStack from 'ember-gridstack/components/grid-stack';
+import GridStackItem from 'ember-gridstack/components/grid-stack-item';
+
+<template>
+  <GridStack @options={{hash animate=true}} @onChange={{@onChange}}>
+    <GridStackItem @options={{hash x=0 y=0 w=6 h=2}}>
+      Widget #1
+    </GridStackItem>
+  </GridStack>
+</template>
+```
+
+The modifier and service are available as `ember-gridstack/modifiers/gs-item-attributes` and `ember-gridstack/services/grid-stack-registry`.
+
+A live demo with every component, the modifier and the service is at https://yahoo.github.io/ember-gridstack/.
 
 ## Components
 
