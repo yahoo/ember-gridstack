@@ -122,5 +122,9 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "volta": {
+    "node": "22.23.5",
+    "yarn": "1.22.22"
   }
 }
