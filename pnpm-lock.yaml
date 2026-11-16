@@ -209,7 +209,7 @@ importers:
         version: 0.16.1(@babel/eslint-parser@8.1.2(@babel/core@8.1.2)(eslint@10.15.0(jiti@2.7.0)))(typescript@6.0.3)
       ember-gridstack:
         specifier: workspace:*
-        version: file:ember-gridstack(@babel/core@8.1.2)(@glimmer/component@2.2.1)(@glimmer/tracking@1.1.2)(ember-source@7.4.0(@glimmer/component@2.2.1))
+        version: link:../ember-gridstack
       ember-load-initializers:
         specifier: ^3.0.1
         version: 3.0.1(ember-source@7.4.0(@glimmer/component@2.2.1))
@@ -217,7 +217,7 @@ importers:
         specifier: ^4.3.0
         version: 4.3.0(@babel/core@8.1.2)
       ember-page-title:
-        specifier: ^9.0.3
+        specifier: ^9.1.0
         version: 9.1.0
       ember-qunit:
         specifier: ^9.2.0
@@ -253,7 +253,7 @@ importers:
         specifier: ^17.14.0
         version: 17.14.0
       highlight.js:
-        specifier: ^11.3.1
+        specifier: ^11.12.0
         version: 11.12.0
       prettier:
         specifier: ^3.10.1
@@ -2118,8 +2118,8 @@ packages:
   '@types/ws@8.18.2':
     resolution: {integrity: sha512-67MQl+fpWKVTT1NYdnmo3U4sc/xPo/zQBncVnI74qmQa0z/b+1g6iYqNmGCPbxO+zz2aklb08a0oHfegiVd0/w==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/ws/-/ws-8.18.2.tgz}
 
-  '@typescript-eslint/tsconfig-utils@8.72.2':
-    resolution: {integrity: sha512-+h3iCgZXuTNtoLXcnnjP12ZUHLMqoUcIHPfQrFEXTUqvb9dF8QK9b5nv5VtSo5fLkdHuks8ehbTzZj3rImAm9w==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@typescript-eslint/tsconfig-utils/-/tsconfig-utils-8.72.2.tgz}
+  '@typescript-eslint/tsconfig-utils@8.73.0':
+    resolution: {integrity: sha512-lmtCFOfYaJfpqZywGuXi4FpNtE+NQ+YLe3T0K9rtEDcW8ZuGWvfI++pj8r05sYMI8vWT2CYK4rWyedmD6Rp4og==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@typescript-eslint/tsconfig-utils/-/tsconfig-utils-8.73.0.tgz}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       typescript: '>=4.8.4 <6.1.0'
@@ -3378,13 +3378,6 @@ packages:
   ember-estree@0.9.0:
     resolution: {integrity: sha512-CExL0d6FbbffZaQkD0+zA5PaIgle3fbpzapuLVQ+QZfI2KLalnhuof0e85Zvfy/fh8+q9liw7dqUhQX4gibMBA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-estree/-/ember-estree-0.9.0.tgz}
 
-  ember-gridstack@file:ember-gridstack:
-    resolution: {directory: ember-gridstack, type: directory}
-    peerDependencies:
-      '@glimmer/component': ^1.1.2 || ^2.0.0
-      '@glimmer/tracking': ^1.1.2
-      ember-source: '>= 4.12.0'
-
   ember-load-initializers@3.0.1:
     resolution: {integrity: sha512-qV3vxJKw5+7TVDdtdLPy8PhVsh58MlK8jwzqh5xeOwJPNP7o0+BlhvwoIlLYTPzGaHdfjEIFCgVSyMRGd74E1g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-load-initializers/-/ember-load-initializers-3.0.1.tgz}
     engines: {node: '>= 18.*'}
@@ -4108,9 +4101,6 @@ packages:
 
   graceful-fs@4.2.12:
     resolution: {integrity: sha512-iuyGF2E4oafQfPsRrG2wtY2ILupMhvtdrhzrxB+0VcjsPpSPttpfYdjnGFGsTi5MaJFjI1jOKHPQ6UTbTj9TAw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/graceful-fs/-/graceful-fs-4.2.12.tgz}
-
-  gridstack@12.6.0:
-    resolution: {integrity: sha512-dUrqsormSybFn/2P4Dz8AgprftKD5e/IiV7UmC0XLQU+G+/WtkAeFiCSNLoAGhPDXoJ/O61Xtj3gljY/Ds83yQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/gridstack/-/gridstack-12.6.0.tgz}
 
   gridstack@14.1.0:
     resolution: {integrity: sha512-nF6asbGVnIJH7N9pa+DCaSBGAoEvTNS7jYHUJfcNN+5bTD3a4pLEKvGia7W/6NbjiJWms9e3Zih1YuU4coT3QA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/gridstack/-/gridstack-14.1.0.tgz}
@@ -9625,7 +9615,7 @@ snapshots:
     dependencies:
       '@types/node': 26.6.6
 
-  '@typescript-eslint/tsconfig-utils@8.72.2(typescript@6.0.3)':
+  '@typescript-eslint/tsconfig-utils@8.73.0(typescript@6.0.3)':
     dependencies:
       typescript: 6.0.3
 
@@ -11120,7 +11110,7 @@ snapshots:
   ember-eslint-parser@0.16.1(@babel/eslint-parser@8.1.2(@babel/core@8.1.2)(eslint@10.15.0(jiti@2.7.0)))(typescript@6.0.3):
     dependencies:
       '@glimmer/syntax': 0.97.0
-      '@typescript-eslint/tsconfig-utils': 8.72.2(typescript@6.0.3)
+      '@typescript-eslint/tsconfig-utils': 8.73.0(typescript@6.0.3)
       content-tag: 4.2.1
       ember-estree: 0.9.0
       eslint-scope: 9.1.2
@@ -11138,19 +11128,6 @@ snapshots:
       '@glimmer/syntax': 0.97.0
       content-tag: 4.2.1
       oxc-parser: 0.130.0
-
-  ember-gridstack@file:ember-gridstack(@babel/core@8.1.2)(@glimmer/component@2.2.1)(@glimmer/tracking@1.1.2)(ember-source@7.4.0(@glimmer/component@2.2.1)):
-    dependencies:
-      '@ember/render-modifiers': 4.0.0
-      '@embroider/addon-shim': 1.11.0
-      '@glimmer/component': 2.2.1
-      '@glimmer/tracking': 1.1.2
-      decorator-transforms: 2.4.0(@babel/core@8.1.2)
-      ember-modifier: 4.3.0(@babel/core@8.1.2)
-      ember-source: 7.4.0(@glimmer/component@2.2.1)
-      gridstack: 12.6.0
-    transitivePeerDependencies:
-      - '@babel/core'
 
   ember-load-initializers@3.0.1(ember-source@7.4.0(@glimmer/component@2.2.1)):
     dependencies:
@@ -12148,8 +12125,6 @@ snapshots:
   graceful-fs@4.2.10: {}
 
   graceful-fs@4.2.12: {}
-
-  gridstack@12.6.0: {}
 
   gridstack@14.1.0: {}
 
