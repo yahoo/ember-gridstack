@@ -235,7 +235,7 @@ export default class GridStackComponent extends Component {
 
   @action
   setMode(mode) {
-    return this.gridStack?.updateOptions({ mode });
+    return this.gridStack?.mode(mode);
   }
 
   @action
