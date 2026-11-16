@@ -23,7 +23,7 @@ module('Integration | Component | grid stack yield api', function (hooks) {
               @options={{hash id="a" x=0 y=2 w=2 h=1}}
               as |item|
             >
-              {{capture "item" item}}
+              <div>{{capture "item" item}}</div>
             </grid.Item>
             <grid.Item data-id="b" @options={{hash id="b" x=4 y=0 w=2 h=1}} />
           </GridStack>

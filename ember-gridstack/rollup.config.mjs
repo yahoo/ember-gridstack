@@ -66,6 +66,8 @@ export default {
       targets: [
         { src: '../README.md', dest: '.' },
         { src: '../LICENSE.md', dest: '.' },
+        // hand-written; kept out of src/ so publicEntrypoints skips them
+        { src: 'types/*', dest: 'declarations' },
       ],
     }),
   ],

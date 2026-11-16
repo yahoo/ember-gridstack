@@ -21,6 +21,7 @@
     "lint:hbs:fix": "ember-template-lint . --fix",
     "lint:js": "eslint . --cache",
     "lint:js:fix": "eslint . --fix",
+    "lint:types": "ember-tsc --noEmit",
     "start": "vite",
     "test": "concurrently \"pnpm:lint\" \"pnpm:test:*\" --names \"lint,test:\" --prefixColors auto",
     "test:ember": "NODE_ENV=development vite build --mode development && testem ci --port 0"
@@ -44,6 +45,8 @@
     "@eslint/js": "^10.0.1",
     "@glimmer/component": "^2.2.1",
     "@glimmer/tracking": "^1.1.2",
+    "@glint/ember-tsc": "^1.14.4",
+    "@glint/template": "^1.11.1",
     "@rollup/plugin-babel": "^7.1.0",
     "babel-plugin-ember-template-compilation": "^4.0.1",
     "concurrently": "^10.0.7",
@@ -75,6 +78,7 @@
     "stylelint": "^18.0.0",
     "stylelint-config-standard": "^41.0.0",
     "testem": "^3.21.5",
+    "typescript": "^5.9.3",
     "vite": "^8.3.8"
   },
   "exports": {

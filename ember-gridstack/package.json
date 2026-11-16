@@ -18,9 +18,45 @@
     "Mike Musson",
     "Kevin Hinterlong<kevinhinterlong@gmail.com>"
   ],
+  "types": "./declarations/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./*": "./dist/*.js",
+    ".": {
+      "types": "./declarations/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./components/grid-stack": {
+      "types": "./declarations/components/grid-stack.d.ts",
+      "default": "./dist/components/grid-stack.js"
+    },
+    "./components/grid-stack.js": {
+      "types": "./declarations/components/grid-stack.d.ts",
+      "default": "./dist/components/grid-stack.js"
+    },
+    "./components/grid-stack-item": {
+      "types": "./declarations/components/grid-stack-item.d.ts",
+      "default": "./dist/components/grid-stack-item.js"
+    },
+    "./components/grid-stack-item.js": {
+      "types": "./declarations/components/grid-stack-item.d.ts",
+      "default": "./dist/components/grid-stack-item.js"
+    },
+    "./modifiers/gs-item-attributes": {
+      "types": "./declarations/modifiers/gs-item-attributes.d.ts",
+      "default": "./dist/modifiers/gs-item-attributes.js"
+    },
+    "./modifiers/gs-item-attributes.js": {
+      "types": "./declarations/modifiers/gs-item-attributes.d.ts",
+      "default": "./dist/modifiers/gs-item-attributes.js"
+    },
+    "./services/grid-stack-registry": {
+      "types": "./declarations/services/grid-stack-registry.d.ts",
+      "default": "./dist/services/grid-stack-registry.js"
+    },
+    "./services/grid-stack-registry.js": {
+      "types": "./declarations/services/grid-stack-registry.d.ts",
+      "default": "./dist/services/grid-stack-registry.js"
+    },
+    "./_app_/*": "./dist/_app_/*",
     "./addon-main.js": "./addon-main.cjs"
   },
   "files": [
