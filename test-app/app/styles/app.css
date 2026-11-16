@@ -380,6 +380,8 @@ h3 code {
   flex-direction: column;
   gap: 0.25rem;
   height: 100%;
+  min-width: 0;
+  overflow: hidden;
   padding: 0.75rem 0.875rem;
 }
 
@@ -477,8 +479,18 @@ h3 code {
   border-top: 0;
 }
 
+.list-main {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.list code {
+  overflow-wrap: anywhere;
+}
+
 .list-aside {
   color: var(--muted);
+  flex-shrink: 0;
   font-size: 0.8125rem;
   white-space: nowrap;
 }
