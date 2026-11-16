@@ -18,7 +18,7 @@
     "start:test-app": "yarn workspace test-app start",
     "test": "yarn lint && yarn test:ember",
     "test:ember": "yarn workspace test-app test:ember",
-    "test:ember-compatibility": "yarn workspace test-app test:ember-compatibility",
+    "test:ember-compatibility": "yarn workspace test-app test:ember-compatibility; status=$?; yarn install --frozen-lockfile --check-files; exit $status",
     "semantic-release": "semantic-release",
     "commit": "commit"
   },

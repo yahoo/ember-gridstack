@@ -6,7 +6,6 @@ const { embroiderOptimized } = require('@embroider/test-setup');
 module.exports = async function () {
   return {
     useYarn: true,
-    useWorkspaces: true,
     scenarios: [
       {
         name: 'ember-lts-4.12',
