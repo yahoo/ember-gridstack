@@ -1,3 +1,7 @@
 packages:
   - 'ember-gridstack'
   - 'test-app'
+
+# core-js@2 postinstall only prints a banner
+ignoredBuiltDependencies:
+  - core-js
