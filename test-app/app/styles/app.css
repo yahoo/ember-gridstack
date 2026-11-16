@@ -440,8 +440,7 @@ h3 code {
   border-bottom-color: var(--accent);
 }
 
-.tabs [role="tab"]:focus-visible,
-.example-card .code:focus-visible {
+.tabs [role="tab"]:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
 }
@@ -475,19 +474,16 @@ h3 code {
   overflow: auto;
 }
 
-/* Responsive example */
-
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 6px;
+.example-card .code:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
-.button[aria-pressed="true"] {
-  border-color: var(--accent);
-  color: var(--accent);
+/* Responsive example */
+
+.resize-toolbar {
+  gap: 0.5rem;
+  margin: 0 0 6px;
 }
 
 .column-count {

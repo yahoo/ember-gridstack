@@ -51,11 +51,11 @@ export default class Responsive extends Component {
   });
 
   <template>
-    <div class="toolbar">
+    <div class="toolbar resize-toolbar">
       {{#each presets as |preset|}}
         <button
           type="button"
-          class="button"
+          class="button {{unless (this.isActive preset.id) 'button-quiet'}}"
           aria-pressed={{if (this.isActive preset.id) "true" "false"}}
           {{on "click" (fn this.setWidth preset.id)}}
         >{{preset.label}}</button>

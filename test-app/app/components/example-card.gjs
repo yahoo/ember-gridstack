@@ -81,7 +81,6 @@ export default class ExampleCard extends Component {
           class="example-code {{unless this.isCode 'is-hidden'}}"
           inert={{this.isPreview}}
         >
-          {{! template-lint-disable no-noninteractive-tabindex }}
           <pre class="code" tabindex="0"><code
               {{highlight lang=@lang}}
             >{{@source}}</code></pre>
