@@ -448,7 +448,7 @@ h3 code {
 /* The preview sizes the card; the code panel fills it and scrolls. */
 .example-stage {
   position: relative;
-  min-height: 16rem;
+  min-height: 10rem;
 }
 
 .example-preview {

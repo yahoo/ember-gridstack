@@ -31,6 +31,10 @@ export default class Responsive extends Component {
     return htmlSafe(`max-width: ${preset.width}`);
   }
 
+  get columnLabel() {
+    return `${this.columns} column${this.columns === 1 ? '' : 's'}`;
+  }
+
   setWidth = (id) => (this.width = id);
   isActive = (id) => id === this.width;
 
@@ -61,8 +65,7 @@ export default class Responsive extends Component {
         >{{preset.label}}</button>
       {{/each}}
       <output class="column-count" aria-live="polite">
-        {{this.columns}}
-        columns
+        {{this.columnLabel}}
       </output>
     </div>
     <div class="resize-frame" style={{this.frameStyle}} {{this.watchColumns}}>
