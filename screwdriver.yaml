@@ -47,8 +47,9 @@ jobs:
           git clone https://github.com/screwdriver-cd/toolbox.git /tmp/ci
           yarn config set cache-folder ~/.yarn
           yarn install --frozen-lockfile
-          ./build-scripts/deploy-gh-pages.sh "Deploy gh-pages from $SD_BUILD_SHA"
           . /tmp/ci/git-ssh.sh
+          git fetch origin gh-pages:refs/remotes/origin/gh-pages
+          ./build-scripts/deploy-gh-pages.sh "Deploy gh-pages from $SD_BUILD_SHA"
           git push origin gh-pages:gh-pages
     secrets:
       - GIT_KEY_BASE64
