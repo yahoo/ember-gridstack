@@ -255,4 +255,94 @@ module('Integration | Component | grid stack layout', function (hooks) {
 
     await this.grid.destroy();
   });
+
+  test('lazyLoad renders only once the item intersects', async function (assert) {
+    const Real = window.IntersectionObserver;
+    const observers = [];
+    window.IntersectionObserver = class {
+      constructor(cb) {
+        this.cb = cb;
+        observers.push(this);
+      }
+      observe(el) {
+        this.el = el;
+      }
+      disconnect() {
+        this.el = null;
+      }
+      fire() {
+        this.cb([{ isIntersecting: true, target: this.el }]);
+      }
+    };
+    try {
+      const layout = [
+        { id: 'a', w: 1, h: 1, component: 'text', props: { text: 'L' } },
+      ];
+      const components = { text: Text };
+      await this.grid.render({
+        template: (d) => <template>
+          {{#if d.visible}}
+            <GridStack
+              @options={{hash lazyLoad=true}}
+              @layout={{layout}}
+              @components={{components}}
+            />
+          {{/if}}
+        </template>,
+      });
+      // the observer is attached in a setTimeout after creation
+      await new Promise((r) => setTimeout(r, 0));
+      assert.dom('[gs-id="a"]').exists('item element exists');
+      assert.dom('[gs-id="a"] .text').doesNotExist('content not rendered yet');
+      assert.strictEqual(observers.length, 1);
+      observers[0].fire();
+      await settled();
+      assert.dom('[gs-id="a"] .text').hasText('L', 'rendered on intersect');
+      await this.grid.destroy();
+    } finally {
+      window.IntersectionObserver = Real;
+    }
+  });
+
+  test('sizeToContent: widget.resizeToContent() grows the node', async function (assert) {
+    const state = new (class {
+      @tracked tall = false;
+    })();
+    const layout = [{ id: 'a', w: 2, h: 1, sizeToContent: true }];
+    let widgetCtx;
+    const capture = (w) => {
+      widgetCtx = w;
+    };
+    await this.grid.render({
+      template: (d) => <template>
+        {{! template-lint-disable no-inline-styles }}
+        {{#if d.visible}}
+          <div style="width: 1000px">
+            <GridStack
+              @options={{hash cellHeight=50}}
+              @layout={{layout}}
+              as |widget|
+            >
+              {{capture widget}}
+              {{#if state.tall}}
+                <div style="height: 300px">tall</div>
+              {{else}}
+                <div style="height: 20px">short</div>
+              {{/if}}
+            </GridStack>
+          </div>
+        {{/if}}
+      </template>,
+    });
+    const before = widgetCtx.node.h;
+    state.tall = true;
+    await settled();
+    widgetCtx.resizeToContent();
+    await settled();
+    assert.true(
+      find('[gs-id="a"]').gridstackNode.h > before,
+      `h grew from ${before} to ${find('[gs-id="a"]').gridstackNode.h}`,
+    );
+    await this.grid.destroy();
+  });
 });
