@@ -118,6 +118,10 @@ module('Integration | Component | grid stack lifecycle', function (hooks) {
     );
   });
 
+  test('GRID_STACK_EVENTS matches gridstack events', function (assert) {
+    assert.deepEqual([...GRID_STACK_EVENTS].sort(), GRIDSTACK_EVENT_NAMES);
+  });
+
   module('events', function (hooks) {
     hooks.beforeEach(async function () {
       const calls = (this.calls = {});

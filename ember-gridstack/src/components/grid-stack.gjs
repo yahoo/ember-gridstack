@@ -44,6 +44,7 @@ export const GRID_STACK_EVENTS = [
   'resizestart',
   'resize',
   'resizestop',
+  'resizecontent',
 ];
 
 export const capitalize = (string) =>
