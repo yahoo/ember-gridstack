@@ -144,6 +144,9 @@ importers:
       '@embroider/test-setup':
         specifier: ^3.0.1
         version: 3.0.3(@embroider/core@3.5.10)
+      '@embroider/try':
+        specifier: ^1.0.2
+        version: 1.0.2
       '@eslint/js':
         specifier: ^9.39.4
         version: 9.39.5
@@ -222,9 +225,6 @@ importers:
       ember-template-lint:
         specifier: ^6.1.0
         version: 6.1.0
-      ember-try:
-        specifier: ^3.0.0
-        version: 3.0.0
       eslint:
         specifier: ^9.39.4
         version: 9.39.5(jiti@2.7.0)
@@ -1109,6 +1109,10 @@ packages:
       '@embroider/webpack':
         optional: true
 
+  '@embroider/try@1.0.2':
+    resolution: {integrity: sha512-CyvVye10wuCRCGjNjz+t3XogF55SEB2noSIXtLf+oAPI6EmbDv4hD1evwkGmr3M2t0pItvlYhTgoahv/nXrasQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@embroider/try/-/try-1.0.2.tgz}
+    hasBin: true
+
   '@eslint-community/eslint-utils@4.10.1':
     resolution: {integrity: sha512-cuadcxVFE8sDK6iWJbs8Sn0av2Nrh2QSGQhVlBW9AaAHqHwjWsZHT8LJ4hFGPh7ASBV2deFdM7H/DPjulmh8rg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@eslint-community/eslint-utils/-/eslint-utils-4.10.1.tgz}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -1721,10 +1725,6 @@ packages:
     resolution: {integrity: sha512-fCTuZK4QBa+39Oz9l4OGfJfz+GpwCp3AqO7Zch3to99xHPgstVsRFpeQ8LNd2o1Gv8raL2mCFwiaHh7bFSp5DQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@simple-libs/stream-utils/-/stream-utils-2.0.0.tgz}
     engines: {node: '>=22'}
 
-  '@sindresorhus/is@0.14.0':
-    resolution: {integrity: sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@sindresorhus/is/-/is-0.14.0.tgz}
-    engines: {node: '>=6'}
-
   '@sindresorhus/is@4.6.0':
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@sindresorhus/is/-/is-4.6.0.tgz}
     engines: {node: '>=10'}
@@ -1739,10 +1739,6 @@ packages:
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@socket.io/component-emitter/-/component-emitter-3.1.2.tgz}
-
-  '@szmarczak/http-timer@1.1.2':
-    resolution: {integrity: sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@szmarczak/http-timer/-/http-timer-1.1.2.tgz}
-    engines: {node: '>=6'}
 
   '@types/cors@2.8.19':
     resolution: {integrity: sha512-mFNylyeyqN93lfe/9CSxOGREz8cpzAhH+E93xJ4xWQf62V8sQ/24reV2nyzUWM6H6Xji+GGHpkbLe7pVoUEskg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/cors/-/cors-2.8.19.tgz}
@@ -1772,9 +1768,6 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/json5/-/json5-0.0.29.tgz}
 
-  '@types/keyv@3.1.4':
-    resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/keyv/-/keyv-3.1.4.tgz}
-
   '@types/minimatch@3.0.5':
     resolution: {integrity: sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/minimatch/-/minimatch-3.0.5.tgz}
 
@@ -1787,9 +1780,6 @@ packages:
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/normalize-package-data/-/normalize-package-data-2.4.4.tgz}
-
-  '@types/responselike@1.0.3':
-    resolution: {integrity: sha512-H/+L+UkTV33uf49PH5pCAUBVPNj2nDBXTN+qS1dOwyyg24l3CcicicCA7ca+HMvJBZcFgl5r8e+RR6elsb4Lyw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/responselike/-/responselike-1.0.3.tgz}
 
   '@types/rimraf@2.0.5':
     resolution: {integrity: sha512-YyP+VfeaqAyFmXoTh3HChxOQMyjByRMsHU7kc5KOJkSlXudhMhQIALbYV7rHh/l8d2lX3VUQzprrcAgWdRuU8g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/rimraf/-/rimraf-2.0.5.tgz}
@@ -2380,10 +2370,6 @@ packages:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/bytes/-/bytes-3.1.2.tgz}
     engines: {node: '>= 0.8'}
 
-  cacheable-request@6.1.0:
-    resolution: {integrity: sha512-Oj3cAGPCqOZX7Rz64Uny2GYAZNliQSqfbePrgAQ1wKAihYmCUnraBtJtKcGR4xz7wF+LoJC+ssFZvv5BgF9Igg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/cacheable-request/-/cacheable-request-6.1.0.tgz}
-    engines: {node: '>=8'}
-
   cacheable@2.5.0:
     resolution: {integrity: sha512-60cyAOytib/OzBw1JNSoSV/boK1AtHryDIjvVBk7XbN4ugfkM3+Sry7fEjNgPMGgOjuaZPAp8ruZ0Cxafwyq9g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/cacheable/-/cacheable-2.5.0.tgz}
 
@@ -2524,9 +2510,6 @@ packages:
   cliui@9.0.1:
     resolution: {integrity: sha512-k7ndgKhwoQveBL+/1tqGJYNz097I7WOvwbmmU2AR5+magtbjPWQTS1C5vzGkBC8Ym8UWRzfKUzUUqFLypY4Q+w==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/cliui/-/cliui-9.0.1.tgz}
     engines: {node: '>=20'}
-
-  clone-response@1.0.3:
-    resolution: {integrity: sha512-ROoL94jJH2dUVML2Y/5PEDNaSHgeOdSDicUyS7izcF63G6sTc/FTjLub4b8Il9S8S0beOfYt0TaA5qvFK+w0wA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/clone-response/-/clone-response-1.0.3.tgz}
 
   clone@1.0.4:
     resolution: {integrity: sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/clone/-/clone-1.0.4.tgz}
@@ -2946,10 +2929,6 @@ packages:
   decimal.js@10.6.0:
     resolution: {integrity: sha512-YpgQiITW3JXGntzdUmyUR1V812Hn8T1YVXhCu+wO3OpS4eU9l4YdD3qjyiKdV6mvV29zapkMeD390UVEf2lkUg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/decimal.js/-/decimal.js-10.6.0.tgz}
 
-  decompress-response@3.3.0:
-    resolution: {integrity: sha512-BzRPQuY1ip+qDonAOz42gRm/pg9F768C+npV/4JOsxRC2sq+Rlk+Q4ZCAsOhnIaMrgarILY+RMUIvMmmX1qAEA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/decompress-response/-/decompress-response-3.3.0.tgz}
-    engines: {node: '>=4'}
-
   decorator-transforms@2.4.0:
     resolution: {integrity: sha512-IB+0RqnJpuS7ndH4dVY5dfWTZsrCzN3avWFdjSiET0uT2U24jKywjpVEK97TflnZkZgiSRfmeqc1WfS+1CI23w==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/decorator-transforms/-/decorator-transforms-2.4.0.tgz}
     peerDependencies:
@@ -2964,9 +2943,6 @@ packages:
 
   defaults@1.0.4:
     resolution: {integrity: sha512-eFuaLoy/Rxalv2kr+lqMlUnrDWV+3j4pljOIJgLIhI058IQfWJ7vXhyEIHu+HtC738klGALYxOKDO0bQP3tg8A==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/defaults/-/defaults-1.0.4.tgz}
-
-  defer-to-connect@1.1.3:
-    resolution: {integrity: sha512-0ISdNousHvZT2EiFlZeZAHBUvSxmKswVCEf8hW7KWgG4a8MVEu/3Vb6uWYozkjylyCxe0JBIiRB1jV45S70WVQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/defer-to-connect/-/defer-to-connect-1.1.3.tgz}
 
   define-data-property@1.1.4:
     resolution: {integrity: sha512-rBMvIzlpA8v6E+SJZoo++HAYqsLrkg7MSfIinMPFhmkorw7X+dOXVJQs+QT69zGkzMyfDnIMN2Wid1+NbL3T+A==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/define-data-property/-/define-data-property-1.1.4.tgz}
@@ -3040,9 +3016,6 @@ packages:
 
   duplexer2@0.1.4:
     resolution: {integrity: sha512-asLFVfWWtJ90ZyOUHMqk7/S2w2guQKxUI2itj3d92ADHhxUSbCMGi1f1cBcJ7xM1To+pE/Khbwo1yuNbMEPKeA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/duplexer2/-/duplexer2-0.1.4.tgz}
-
-  duplexer3@0.1.5:
-    resolution: {integrity: sha512-1A8za6ws41LQgv9HrE/66jyC5yuSjQ3L/KOpFtoBilsAK2iA2wuS5rTt1OCzIvtS2V7nVmedsUU+DGRcjBmOYA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/duplexer3/-/duplexer3-0.1.5.tgz}
 
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/eastasianwidth/-/eastasianwidth-0.2.0.tgz}
@@ -3230,14 +3203,6 @@ packages:
     resolution: {integrity: sha512-VnRN8FzEHQnw/5rCv6Wnq8MVYXbGQbFY+rEufvWV+FO/IsxMahGEud4MYWtTA2q8iG+qJFrDQefNvQ//7MI7Qw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-template-recast/-/ember-template-recast-6.1.5.tgz}
     engines: {node: 12.* || 14.* || >= 16.*}
     hasBin: true
-
-  ember-try-config@4.0.0:
-    resolution: {integrity: sha512-jAv7fqYJK7QYYekPc/8Nr7KOqDpv/asqM6F8xcRnbmf9UrD35BkSffY63qUuiD9e0aR5qiMNBIQzH8f65rGDqw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-try-config/-/ember-try-config-4.0.0.tgz}
-    engines: {node: 10.* || 12.* || >= 14}
-
-  ember-try@3.0.0:
-    resolution: {integrity: sha512-ZYVKYWMnrHSD3vywo7rV76kPCOC9ATIEnGGG/PEKfCcFE0lB26jltRDnOrhORfLKq0JFp62fFxC/4940U+MwRQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-try/-/ember-try-3.0.0.tgz}
-    engines: {node: 16.* || >= 18.*}
 
   emoji-regex@10.6.0:
     resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/emoji-regex/-/emoji-regex-10.6.0.tgz}
@@ -3790,9 +3755,6 @@ packages:
   fs-extra@5.0.0:
     resolution: {integrity: sha512-66Pm4RYbjzdyeuqudYqhFiNBbCIuI9kgRqLPSHIlXHidW8NIQtVdkM1yeZ4lXwuhbTETv3EUGMNHAAw6hiundQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/fs-extra/-/fs-extra-5.0.0.tgz}
 
-  fs-extra@6.0.1:
-    resolution: {integrity: sha512-GnyIkKhhzXZUWFCaJzvyDLEEgDkPfb4/TPvJCJVuS8MWZgoSsErf++QpiAlDnKFcqhRlm+tIOcencCjyJE6ZCA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/fs-extra/-/fs-extra-6.0.1.tgz}
-
   fs-extra@7.0.1:
     resolution: {integrity: sha512-YJDaCJZEnBmcbw13fvdAM9AwNOJwOzrE4pqMqBq5nFiEqXUqHwlK4B+3pUw6JNvfSPtX05xFHtYy/1ni01eGCw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/fs-extra/-/fs-extra-7.0.1.tgz}
     engines: {node: '>=6 <7 || >=8'}
@@ -3872,10 +3834,6 @@ packages:
   get-stdin@9.0.0:
     resolution: {integrity: sha512-dVKBjfWisLAicarI2Sf+JuBE/DghV4UzNAVe9yhEJuzeREd3JhOTE9cUaJTeSa77fsbQUK3pcOpJfM59+VKZaA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/get-stdin/-/get-stdin-9.0.0.tgz}
     engines: {node: '>=12'}
-
-  get-stream@4.1.0:
-    resolution: {integrity: sha512-GMat4EJ5161kIy2HevLlr4luNjBgvmj413KaQA7jt4V8B4RDsfpHk7WQ9GVqfYyyx8OS/L66Kox+rJRNklLK7w==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/get-stream/-/get-stream-4.1.0.tgz}
-    engines: {node: '>=6'}
 
   get-stream@5.2.0:
     resolution: {integrity: sha512-nBF+F1rAZVCu/p7rjzgA+Yb4lfYXrpl7a6VmJrU8wF9I1CKvP/QwPNZHnOlwbTkY6dvtFIzFMSyQXbLoTQPRpA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/get-stream/-/get-stream-5.2.0.tgz}
@@ -4004,10 +3962,6 @@ packages:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/gopd/-/gopd-1.2.0.tgz}
     engines: {node: '>= 0.4'}
 
-  got@9.6.0:
-    resolution: {integrity: sha512-R7eWptXuGYxwijs0eV+v3o6+XH1IqVK8dJOEecQfTmkncw9AV4dcw/Dhxi8MdlqPthxxpZyizMzyg8RTmEsG+Q==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/got/-/got-9.6.0.tgz}
-    engines: {node: '>=8.6'}
-
   graceful-fs@4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/graceful-fs/-/graceful-fs-4.2.10.tgz}
 
@@ -4116,9 +4070,6 @@ packages:
   html-tags@3.3.1:
     resolution: {integrity: sha512-ztqyC3kLto0e9WbNp0aeP+M3kTt+nbaIveGmUxAtZa+8iFgKLUOD4YKM5j+f3QD89bra7UeumolZHKuOXnTmeQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/html-tags/-/html-tags-3.3.1.tgz}
     engines: {node: '>=8'}
-
-  http-cache-semantics@4.3.0:
-    resolution: {integrity: sha512-M5t5LlJpS1UHMjvwRQVdFHvPISGeLAxNcrWuJkeGh0KxsqCHZ1O3NXZU/8x7cD0BDcGW8kapxMKTvwlqrNkHkA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/http-cache-semantics/-/http-cache-semantics-4.3.0.tgz}
 
   http-errors@1.6.3:
     resolution: {integrity: sha512-lks+lVC8dgGyh97jxvxeYTWQFvh4uw4yC12gVl63Cg30sjPX4wuGcdkICVXDAESr6OJGjqGA8Iz5mkeN6zlD7A==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/http-errors/-/http-errors-1.6.3.tgz}
@@ -4552,9 +4503,6 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  json-buffer@3.0.0:
-    resolution: {integrity: sha512-CuUqjv0FUZIdXkHPI8MezCnFCdaTAacej1TZYulLoAg1h/PhwkdXFN4V/gzY4g+fMBCOV2xF+rp7t2XD2ns/NQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/json-buffer/-/json-buffer-3.0.0.tgz}
-
   json-buffer@3.0.1:
     resolution: {integrity: sha512-4bV5BfR2mqfQTJm+V5tPPdf+ZpuhiIvTuAB5g8kcrXOZpTT/QwwVRWBywX1ozr6lEuPdbHxwaJlm9G6mI2sfSQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/json-buffer/-/json-buffer-3.0.1.tgz}
 
@@ -4600,9 +4548,6 @@ packages:
 
   jsonify@0.0.1:
     resolution: {integrity: sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/jsonify/-/jsonify-0.0.1.tgz}
-
-  keyv@3.1.0:
-    resolution: {integrity: sha512-9ykJ/46SN/9KPM/sichzQ7OvXyGDYKGTaDlKMGCAlg2UK8KRy4jb0d8sFc+0Tt0YYnThq8X2RZgCg74RPxgcVA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/keyv/-/keyv-3.1.0.tgz}
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/keyv/-/keyv-4.5.4.tgz}
@@ -4725,14 +4670,6 @@ packages:
 
   lower-case@2.0.2:
     resolution: {integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/lower-case/-/lower-case-2.0.2.tgz}
-
-  lowercase-keys@1.0.1:
-    resolution: {integrity: sha512-G2Lj61tXDnVFFOi8VZds+SoQjtQC3dgokKdDG2mTm1tx4m50NUHBOZSBwQQHyy0V12A0JTG4icfZQH+xPyh8VA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/lowercase-keys/-/lowercase-keys-1.0.1.tgz}
-    engines: {node: '>=0.10.0'}
-
-  lowercase-keys@2.0.0:
-    resolution: {integrity: sha512-tqNXrS78oMOE73NMxK4EMLQsQowWf8jKooH9g7xPavRT706R6bkQJ6DY2Te7QukaZsulxa30wQ7bk0pm4XiHmA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/lowercase-keys/-/lowercase-keys-2.0.0.tgz}
-    engines: {node: '>=8'}
 
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/lru-cache/-/lru-cache-10.4.3.tgz}
@@ -4871,10 +4808,6 @@ packages:
   mimic-fn@4.0.0:
     resolution: {integrity: sha512-vqiC06CuhBTUdZH+RYl8sFrL096vA45Ok5ISO6sE/Mr1jRbGH4Csnhi8f3wKVl7x8mO4Au7Ir9D3Oyv1VYMFJw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/mimic-fn/-/mimic-fn-4.0.0.tgz}
     engines: {node: '>=12'}
-
-  mimic-response@1.0.1:
-    resolution: {integrity: sha512-j5EctnkH7amfV/q5Hgmoal1g2QHFJRraOtmx0JpIqkxhBhI/lJSl1nMpQ45hVarwNETOoWEimndZ4QK0RHxuxQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/mimic-response/-/mimic-response-1.0.1.tgz}
-    engines: {node: '>=4'}
 
   mini-css-extract-plugin@2.10.2:
     resolution: {integrity: sha512-AOSS0IdEB95ayVkxn5oGzNQwqAi2J0Jb/kKm43t7H73s8+f5873g0yuj0PNvK4dO75mu5DHg4nlgp4k6Kga8eg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/mini-css-extract-plugin/-/mini-css-extract-plugin-2.10.2.tgz}
@@ -5096,10 +5029,6 @@ packages:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/normalize-path/-/normalize-path-3.0.0.tgz}
     engines: {node: '>=0.10.0'}
 
-  normalize-url@4.5.1:
-    resolution: {integrity: sha512-9UZCFRHQdNrfTpGg8+1INIg93B6zE0aXMVFkw1WFwvO4SlZywU6aLg5Of0Ap/PgcbSw4LNxvMWXMeugwMCX0AA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/normalize-url/-/normalize-url-4.5.1.tgz}
-    engines: {node: '>=8'}
-
   normalize-url@9.0.1:
     resolution: {integrity: sha512-ARftfC5HdUNu9jJeL8pHj8debUIHA2b91FizCoMzY4lG6dDX13jdvTK0TBe24IBDRf2HvJSzzwEPvmbkQWHRSg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/normalize-url/-/normalize-url-9.0.1.tgz}
     engines: {node: '>=20'}
@@ -5281,10 +5210,6 @@ packages:
     resolution: {integrity: sha512-19YVAg7T+WTrxggPukVq7DjTv6+PJ867TmhCvBsYwmbFCsZd344rq2Ld1p0wo8f8Qrrhgp82c6FJRqdXWtSEhg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/own-keys/-/own-keys-1.0.2.tgz}
     engines: {node: '>= 0.4'}
 
-  p-cancelable@1.1.0:
-    resolution: {integrity: sha512-s73XxOZ4zpt1edZYZzvhqFa6uvQc1vwUa0K0BdtIZgQMAJj9IbebH+JkgKZc9h+B05PKHLOTl4ajG1BmNrVZlw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/p-cancelable/-/p-cancelable-1.1.0.tgz}
-    engines: {node: '>=6'}
-
   p-defer@1.0.0:
     resolution: {integrity: sha512-wB3wfAxZpk2AzOfUMJNL+d36xothRSyj8EXOa4f6GMqYDN9BJaaSISbsk+wS9abmnebVw95C2Kb5t85UmpCxuw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/p-defer/-/p-defer-1.0.0.tgz}
     engines: {node: '>=4'}
@@ -5363,10 +5288,6 @@ packages:
 
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/package-json-from-dist/-/package-json-from-dist-1.0.1.tgz}
-
-  package-json@6.5.0:
-    resolution: {integrity: sha512-k3bdm2n25tkyxcjSKzB5x8kfVxlMdgsbPr0GkZcwHsLpba6cBjqCt1KlcChKEvxHIcTB1FVMuwoijZ26xex5MQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/package-json/-/package-json-6.5.0.tgz}
-    engines: {node: '>=8'}
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/parent-module/-/parent-module-1.0.1.tgz}
@@ -5563,10 +5484,6 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/prelude-ls/-/prelude-ls-1.2.1.tgz}
     engines: {node: '>= 0.8.0'}
 
-  prepend-http@2.0.0:
-    resolution: {integrity: sha512-ravE6m9Atw9Z/jjttRUZ+clIXogdghyZAuWJ3qEzjT+jI/dL1ifAqhZeC5VHzQp1MSt1+jxKkFNemj/iO7tVUA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/prepend-http/-/prepend-http-2.0.0.tgz}
-    engines: {node: '>=4'}
-
   prettier-plugin-ember-template-tag@2.1.8:
     resolution: {integrity: sha512-ioLdBFoZ11kuiuFF9/bGwHgzjiU3vQVOF1rQhcuEqGc1jmKBH+G3i3BL2yHGum2Z2IQOE/7MPstYo5iAU0Uhlw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/prettier-plugin-ember-template-tag/-/prettier-plugin-ember-template-tag-2.1.8.tgz}
     engines: {node: 18.* || >= 20}
@@ -5747,17 +5664,9 @@ packages:
     resolution: {integrity: sha512-VpdamrZ9bw4YmvMZfTA3Yg8IHU9Guvg21bonvgjC4l3KfBkOqCPJesHakz7cQeE4Vh4zz4r4Gy6igAcnJxZv9g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/regexpu-core/-/regexpu-core-6.5.4.tgz}
     engines: {node: '>=4'}
 
-  registry-auth-token@4.2.2:
-    resolution: {integrity: sha512-PC5ZysNb42zpFME6D/XlIgtNGdTl8bBOCw90xQLVMpzuuubJKYDWFAEuUNc+Cn8Z8724tg2SDhDRrkVEsqfDMg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/registry-auth-token/-/registry-auth-token-4.2.2.tgz}
-    engines: {node: '>=6.0.0'}
-
   registry-auth-token@5.1.1:
     resolution: {integrity: sha512-P7B4+jq8DeD2nMsAcdfaqHbssgHtZ7Z5+++a5ask90fvmJ8p5je4mOa+wzu+DB4vQ5tdJV/xywY+UnVFeQLV5Q==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/registry-auth-token/-/registry-auth-token-5.1.1.tgz}
     engines: {node: '>=14'}
-
-  registry-url@5.1.0:
-    resolution: {integrity: sha512-8acYXXTI0AkQv6RAOjE3vOaIXZkT9wo4LOFbBKYQEEnnMNBpKqdUrI6S4NT0KPIo/WVvJ5tE/X5LF/TQUf0ekw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/registry-url/-/registry-url-5.1.0.tgz}
-    engines: {node: '>=8'}
 
   regjsgen@0.8.0:
     resolution: {integrity: sha512-RvwtGe3d7LvWiDQXeQw8p5asZUmfU1G/l6WbUXeHta7Y2PEIvBTwH6E2EfmYUK8pxcxEdEmaomqyp0vZZ7C+3Q==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/regjsgen/-/regjsgen-0.8.0.tgz}
@@ -5765,10 +5674,6 @@ packages:
   regjsparser@0.14.1:
     resolution: {integrity: sha512-IeYboCLG1KBNRksrZQIZ1SV5KVWZiR0ikFokOcA0n63vLvlaFvCsfxN+fd4aXwL0KW3YD+ByRzIgo9ZAHdbldw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/regjsparser/-/regjsparser-0.14.1.tgz}
     hasBin: true
-
-  remote-git-tags@3.0.0:
-    resolution: {integrity: sha512-C9hAO4eoEsX+OXA4rla66pXZQ+TLQ8T9dttgQj18yuKlPMTVkIkdYXvlMC55IuUsIkV6DpmQYi10JKFLaU+l7w==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/remote-git-tags/-/remote-git-tags-3.0.0.tgz}
-    engines: {node: '>=8'}
 
   remove-types@1.0.0:
     resolution: {integrity: sha512-G7Hk1Q+UJ5DvlNAoJZObxANkBZGiGdp589rVcTW/tYqJWJ5rwfraSnKSQaETN8Epaytw8J40nS/zC7bcHGv36w==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/remove-types/-/remove-types-1.0.0.tgz}
@@ -5841,9 +5746,6 @@ packages:
     resolution: {integrity: sha512-tqt+NBWwyaMgw3zDsnygx4CByWjQEJHOPMdslYhppaQSJUtL/D4JO9CcBBlhPoI8lz9oJIDXkwXfhF4aWqP8xQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/resolve/-/resolve-2.0.0-next.7.tgz}
     engines: {node: '>= 0.4'}
     hasBin: true
-
-  responselike@1.0.2:
-    resolution: {integrity: sha512-/Fpe5guzJk1gPqdJLJR5u7eG/gNY4nImjbRDaVWVMRhne55TCmj2i9Q+54PBRfatRC8v/rIiv9BN0pMd9OV5EQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/responselike/-/responselike-1.0.2.tgz}
 
   restore-cursor@2.0.0:
     resolution: {integrity: sha512-6IzJLuGi4+R14vwagDHX+JrXmPVtPpn4mffDJ1UdR7/Edm87fl6yi8mMBIVvFtJaNTUvjughmW4hwLhRG7gC1Q==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/restore-cursor/-/restore-cursor-2.0.0.tgz}
@@ -6475,10 +6377,6 @@ packages:
   tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/tmpl/-/tmpl-1.0.5.tgz}
 
-  to-readable-stream@1.0.0:
-    resolution: {integrity: sha512-Iq25XBt6zD5npPhlLVXGFN3/gyR2/qODcKNNyTMd4vbm39HUaOiAM4PMq0eMVC/Tkxz+Zjdsc55g9yyz+Yq00Q==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/to-readable-stream/-/to-readable-stream-1.0.0.tgz}
-    engines: {node: '>=6'}
-
   to-regex-range@5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/to-regex-range/-/to-regex-range-5.0.1.tgz}
     engines: {node: '>=8.0'}
@@ -6682,10 +6580,6 @@ packages:
   url-join@5.2.0:
     resolution: {integrity: sha512-/tMVQdp/2eE90fGb6npbd2nLHH8jamzLLeZhLEKTz4Rc38wO5AeEuIhoWroWWfQJS50ZzL4Xod9JER/pJWTTEQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/url-join/-/url-join-5.2.0.tgz}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-
-  url-parse-lax@3.0.0:
-    resolution: {integrity: sha512-NjFKA0DidqPa5ciFcSrXnAltTtzz84ogy+NebPvfEgAck0+TNg4UJ4IN+fB7zRZfbgUf0syOo9MDxFkDSMuFaQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/url-parse-lax/-/url-parse-lax-3.0.0.tgz}
-    engines: {node: '>=4'}
 
   username-sync@1.0.3:
     resolution: {integrity: sha512-m/7/FSqjJNAzF2La448c/aEom0gJy7HY7Y509h6l0ePvEkFictAGptwWaj1msWJ38JbfEDOUoE8kqFee9EHKdA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/username-sync/-/username-sync-1.0.3.tgz}
@@ -8144,6 +8038,8 @@ snapshots:
     optionalDependencies:
       '@embroider/core': 3.5.10
 
+  '@embroider/try@1.0.2': {}
+
   '@eslint-community/eslint-utils@4.10.1(eslint@9.39.5(jiti@2.7.0))':
     dependencies:
       eslint: 9.39.5(jiti@2.7.0)
@@ -8754,8 +8650,6 @@ snapshots:
 
   '@simple-libs/stream-utils@2.0.0': {}
 
-  '@sindresorhus/is@0.14.0': {}
-
   '@sindresorhus/is@4.6.0': {}
 
   '@sindresorhus/merge-streams@2.3.0': {}
@@ -8763,10 +8657,6 @@ snapshots:
   '@sindresorhus/merge-streams@4.0.0': {}
 
   '@socket.io/component-emitter@3.1.2': {}
-
-  '@szmarczak/http-timer@1.1.2':
-    dependencies:
-      defer-to-connect: 1.1.3
 
   '@types/cors@2.8.19':
     dependencies:
@@ -8800,10 +8690,6 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/keyv@3.1.4':
-    dependencies:
-      '@types/node': 26.6.6
-
   '@types/minimatch@3.0.5': {}
 
   '@types/minimatch@6.0.0':
@@ -8815,10 +8701,6 @@ snapshots:
       undici-types: 8.9.0
 
   '@types/normalize-package-data@2.4.4': {}
-
-  '@types/responselike@1.0.3':
-    dependencies:
-      '@types/node': 26.6.6
 
   '@types/rimraf@2.0.5':
     dependencies:
@@ -9713,16 +9595,6 @@ snapshots:
 
   bytes@3.1.2: {}
 
-  cacheable-request@6.1.0:
-    dependencies:
-      clone-response: 1.0.3
-      get-stream: 5.2.0
-      http-cache-semantics: 4.3.0
-      keyv: 3.1.0
-      lowercase-keys: 2.0.0
-      normalize-url: 4.5.1
-      responselike: 1.0.2
-
   cacheable@2.5.0:
     dependencies:
       '@cacheable/memory': 2.2.0
@@ -9866,10 +9738,6 @@ snapshots:
       string-width: 7.2.0
       strip-ansi: 7.2.0
       wrap-ansi: 9.0.2
-
-  clone-response@1.0.3:
-    dependencies:
-      mimic-response: 1.0.1
 
   clone@1.0.4: {}
 
@@ -10139,10 +10007,6 @@ snapshots:
 
   decimal.js@10.6.0: {}
 
-  decompress-response@3.3.0:
-    dependencies:
-      mimic-response: 1.0.1
-
   decorator-transforms@2.4.0(@babel/core@7.29.13):
     dependencies:
       '@babel/core': 7.29.13
@@ -10155,8 +10019,6 @@ snapshots:
   defaults@1.0.4:
     dependencies:
       clone: 1.0.4
-
-  defer-to-connect@1.1.3: {}
 
   define-data-property@1.1.4:
     dependencies:
@@ -10220,8 +10082,6 @@ snapshots:
   duplexer2@0.1.4:
     dependencies:
       readable-stream: 2.3.8
-
-  duplexer3@0.1.5: {}
 
   eastasianwidth@0.2.0: {}
 
@@ -10760,33 +10620,6 @@ snapshots:
       tmp: 0.2.7
       workerpool: 6.5.1
     transitivePeerDependencies:
-      - supports-color
-
-  ember-try-config@4.0.0:
-    dependencies:
-      ember-source-channel-url: 3.0.0
-      lodash: 4.18.1
-      package-json: 6.5.0
-      remote-git-tags: 3.0.0
-      semver: 7.8.6
-    transitivePeerDependencies:
-      - encoding
-
-  ember-try@3.0.0:
-    dependencies:
-      chalk: 4.1.2
-      cli-table3: 0.6.5
-      core-object: 3.1.5
-      debug: 4.4.3
-      ember-try-config: 4.0.0
-      execa: 4.1.0
-      fs-extra: 6.0.1
-      resolve: 1.22.14
-      rimraf: 3.0.2
-      semver: 7.8.6
-      walk-sync: 2.2.0
-    transitivePeerDependencies:
-      - encoding
       - supports-color
 
   emoji-regex@10.6.0: {}
@@ -11521,12 +11354,6 @@ snapshots:
       jsonfile: 4.0.0
       universalify: 0.1.2
 
-  fs-extra@6.0.1:
-    dependencies:
-      graceful-fs: 4.2.12
-      jsonfile: 4.0.0
-      universalify: 0.1.2
-
   fs-extra@7.0.1:
     dependencies:
       graceful-fs: 4.2.12
@@ -11637,10 +11464,6 @@ snapshots:
       es-object-atoms: 1.1.2
 
   get-stdin@9.0.0: {}
-
-  get-stream@4.1.0:
-    dependencies:
-      pump: 3.0.4
 
   get-stream@5.2.0:
     dependencies:
@@ -11807,22 +11630,6 @@ snapshots:
 
   gopd@1.2.0: {}
 
-  got@9.6.0:
-    dependencies:
-      '@sindresorhus/is': 0.14.0
-      '@szmarczak/http-timer': 1.1.2
-      '@types/keyv': 3.1.4
-      '@types/responselike': 1.0.3
-      cacheable-request: 6.1.0
-      decompress-response: 3.3.0
-      duplexer3: 0.1.5
-      get-stream: 4.1.0
-      lowercase-keys: 1.0.1
-      mimic-response: 1.0.1
-      p-cancelable: 1.1.0
-      to-readable-stream: 1.0.0
-      url-parse-lax: 3.0.0
-
   graceful-fs@4.2.10: {}
 
   graceful-fs@4.2.12: {}
@@ -11931,8 +11738,6 @@ snapshots:
       whatwg-encoding: 3.1.1
 
   html-tags@3.3.1: {}
-
-  http-cache-semantics@4.3.0: {}
 
   http-errors@1.6.3:
     dependencies:
@@ -12389,8 +12194,6 @@ snapshots:
 
   jsesc@3.1.0: {}
 
-  json-buffer@3.0.0: {}
-
   json-buffer@3.0.1: {}
 
   json-parse-better-errors@1.0.2: {}
@@ -12434,10 +12237,6 @@ snapshots:
       graceful-fs: 4.2.12
 
   jsonify@0.0.1: {}
-
-  keyv@3.1.0:
-    dependencies:
-      json-buffer: 3.0.0
 
   keyv@4.5.4:
     dependencies:
@@ -12556,10 +12355,6 @@ snapshots:
   lower-case@2.0.2:
     dependencies:
       tslib: 2.9.1
-
-  lowercase-keys@1.0.1: {}
-
-  lowercase-keys@2.0.0: {}
 
   lru-cache@10.4.3: {}
 
@@ -12690,8 +12485,6 @@ snapshots:
   mimic-fn@3.1.0: {}
 
   mimic-fn@4.0.0: {}
-
-  mimic-response@1.0.1: {}
 
   mini-css-extract-plugin@2.10.2(webpack@5.112.2(postcss@8.5.33)):
     dependencies:
@@ -12844,8 +12637,6 @@ snapshots:
 
   normalize-path@3.0.0: {}
 
-  normalize-url@4.5.1: {}
-
   normalize-url@9.0.1: {}
 
   npm-package-arg@13.0.2:
@@ -12985,8 +12776,6 @@ snapshots:
       object-keys: 1.1.1
       safe-push-apply: 1.0.0
 
-  p-cancelable@1.1.0: {}
-
   p-defer@1.0.0: {}
 
   p-defer@4.0.1: {}
@@ -13048,13 +12837,6 @@ snapshots:
   p-try@2.2.0: {}
 
   package-json-from-dist@1.0.1: {}
-
-  package-json@6.5.0:
-    dependencies:
-      got: 9.6.0
-      registry-auth-token: 4.2.2
-      registry-url: 5.1.0
-      semver: 6.3.2
 
   parent-module@1.0.1:
     dependencies:
@@ -13217,8 +12999,6 @@ snapshots:
       source-map-js: 1.2.2
 
   prelude-ls@1.2.1: {}
-
-  prepend-http@2.0.0: {}
 
   prettier-plugin-ember-template-tag@2.1.8(prettier@3.10.1):
     dependencies:
@@ -13436,25 +13216,15 @@ snapshots:
       unicode-match-property-ecmascript: 2.0.0
       unicode-match-property-value-ecmascript: 2.2.1
 
-  registry-auth-token@4.2.2:
-    dependencies:
-      rc: 1.2.8
-
   registry-auth-token@5.1.1:
     dependencies:
       '@pnpm/npm-conf': 3.0.3
-
-  registry-url@5.1.0:
-    dependencies:
-      rc: 1.2.8
 
   regjsgen@0.8.0: {}
 
   regjsparser@0.14.1:
     dependencies:
       jsesc: 3.1.0
-
-  remote-git-tags@3.0.0: {}
 
   remove-types@1.0.0:
     dependencies:
@@ -13529,10 +13299,6 @@ snapshots:
       object-keys: 1.1.1
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
-
-  responselike@1.0.2:
-    dependencies:
-      lowercase-keys: 1.0.1
 
   restore-cursor@2.0.0:
     dependencies:
@@ -14412,8 +14178,6 @@ snapshots:
 
   tmpl@1.0.5: {}
 
-  to-readable-stream@1.0.0: {}
-
   to-regex-range@5.0.1:
     dependencies:
       is-number: 7.0.0
@@ -14607,10 +14371,6 @@ snapshots:
       punycode: 2.3.1
 
   url-join@5.2.0: {}
-
-  url-parse-lax@3.0.0:
-    dependencies:
-      prepend-http: 2.0.0
 
   username-sync@1.0.3: {}
 

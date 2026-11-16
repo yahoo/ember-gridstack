@@ -11,15 +11,8 @@ node_modules/
 .env*
 .pnp*
 .pnpm-store
-.sass-cache
 .eslintcache
 coverage/
 npm-debug.log*
-yarn-error.log
+pnpm-debug.log*
 testem.log
-
-# ember-try
-.node_modules.ember-try/
-package.json.ember-try
-/package-lock.json.ember-try
-/yarn.lock.ember-try
