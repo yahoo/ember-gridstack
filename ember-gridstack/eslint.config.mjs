@@ -78,7 +78,10 @@ export default [
     },
   },
   {
-    files: ['src/components/grid-stack.gjs'],
+    files: [
+      'src/components/grid-stack.gjs',
+      'src/components/grid-stack-layout.gjs',
+    ],
     rules: {
       // gridstack event callbacks are scheduled with scheduleOnce; changing that is out of scope
       'ember/no-runloop': 'off',
