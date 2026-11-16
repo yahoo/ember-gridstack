@@ -47,8 +47,7 @@ jobs:
           git clone https://github.com/screwdriver-cd/toolbox.git /tmp/ci
           yarn config set cache-folder ~/.yarn
           yarn install --frozen-lockfile
-          cd test-app
-          yarn ember github-pages:commit --message "Deploy gh-pages from $SD_BUILD_SHA"
+          ./build-scripts/deploy-gh-pages.sh "Deploy gh-pages from $SD_BUILD_SHA"
           . /tmp/ci/git-ssh.sh
           git push origin gh-pages:gh-pages
     secrets:

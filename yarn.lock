@@ -6193,14 +6193,6 @@ ember-cli-get-component-path-option@^1.0.0:
   resolved "https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-get-component-path-option/-/ember-cli-get-component-path-option-1.0.0.tgz#0d7b595559e2f9050abed804f1d8eff1b08bc771"
   integrity sha512-k47TDwcJ2zPideBCZE8sCiShSxQSpebY2BHcX2DdipMmBox5gsfyVrbKJWIHeSTTKyEUgmBIvQkqTOozEziCZA==
 
-ember-cli-github-pages@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-github-pages/-/ember-cli-github-pages-0.2.2.tgz#cef01ed1de9ddd82863b310fef05e7f5b55beb9e"
-  integrity sha512-pFtruVBZ5OW1O1MiGQRQSQewW9DSBx6ZbRcbVpcpTlZqeDyWs5nyvhOm4qRFwK6m+jQPe2l52cYtf1rUAkBNxA==
-  dependencies:
-    ember-cli-version-checker "^2.1.0"
-    rsvp "^4.7.0"
-
 ember-cli-htmlbars@^5.3.2, ember-cli-htmlbars@^5.7.1:
   version "5.7.2"
   resolved "https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-htmlbars/-/ember-cli-htmlbars-5.7.2.tgz#e0cd2fb3c20d85fe4c3e228e6f0590ee1c645ba8"
