@@ -3,7 +3,13 @@ import { setupRenderingTest } from 'ember-qunit';
 import { render, settled, find } from '@ember/test-helpers';
 import GridStack from 'ember-gridstack/components/grid-stack';
 import GridStackItem from 'ember-gridstack/components/grid-stack-item';
-import { State, Item, gridFor, itemTexts } from '../../helpers/grid';
+import {
+  State,
+  Item,
+  gridFor,
+  itemTexts,
+  pointerDrag,
+} from '../../helpers/grid';
 
 const sorted = (a) => [...a].sort();
 
@@ -50,6 +56,37 @@ module('Integration | Component | grid stack reorder', function (hooks) {
     );
     assert.strictEqual(ctx.grid.gridStack.engine.nodes.length, expected.length);
   }
+
+  test('gridstack still has the _sortDom the addon disables', function (assert) {
+    const proto = Object.getPrototypeOf(this.grid.gridStack);
+    assert.strictEqual(typeof proto._sortDom, 'function');
+    assert.notStrictEqual(this.grid.gridStack._sortDom, proto._sortDom);
+  });
+
+  test('remove a middle item after gridstack moved an item', async function (assert) {
+    await moveFirstAway(this);
+    this.state.items = this.state.items.filter((i) => i.id !== '2');
+    await settled();
+    check(assert, this, ['0', '1', '3']);
+  });
+
+  test('remove a middle item after a drag moved an item', async function (assert) {
+    await pointerDrag(find('[data-id="0"]'), 0, 260);
+    assert.notStrictEqual(
+      find('[data-id="0"]').gridstackNode.y,
+      0,
+      'drag moved the item',
+    );
+    this.state.items = this.state.items.filter((i) => i.id !== '2');
+    await settled();
+    check(assert, this, ['0', '1', '3']);
+  });
+
+  test('a drag that changes visual order keeps DOM order', async function (assert) {
+    await pointerDrag(find('[data-id="0"]'), 0, 260);
+    assert.notStrictEqual(find('[data-id="0"]').gridstackNode.y, 0);
+    assert.deepEqual(itemTexts(), ['0', '1', '2', '3']);
+  });
 
   test('reverse the array after gridstack moved an item', async function (assert) {
     await moveFirstAway(this);

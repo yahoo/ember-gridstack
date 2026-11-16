@@ -133,6 +133,13 @@ export default class GridStackComponent extends Component {
     this._appliedOptions = this.options;
     this.gridStack = GridStack.init({ ...this._appliedOptions }, this.elm);
 
+    // Glimmer owns the DOM order; gridstack's re-sorting would desync {{#each}}
+    if (typeof this.gridStack._sortDom === 'function') {
+      this.gridStack._sortDom = function () {
+        return this;
+      };
+    }
+
     // resolve @on* at fire time so changed handlers need no re-init
     GRID_STACK_EVENTS.forEach((eventName) => {
       const argName = `on${capitalize(eventName)}`;
