@@ -22,12 +22,12 @@
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@commitlint/prompt-cli": "^21.2.4",
-    "concurrently": "^9.1.2",
+    "concurrently": "^10.0.7",
     "husky": "^9.1.7",
     "prettier": "^3.10.1",
     "prettier-plugin-ember-template-tag": "^2.1.8",
     "pretty-quick": "^4.2.2",
-    "semantic-release": "^25.0.6"
+    "semantic-release": "^26.0.1"
   },
   "engines": {
     "node": ">= 20.19"
