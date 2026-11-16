@@ -65,6 +65,11 @@ export default class GridStackItem extends Component {
   }
 
   @action
+  resizeToContent() {
+    this.grid?.gridStack?.resizeToContent(this.elm);
+  }
+
+  @action
   willDestroyNode() {
     this.gridStackComponent?.removeWidget(this.elm);
   }

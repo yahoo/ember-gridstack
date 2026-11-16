@@ -203,6 +203,46 @@ export default class GridStackComponent extends Component {
     unregisterGridElement(this.elm);
   }
 
+  /** The GridStack instance, or `null` before insert / after destroy. */
+  get instance() {
+    return this.gridStack;
+  }
+
+  @action
+  compact(layout, doSort) {
+    return this.gridStack?.compact(layout, doSort);
+  }
+
+  @action
+  save(...args) {
+    return this.gridStack?.save(...args);
+  }
+
+  @action
+  load(layout, addRemove) {
+    return this.gridStack?.load(layout, addRemove);
+  }
+
+  @action
+  enableMove(doEnable, recurse) {
+    return this.gridStack?.enableMove(doEnable, recurse);
+  }
+
+  @action
+  enableResize(doEnable, recurse) {
+    return this.gridStack?.enableResize(doEnable, recurse);
+  }
+
+  @action
+  setMode(mode) {
+    return this.gridStack?.updateOptions({ mode });
+  }
+
+  @action
+  removeAll(removeDOM = false, triggerEvent = true) {
+    return this.gridStack?.removeAll(removeDOM, triggerEvent);
+  }
+
   @action
   addWidget(element) {
     this.gridStack?.makeWidget(element);
