@@ -6,7 +6,7 @@ import { on } from '@ember/modifier';
 import GridStack from 'ember-gridstack/components/grid-stack';
 import GridStackItem from 'ember-gridstack/components/grid-stack-item';
 
-// Items come from a tracked array; gridstack picks up new
+// The items come from a tracked array; gridstack picks up new
 // <GridStackItem>s and forgets removed ones.
 export default class AddRemove extends Component {
   @tracked items = [{ id: 1 }, { id: 2 }];

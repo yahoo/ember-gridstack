@@ -14,10 +14,14 @@ import GridStackItem from 'ember-gridstack/components/grid-stack-item';
           @options={{hash cellHeight=40 margin=4 column=4}}
         >
           <GridStackItem @options={{hash x=0 y=0 w=2 h=1}}>
-            <div class="widget"><div class="widget-label">Inner 1</div></div>
+            <div class="widget">
+              <div class="widget-label">Inner 1</div>
+            </div>
           </GridStackItem>
           <GridStackItem @options={{hash x=2 y=0 w=2 h=1}}>
-            <div class="widget"><div class="widget-label">Inner 2</div></div>
+            <div class="widget">
+              <div class="widget-label">Inner 2</div>
+            </div>
           </GridStackItem>
         </GridStack>
       </div>

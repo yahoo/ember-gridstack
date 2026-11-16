@@ -13,7 +13,9 @@ import GridStackItem from 'ember-gridstack/components/grid-stack-item';
       <div class="widget"><div class="widget-label">noMove</div></div>
     </GridStackItem>
     <GridStackItem @options={{hash x=8 y=0 w=4 h=2 noResize=true}}>
-      <div class="widget"><div class="widget-label">noResize</div></div>
+      <div class="widget">
+        <div class="widget-label">noResize</div>
+      </div>
     </GridStackItem>
     <GridStackItem @options={{hash x=0 y=2 w=4 h=1}}>
       <div class="widget"><div class="widget-label">free</div></div>

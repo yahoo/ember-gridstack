@@ -37,6 +37,8 @@ export default class Responsive extends Component {
 
   setWidth = (id) => (this.width = id);
   isActive = (id) => id === this.width;
+  buttonClass = (id) =>
+    this.isActive(id) ? 'button' : 'button button-quiet';
 
   watchColumns = modifier((frame) => {
     let raf;
@@ -59,7 +61,7 @@ export default class Responsive extends Component {
       {{#each presets as |preset|}}
         <button
           type="button"
-          class="button {{unless (this.isActive preset.id) 'button-quiet'}}"
+          class={{this.buttonClass preset.id}}
           aria-pressed={{if (this.isActive preset.id) "true" "false"}}
           {{on "click" (fn this.setWidth preset.id)}}
         >{{preset.label}}</button>
@@ -68,18 +70,25 @@ export default class Responsive extends Component {
         {{this.columnLabel}}
       </output>
     </div>
-    <div class="resize-frame" style={{this.frameStyle}} {{this.watchColumns}}>
+    <div
+      class="resize-frame"
+      style={{this.frameStyle}}
+      {{this.watchColumns}}
+    >
       <GridStack
         @options={{hash
           cellHeight=60
           margin=6
           columnOpts=(hash
-            breakpoints=(array (hash w=500 c=1) (hash w=900 c=6)) columnMax=12
+            breakpoints=(array (hash w=500 c=1) (hash w=900 c=6))
+            columnMax=12
           )
         }}
       >
         {{#each widgets as |widget|}}
-          <GridStackItem @options={{hash id=widget.id x=widget.x y=0 w=3 h=1}}>
+          <GridStackItem
+            @options={{hash id=widget.id x=widget.x y=0 w=3 h=1}}
+          >
             <div class="widget">
               <div class="widget-label">
                 Widget

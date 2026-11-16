@@ -10,5 +10,10 @@ module.exports = {
         templateSingleQuote: false,
       },
     },
+    {
+      // Shown as source snippets in the demo; keep them narrow.
+      files: 'app/components/examples/*.gjs',
+      options: { printWidth: 70 },
+    },
   ],
 };

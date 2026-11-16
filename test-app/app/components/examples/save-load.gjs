@@ -13,7 +13,9 @@ export default class SaveLoad extends Component {
   grid = null;
 
   get json() {
-    return this.saved ? JSON.stringify(this.saved, null, 1) : 'Not saved yet';
+    return this.saved
+      ? JSON.stringify(this.saved, null, 1)
+      : 'Not saved yet';
   }
 
   @action register(grid) {
@@ -49,7 +51,9 @@ export default class SaveLoad extends Component {
         <div class="widget"><div class="widget-label">two</div></div>
       </GridStackItem>
       <GridStackItem @options={{hash id="three" x=8 y=0 w=4 h=1}}>
-        <div class="widget"><div class="widget-label">three</div></div>
+        <div class="widget">
+          <div class="widget-label">three</div>
+        </div>
       </GridStackItem>
     </GridStack>
     <pre class="code saved-json"><code>{{this.json}}</code></pre>
