@@ -76,7 +76,7 @@ export default [
     },
   },
   {
-    files: ['tests/integration/components/*-test.js'],
+    files: ['tests/integration/components/*-test.gjs'],
     rules: {
       // existing assertions use assert.expect(); changing test assertions is out of scope
       'qunit/require-expect': 'off',

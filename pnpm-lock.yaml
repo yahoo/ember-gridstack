@@ -135,9 +135,6 @@ importers:
       '@ember/optional-features':
         specifier: ^2.3.0
         version: 2.3.0
-      '@ember/string':
-        specifier: ^3.0.1
-        version: 3.1.1
       '@ember/test-helpers':
         specifier: ^5.4.1
         version: 5.8.0(@babel/core@7.29.13)
@@ -1051,10 +1048,6 @@ packages:
 
   '@ember/render-modifiers@4.0.0':
     resolution: {integrity: sha512-QWo6rBJ9EwCLWbAzdppco2/Lh86Op3ad5UAn34yE9QaRgoMSf08XkMoE+5ftPiYOo08SG/QsNBDcxbpe3OgqWA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@ember/render-modifiers/-/render-modifiers-4.0.0.tgz}
-
-  '@ember/string@3.1.1':
-    resolution: {integrity: sha512-UbXJ+k3QOrYN4SRPHgXCqYIJ+yWWUg1+vr0H4DhdQPTy8LJfyqwZ2tc5uqpSSnEXE+/1KopHBE5J8GDagAg5cg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@ember/string/-/string-3.1.1.tgz}
-    engines: {node: 12.* || 14.* || >= 16}
 
   '@ember/test-helpers@5.8.0':
     resolution: {integrity: sha512-JvQr0F8f5YfhshcG9gpOhZyuCPHFGMnWYaMH0rPf33W2R+CocSdp/aHr7D5wUg9Tl7aBiMJW6yz80MpTPVpTWQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@ember/test-helpers/-/test-helpers-5.8.0.tgz}
@@ -8019,12 +8012,6 @@ snapshots:
   '@ember/render-modifiers@4.0.0':
     dependencies:
       '@embroider/addon-shim': 1.11.0
-
-  '@ember/string@3.1.1':
-    dependencies:
-      ember-cli-babel: 7.26.11
-    transitivePeerDependencies:
-      - supports-color
 
   '@ember/test-helpers@5.8.0(@babel/core@7.29.13)':
     dependencies:

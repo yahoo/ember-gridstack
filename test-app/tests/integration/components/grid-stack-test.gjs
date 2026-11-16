@@ -1,11 +1,14 @@
 import { action } from '@ember/object';
 import { run, next } from '@ember/runloop';
-import { A, isArray } from '@ember/array';
+import { isArray } from '@ember/array';
+import { fn, hash } from '@ember/helper';
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, triggerEvent, settled, find } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
-import { camelize } from '@ember/string';
+import { tracked } from '@glimmer/tracking';
+import GridStack from 'ember-gridstack/components/grid-stack';
+import GridStackItem from 'ember-gridstack/components/grid-stack-item';
+import EventListener from 'test-app/components/event-listener';
 
 /**
  * Read an item's gs-x/gs-y position. Older gridstack 12.x releases omit the attribute
@@ -15,19 +18,41 @@ function gsPos(selector, attr) {
   return Number(find(selector).getAttribute(attr) ?? 0);
 }
 
+const camelize = (str) => str.replace(/-(\w)/g, (_, c) => c.toUpperCase());
+
+class State {
+  @tracked items = [];
+  @tracked options;
+  @tracked onChange;
+  @tracked onAdded;
+  @tracked onRemoved;
+  @tracked shouldRender = true;
+}
+
+class Item {
+  @tracked options;
+
+  constructor(id, options) {
+    this.id = id;
+    this.options = options;
+  }
+}
+
 module('Integration | Component | grid stack', function (hooks) {
   setupRenderingTest(hooks);
 
   test('gridstack renders', async function (assert) {
     assert.expect(1);
 
-    await render(hbs`
-      <GridStack class="test-grid">
-        <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="1" gs-h="1">
-          <div class="grid-stack-item-content">My Widget</div>
-        </div>
-      </GridStack>
-    `);
+    await render(
+      <template>
+        <GridStack class="test-grid">
+          <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="1" gs-h="1">
+            <div class="grid-stack-item-content">My Widget</div>
+          </div>
+        </GridStack>
+      </template>,
+    );
 
     assert
       .dom(
@@ -41,17 +66,20 @@ module('Integration | Component | grid stack', function (hooks) {
   test('gridstack with items', async function (assert) {
     assert.expect(4);
 
-    this.set('items', A([0, 1]));
+    const state = new State();
+    state.items = [0, 1];
 
-    await render(hbs`
-      <GridStack>
-        {{#each this.items as |item|}}
-          <GridStackItem @options={{hash x=0 y=item}}>
-            {{item}}
-          </GridStackItem>
-        {{/each}}
-      </GridStack>
-    `);
+    await render(
+      <template>
+        <GridStack>
+          {{#each state.items as |item|}}
+            <GridStackItem @options={{hash x=0 y=item}}>
+              {{item}}
+            </GridStackItem>
+          {{/each}}
+        </GridStack>
+      </template>,
+    );
 
     assert
       .dom(
@@ -62,9 +90,8 @@ module('Integration | Component | grid stack', function (hooks) {
         'initial grid-stack-item components are initialized by gridstack',
       );
 
-    run(() => {
-      this.items.pushObject(2);
-    });
+    state.items = [...state.items, 2];
+    await settled();
 
     assert
       .dom(
@@ -81,9 +108,8 @@ module('Integration | Component | grid stack', function (hooks) {
       .dom('.grid-stack')
       .hasAttribute('gs-current-row', '3', 'gridstack recognizes new items');
 
-    run(() => {
-      this.items.popObject();
-    });
+    state.items = state.items.slice(0, -1);
+    await settled();
 
     assert
       .dom('.grid-stack')
@@ -97,17 +123,18 @@ module('Integration | Component | grid stack', function (hooks) {
   test('gridstack options', async function (assert) {
     assert.expect(4);
 
-    this.set('options', {
-      cellHeight: '200px',
-    });
+    const state = new State();
+    state.options = { cellHeight: '200px' };
 
-    await render(hbs`
-      <GridStack @options={{this.options}}>
-        <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="1" gs-h="1">
-          <div class="grid-stack-item-content">My Widget</div>
-        </div>
-      </GridStack>
-    `);
+    await render(
+      <template>
+        <GridStack @options={{state.options}}>
+          <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="1" gs-h="1">
+            <div class="grid-stack-item-content">My Widget</div>
+          </div>
+        </GridStack>
+      </template>,
+    );
 
     assert.strictEqual(
       this.element.querySelector('.grid-stack-item').clientHeight,
@@ -115,9 +142,8 @@ module('Integration | Component | grid stack', function (hooks) {
       'Cell height option is passed through to gridstack',
     );
 
-    this.set('options', {
-      cellHeight: '300px',
-    });
+    state.options = { cellHeight: '300px' };
+    await settled();
 
     assert.strictEqual(
       this.element.querySelector('.grid-stack-item').clientHeight,
@@ -125,10 +151,8 @@ module('Integration | Component | grid stack', function (hooks) {
       'Gridstack updates with options',
     );
 
-    this.set('options', {
-      cellHeight: '300px',
-      staticGrid: true,
-    });
+    state.options = { cellHeight: '300px', staticGrid: true };
+    await settled();
 
     assert
       .dom('.grid-stack-static .grid-stack-item')
@@ -149,21 +173,23 @@ module('Integration | Component | grid stack', function (hooks) {
     assert.expect(1);
 
     // Create fake component for listening to events
-    this.init = (containerComponent) => {
+    const init = (containerComponent) => {
       containerComponent.element.addEventListener('resizestop', () => {
         assert.ok(true, 'resize action is called when item is resized');
         done();
       });
     };
 
-    await render(hbs`
-      <GridStack>
-        <GridStackItem as |item|>
-          <EventListener @init={{fn this.init item}}/>
-        </GridStackItem>
-        <div class="a-different-item" />
-      </GridStack>
-    `);
+    await render(
+      <template>
+        <GridStack>
+          <GridStackItem as |item|>
+            <EventListener @init={{fn init item}} />
+          </GridStackItem>
+          <div class="a-different-item" />
+        </GridStack>
+      </template>,
+    );
 
     next(async () => {
       await triggerEvent('.grid-stack-item', 'resizestop');
@@ -178,31 +204,35 @@ module('Integration | Component | grid stack', function (hooks) {
   test('onChange, onAdded, onRemove actions', async function (assert) {
     assert.expect(12);
 
-    this.set('items', A([1]));
+    const state = new State();
+    state.items = [1];
 
     /* == Test event handlers when respective attrs not provided == */
 
-    await render(hbs`
-      <GridStack>
-        {{#each this.items as |item|}}
-          <GridStackItem @options={{hash x=0 y=item h=1}}>
-            {{item}}
-          </GridStackItem>
-        {{/each}}
-      </GridStack>
-    `);
+    await render(
+      <template>
+        <GridStack>
+          {{#each state.items as |item|}}
+            <GridStackItem @options={{hash x=0 y=item h=1}}>
+              {{item}}
+            </GridStackItem>
+          {{/each}}
+        </GridStack>
+      </template>,
+    );
 
-    run(() => this.items.pushObject(2));
+    state.items = [...state.items, 2];
+    await settled();
 
     /* == Test event handler when respective attrs provided == */
 
-    this.set('items', A([1]));
+    state.items = [1];
 
     const events = ['change', 'added', 'removed'];
 
     events.forEach((e) => {
       let onAttr = camelize(`on-${e}`);
-      this.set(onAttr, (event, items) => {
+      state[onAttr] = (event, items) => {
         const ids = items.map((i) => i.y).join(',');
         assert.ok(
           true,
@@ -219,41 +249,48 @@ module('Integration | Component | grid stack', function (hooks) {
           isArray(items),
           `\`${onAttr}\` action provides the \`items\` argument`,
         );
-      });
+      };
     });
 
-    await render(hbs`
-      <GridStack
-        @onChange={{this.onChange}}
-        @onAdded={{this.onAdded}}
-        @onRemoved={{this.onRemoved}}
-      >
-        {{#each this.items as |item|}}
-          <GridStackItem @options={{hash x=0 y=item}}>
-            {{item}}
-          </GridStackItem>
-        {{/each}}
-      </GridStack>
-    `);
+    await render(
+      <template>
+        <GridStack
+          @onChange={{state.onChange}}
+          @onAdded={{state.onAdded}}
+          @onRemoved={{state.onRemoved}}
+        >
+          {{#each state.items as |item|}}
+            <GridStackItem @options={{hash x=0 y=item}}>
+              {{item}}
+            </GridStackItem>
+          {{/each}}
+        </GridStack>
+      </template>,
+    );
 
     //Update gridstack
-    run(() => this.items.pushObject(2));
+    state.items = [...state.items, 2];
+    await settled();
 
     // this will trigger onChange in addition to onAdded as
     // the existing item at y=2 will be moved by gridstack
-    run(() => this.items.pushObject(2));
+    state.items = [...state.items, 2];
+    await settled();
 
-    run(() => this.items.removeObject(2));
+    state.items = state.items.filter((i) => i !== 2);
+    await settled();
   });
 
   test('gridstack items with noMove/Resize', async function (assert) {
-    await render(hbs`
-      <GridStack>
-        <GridStackItem @options={{hash x=0 y=0 noMove=true noResize=true}}>
-          Test widget
-        </GridStackItem>
-      </GridStack>
-    `);
+    await render(
+      <template>
+        <GridStack>
+          <GridStackItem @options={{hash x=0 y=0 noMove=true noResize=true}}>
+            Test widget
+          </GridStackItem>
+        </GridStack>
+      </template>,
+    );
 
     assert.deepEqual(
       [...find('.grid-stack-item').classList],
@@ -265,19 +302,21 @@ module('Integration | Component | grid stack', function (hooks) {
   test('gridstack is notified when items properties change', async function (assert) {
     assert.expect(2);
 
-    this.set('onChange', () => assert.ok(true, '`onChange` was called'));
+    const state = new State();
+    state.onChange = () => assert.ok(true, '`onChange` was called');
+    state.options = { w: 6 };
 
-    this.set('options', { w: 6 });
+    await render(
+      <template>
+        <GridStack @onChange={{state.onChange}}>
+          <GridStackItem @options={{state.options}}>
+            Test
+          </GridStackItem>
+        </GridStack>
+      </template>,
+    );
 
-    await render(hbs`
-      <GridStack @onChange={{this.onChange}}>
-        <GridStackItem @options={{this.options}}>
-          Test
-        </GridStackItem>
-      </GridStack>
-    `);
-
-    this.set('options', { w: 12 });
+    state.options = { w: 12 };
     await settled();
 
     class GlimmerActionListener {
@@ -287,32 +326,35 @@ module('Integration | Component | grid stack', function (hooks) {
       }
     }
     const listener = new GlimmerActionListener();
-    this.set('onChange', listener.onChange);
+    state.onChange = listener.onChange;
 
-    this.set('options', { w: 10 });
+    state.options = { w: 10 };
     await settled();
   });
 
   test('gridstack updates the layout when items properties change', async function (assert) {
     assert.expect(16);
-    this.set('items', [
-      { id: 0, options: { x: 0, y: 0, w: 5, h: 1 } },
-      { id: 1, options: { x: 6, y: 0, w: 3, h: 1 } },
-      { id: 2, options: { x: 0, y: 1, w: 4, h: 1 } },
-      { id: 3, options: { x: 6, y: 1, w: 2, h: 1 } },
-    ]);
+    const state = new State();
+    state.items = [
+      new Item(0, { x: 0, y: 0, w: 5, h: 1 }),
+      new Item(1, { x: 6, y: 0, w: 3, h: 1 }),
+      new Item(2, { x: 0, y: 1, w: 4, h: 1 }),
+      new Item(3, { x: 6, y: 1, w: 2, h: 1 }),
+    ];
 
-    await render(hbs`
-      <GridStack>
-        {{#each this.items as |item|}}
-          <GridStackItem data-id={{item.id}} @options={{item.options}}>
-            {{item.id}}
-          </GridStackItem>
-        {{/each}}
-      </GridStack>
-    `);
+    await render(
+      <template>
+        <GridStack>
+          {{#each state.items as |item|}}
+            <GridStackItem data-id={{item.id}} @options={{item.options}}>
+              {{item.id}}
+            </GridStackItem>
+          {{/each}}
+        </GridStack>
+      </template>,
+    );
 
-    this.items.forEach(({ id, options }) => {
+    state.items.forEach(({ id, options }) => {
       assert.strictEqual(
         gsPos(`[data-id="${id}"]`, 'gs-x'),
         options.x,
@@ -326,7 +368,9 @@ module('Integration | Component | grid stack', function (hooks) {
     });
 
     // Update the position of item 1
-    this.set('items.1.options', { x: 2, y: 1, w: 12, h: 1 });
+    state.items[1].options = { x: 2, y: 1, w: 12, h: 1 };
+    await settled();
+
     assert.strictEqual(
       gsPos(`[data-id="0"]`, 'gs-x'),
       0,
@@ -383,35 +427,39 @@ module('Integration | Component | grid stack', function (hooks) {
   test('do not fire `onChange` or `onRemoved` during teardown', async function (assert) {
     assert.expect(1);
 
-    this.set('shouldRender', true);
-    this.set('items', [
-      { id: 0, options: { x: 0, y: 0, w: 5, h: 1 } },
-      { id: 1, options: { x: 6, y: 0, w: 3, h: 1 } },
-      { id: 2, options: { x: 0, y: 1, w: 4, h: 1 } },
-      { id: 3, options: { x: 6, y: 1, w: 2, h: 1 } },
-    ]);
+    const state = new State();
+    state.shouldRender = true;
+    state.items = [
+      new Item(0, { x: 0, y: 0, w: 5, h: 1 }),
+      new Item(1, { x: 6, y: 0, w: 3, h: 1 }),
+      new Item(2, { x: 0, y: 1, w: 4, h: 1 }),
+      new Item(3, { x: 6, y: 1, w: 2, h: 1 }),
+    ];
 
-    this.onChange = () =>
+    state.onChange = () =>
       assert.notOk(true, '`onChange` should not fire on teardown');
-    this.onRemoved = () =>
+    state.onRemoved = () =>
       assert.notOk(true, '`onRemoved` should not fire on teardown');
 
-    await render(hbs`
-      {{#if this.shouldRender}}
-        <GridStack
-          onChange={{this.onChange}}
-          onRemoved={{this.onChange}}
-        >
-          {{#each this.items as |item|}}
-            <GridStackItem data-id={{item.id}} @options={{item.options}}>
-              {{item.id}}
-            </GridStackItem>
-          {{/each}}
-        </GridStack>
-      {{/if}}
-    `);
+    await render(
+      <template>
+        {{#if state.shouldRender}}
+          <GridStack
+            @onChange={{state.onChange}}
+            @onRemoved={{state.onRemoved}}
+          >
+            {{#each state.items as |item|}}
+              <GridStackItem data-id={{item.id}} @options={{item.options}}>
+                {{item.id}}
+              </GridStackItem>
+            {{/each}}
+          </GridStack>
+        {{/if}}
+      </template>,
+    );
 
-    this.set('shouldRender', false);
+    state.shouldRender = false;
+    await settled();
     assert.ok(true, 'all is good');
   });
 });

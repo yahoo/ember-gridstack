@@ -1,7 +1,12 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import { render, settled } from '@ember/test-helpers';
+import { tracked } from '@glimmer/tracking';
+import GridStackItem from 'ember-gridstack/components/grid-stack-item';
+
+class State {
+  @tracked options;
+}
 
 module('Integration | Component | grid stack item', function (hooks) {
   setupRenderingTest(hooks);
@@ -27,13 +32,15 @@ module('Integration | Component | grid stack item', function (hooks) {
 
     GridStackRegistry.registerGrid('fake-id', MockGridStack);
 
-    await render(hbs`
-      <div id="fake-id" class="grid-stack">
-        <GridStackItem>
-          template block text
-        </GridStackItem>
-      </div>
-    `);
+    await render(
+      <template>
+        <div id="fake-id" class="grid-stack">
+          <GridStackItem>
+            template block text
+          </GridStackItem>
+        </div>
+      </template>,
+    );
 
     assert.dom().hasText('template block text', 'Inner template is yielded');
   });
@@ -41,11 +48,12 @@ module('Integration | Component | grid stack item', function (hooks) {
   test('item options', async function (assert) {
     assert.expect(3);
 
-    this.set('options', {
-      minH: 2,
-    });
+    const state = new State();
+    state.options = { minH: 2 };
 
-    await render(hbs`<GridStackItem @options={{this.options}} />`);
+    await render(
+      <template><GridStackItem @options={{state.options}} /></template>,
+    );
 
     assert
       .dom('.grid-stack-item')
@@ -55,9 +63,8 @@ module('Integration | Component | grid stack item', function (hooks) {
         'Item options are added as data attributes',
       );
 
-    this.set('options', {
-      minH: 3,
-    });
+    state.options = { minH: 3 };
+    await settled();
 
     assert
       .dom('.grid-stack-item')
@@ -67,9 +74,8 @@ module('Integration | Component | grid stack item', function (hooks) {
         'Data attributes are updated with options',
       );
 
-    this.set('options', {
-      minH: undefined,
-    });
+    state.options = { minH: undefined };
+    await settled();
 
     assert
       .dom('.grid-stack-item')
