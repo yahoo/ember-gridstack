@@ -3,14 +3,14 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [master, alpha]
+    branches: [main, alpha]
 
 permissions:
   contents: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   lint:
@@ -67,3 +67,34 @@ jobs:
       - env:
           SCENARIO: ${{ matrix.scenario }}
         run: pnpm test:try "$SCENARIO"
+
+  release:
+    needs: [lint, test, try]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/alpha')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: release-${{ github.ref }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+    steps:
+      # persist-credentials stays on: semantic-release pushes the release tag and commit.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      # Trusted publishing needs npm >= 11.5.1; Node 22 ships npm 10.
+      - run: npm install -g npm@^11.5.1
+      - run: pnpm install --frozen-lockfile
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_PROVENANCE: 'true'
+        run: pnpm exec semantic-release

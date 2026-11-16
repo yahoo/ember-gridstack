@@ -45,7 +45,7 @@
   "release": {
     "repositoryUrl": "https://github.com/yahoo/ember-gridstack.git",
     "branches": [
-      "master",
+      "main",
       {
         "name": "alpha",
         "prerelease": true
