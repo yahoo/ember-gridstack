@@ -63,7 +63,15 @@
       <div class="example-preview">
         <GridStack
           @onChange={{this.logChange}}
-          @options={{hash float=this.shouldFloat cellHeight=80 margin=6}}
+          @options={{hash
+            float=this.shouldFloat
+            cellHeight=80
+            margin=6
+            columnOpts=(hash
+              breakpoints=(array (hash w=700 c=1) (hash w=1000 c=6))
+              columnMax=12
+            )
+          }}
         >
           <GridStackItem @options={{hash x=0 y=0 w=3 h=2}}>
             <StatWidget
