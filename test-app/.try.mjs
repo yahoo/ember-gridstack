@@ -8,7 +8,6 @@ export default {
         devDependencies: {
           'ember-source': '~4.12.0',
           '@glimmer/component': '^1.1.2',
-          'ember-load-initializers': '^2.1.2',
         },
       },
     },
