@@ -4,21 +4,16 @@
   "private": true,
   "repository": "https://github.com/yahoo/ember-gridstack.git",
   "license": "BSD-3-Clause",
-  "workspaces": [
-    "ember-gridstack",
-    "test-app"
-  ],
   "scripts": {
-    "build": "yarn workspace ember-gridstack build",
-    "lint": "yarn workspace ember-gridstack lint && yarn workspace test-app lint",
-    "lint:fix": "yarn workspace ember-gridstack lint:fix && yarn workspace test-app lint:fix",
-    "prepare": "husky && yarn build",
-    "start": "concurrently \"npm:start:*\" --restart-after 5000 --prefixColors auto",
-    "start:addon": "yarn workspace ember-gridstack start --no-watch.clearScreen",
-    "start:test-app": "yarn workspace test-app start",
-    "test": "yarn lint && yarn test:ember",
-    "test:ember": "yarn workspace test-app test:ember",
-    "test:ember-compatibility": "yarn workspace test-app test:ember-compatibility; status=$?; yarn install --frozen-lockfile --check-files; exit $status",
+    "build": "pnpm --filter ember-gridstack build",
+    "lint": "pnpm --filter '*' lint",
+    "lint:fix": "pnpm --filter '*' lint:fix",
+    "prepare": "husky && pnpm build",
+    "start": "concurrently 'pnpm:start:*' --restart-after 5000 --prefixColors auto",
+    "start:addon": "pnpm --filter ember-gridstack start --no-watch.clearScreen",
+    "start:test-app": "pnpm --filter test-app start",
+    "test": "pnpm lint && pnpm test:ember",
+    "test:ember": "pnpm --filter '*' test:ember",
     "semantic-release": "semantic-release",
     "commit": "commit"
   },
@@ -69,6 +64,7 @@
   },
   "volta": {
     "node": "22.23.5",
-    "yarn": "1.22.22"
-  }
+    "pnpm": "10.34.9"
+  },
+  "packageManager": "pnpm@10.34.9"
 }
