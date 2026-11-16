@@ -25,9 +25,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { schedule } from '@ember/runloop';
 import { GridStack } from 'gridstack';
-import didInsert from '@ember/render-modifiers/modifiers/did-insert';
-import didUpdate from '@ember/render-modifiers/modifiers/did-update';
-import willDestroy from '@ember/render-modifiers/modifiers/will-destroy';
+import lifecycle from '../utils/lifecycle.js';
 import GridStackItem from './grid-stack-item.gjs';
 import {
   registerGridElement,
@@ -219,9 +217,12 @@ export default class GridStackComponent extends Component {
   <template>
     <div
       class="grid-stack"
-      {{didInsert this.setup}}
-      {{didUpdate this.update @options}}
-      {{willDestroy this.willDestroyNode}}
+      {{lifecycle
+        setup=this.setup
+        update=this.update
+        teardown=this.willDestroyNode
+        options=@options
+      }}
       ...attributes
     >
       {{yield this}}

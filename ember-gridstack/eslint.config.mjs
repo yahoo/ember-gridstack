@@ -71,13 +71,6 @@ export default [
     },
   },
   {
-    files: ['src/components/*.gjs'],
-    rules: {
-      // components still rely on render-modifiers; rewriting them is out of scope for the v2 conversion
-      'ember/no-at-ember-render-modifiers': 'off',
-    },
-  },
-  {
     files: ['src/components/grid-stack.gjs'],
     rules: {
       // gridstack event callbacks are scheduled with scheduleOnce; changing that is out of scope

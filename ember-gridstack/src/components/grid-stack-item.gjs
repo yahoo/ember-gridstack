@@ -14,9 +14,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import { action } from '@ember/object';
-import didInsert from '@ember/render-modifiers/modifiers/did-insert';
-import didUpdate from '@ember/render-modifiers/modifiers/did-update';
-import willDestroy from '@ember/render-modifiers/modifiers/will-destroy';
+import lifecycle from '../utils/lifecycle.js';
 import gsItemAttributes from '../modifiers/gs-item-attributes.js';
 import { gridForElement } from '../utils/grid-elements.js';
 
@@ -71,9 +69,12 @@ export default class GridStackItem extends Component {
       class="grid-stack-item"
       ...attributes
       {{gsItemAttributes @options}}
-      {{didInsert this.setup}}
-      {{didUpdate this.updateGridStack @options}}
-      {{willDestroy this.willDestroyNode}}
+      {{lifecycle
+        setup=this.setup
+        update=this.updateGridStack
+        teardown=this.willDestroyNode
+        options=@options
+      }}
     >
       <div class="grid-stack-item-content">
         {{yield this}}

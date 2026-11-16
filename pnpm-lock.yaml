@@ -38,9 +38,6 @@ importers:
 
   ember-gridstack:
     dependencies:
-      '@ember/render-modifiers':
-        specifier: ^4.0.0
-        version: 4.0.0
       '@embroider/addon-shim':
         specifier: ^1.11.0
         version: 1.11.0
@@ -1118,9 +1115,6 @@ packages:
   '@ember/optional-features@3.0.0':
     resolution: {integrity: sha512-HMQqZoBb16I4NyHfQglIYjopSG6folcEJah2WPa0FuolWRA/8cS5ozQmFK5BQx7cijTQJxj6viLpQK9KrXuYdw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@ember/optional-features/-/optional-features-3.0.0.tgz}
     engines: {node: '>= 20.19'}
-
-  '@ember/render-modifiers@4.0.0':
-    resolution: {integrity: sha512-QWo6rBJ9EwCLWbAzdppco2/Lh86Op3ad5UAn34yE9QaRgoMSf08XkMoE+5ftPiYOo08SG/QsNBDcxbpe3OgqWA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@ember/render-modifiers/-/render-modifiers-4.0.0.tgz}
 
   '@ember/test-helpers@5.8.0':
     resolution: {integrity: sha512-JvQr0F8f5YfhshcG9gpOhZyuCPHFGMnWYaMH0rPf33W2R+CocSdp/aHr7D5wUg9Tl7aBiMJW6yz80MpTPVpTWQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@ember/test-helpers/-/test-helpers-5.8.0.tgz}
@@ -8587,10 +8581,6 @@ snapshots:
       - '@types/node'
       - supports-color
 
-  '@ember/render-modifiers@4.0.0':
-    dependencies:
-      '@embroider/addon-shim': 1.11.0
-
   '@ember/test-helpers@5.8.0(@babel/core@8.1.2)':
     dependencies:
       '@ember/test-waiters': 4.1.2
@@ -11138,7 +11128,6 @@ snapshots:
 
   ember-gridstack@file:ember-gridstack(@babel/core@8.1.2)(@glimmer/component@2.2.1)(@glimmer/tracking@1.1.2)(ember-source@7.4.0(@glimmer/component@2.2.1)):
     dependencies:
-      '@ember/render-modifiers': 4.0.0
       '@embroider/addon-shim': 1.11.0
       '@glimmer/component': 2.2.1
       '@glimmer/tracking': 1.1.2

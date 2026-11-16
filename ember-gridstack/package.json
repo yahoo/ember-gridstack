@@ -43,7 +43,6 @@
     "test": "echo 'A v2 addon does not have tests, run tests in test-app'"
   },
   "dependencies": {
-    "@ember/render-modifiers": "^4.0.0",
     "@embroider/addon-shim": "^1.11.0",
     "decorator-transforms": "^2.4.0",
     "ember-modifier": "^4.3.0",
