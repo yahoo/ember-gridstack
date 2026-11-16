@@ -1,4 +1,4 @@
-# ember-gridstack [![Pipeline Status][status-image]][status-url] [![Latest NPM release][npm-badge]][npm-badge-url] [![Ember Observer Score][ember-observer-badge]][ember-observer-badge-url]
+# ember-gridstack [![CI][ci-badge]][ci-badge-url] [![Latest NPM release][npm-badge]][npm-badge-url] [![Ember Observer Score][ember-observer-badge]][ember-observer-badge-url]
 
 Ember components to build drag-and-drop multi-column grids powered by [gridstack.js](https://gridstackjs.com/)
 
@@ -171,8 +171,8 @@ For touch support do the following
 By default, the [bower dependencies for Gridstack](https://github.com/troolee/gridstack.js#requirements)
 will be installed automatically.
 
-[status-image]: https://cd.screwdriver.cd/pipelines/7366/badge
-[status-url]: https://cd.screwdriver.cd/pipelines/7366
+[ci-badge]: https://github.com/yahoo/ember-gridstack/actions/workflows/ci.yml/badge.svg?branch=master
+[ci-badge-url]: https://github.com/yahoo/ember-gridstack/actions/workflows/ci.yml
 [npm-badge]: https://img.shields.io/npm/v/ember-gridstack.svg
 [npm-badge-url]: https://www.npmjs.com/package/ember-gridstack
 [ember-observer-badge]: https://emberobserver.com/badges/ember-gridstack.svg

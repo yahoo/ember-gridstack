@@ -3,7 +3,7 @@
 This repo is a pnpm workspace with two packages:
 
 - `ember-gridstack/` – the v2 addon (built with rollup)
-- `test-app/` – the test suite and the demo published to gh-pages
+- `test-app/` – the test suite and the demo, deployed to GitHub Pages
 
 Use Node 22 and pnpm 10 (both pinned in `package.json` via `volta` and `packageManager`; `corepack enable` also works).
 
@@ -29,6 +29,14 @@ test-app lists the addon as an injected dependency. It stays a symlink unless a 
 - `pnpm test` – Lints and runs the test suite on the current Ember version
 - `pnpm test:ember` – Runs the test suite on the current Ember version
 - `pnpm test:try` – Runs the test suite against every scenario in `test-app/.try.mjs` (via [`@embroider/try`](https://github.com/embroider-build/embroider/tree/main/packages/try)). Pass scenario names to run a subset, e.g. `pnpm test:try ember-lts-4.12`. It resets `test-app/` and `pnpm-lock.yaml` after each scenario, so commit your work first.
+
+## Continuous integration and releases
+
+GitHub Actions runs CI (`.github/workflows/ci.yml`) on pull requests and on pushes to `master` and `alpha`: a lint job, a test job, and one job per try scenario in `test-app/.try.mjs`. Every job must pass.
+
+Releases are handled by the Release workflow (`.github/workflows/release.yml`), which runs after CI succeeds on a push to `master` (published to npm as `latest`) or `alpha` (prerelease under the `alpha` dist-tag). It uses semantic-release to derive the version from conventional commits and publishes with npm trusted publishing and provenance, so no npm token is needed. Because it is triggered by `workflow_run`, GitHub always uses the copy of `release.yml` on the default branch.
+
+The demo is built and deployed to GitHub Pages from `master` by the Pages workflow (`.github/workflows/pages.yml`).
 
 ## Running the demo application
 
