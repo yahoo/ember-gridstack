@@ -32,11 +32,11 @@ test-app lists the addon as an injected dependency. It stays a symlink unless a 
 
 ## Continuous integration and releases
 
-GitHub Actions runs CI (`.github/workflows/ci.yml`) on pull requests and on pushes to `master` and `alpha`: a lint job, a test job, and one job per try scenario in `test-app/.try.mjs`. Every job must pass.
+GitHub Actions runs CI (`.github/workflows/ci.yml`) on pull requests and on pushes to `main` and `alpha`: a lint job, a test job, and one job per try scenario in `test-app/.try.mjs`. Every job must pass.
 
-Releases are handled by the Release workflow (`.github/workflows/release.yml`), which runs after CI succeeds on a push to `master` (published to npm as `latest`) or `alpha` (prerelease under the `alpha` dist-tag). It uses semantic-release to derive the version from conventional commits and publishes with npm trusted publishing and provenance, so no npm token is needed. Because it is triggered by `workflow_run`, GitHub always uses the copy of `release.yml` on the default branch.
+Releases come from the `release` job in `.github/workflows/ci.yml`, which runs after the lint, test and try jobs pass on a push to `main` (published to npm as `latest`) or `alpha` (prerelease under the `alpha` dist-tag). It uses semantic-release to derive the version from conventional commits and publishes with npm trusted publishing and provenance, so no npm token is needed. The job lives in ci.yml (not a separate `workflow_run` workflow) so it also runs for `alpha` while that branch is not the default.
 
-The demo is built and deployed to GitHub Pages from `master` by the Pages workflow (`.github/workflows/pages.yml`).
+The demo is built and deployed to GitHub Pages from `main` by the Pages workflow (`.github/workflows/pages.yml`).
 
 ## Running the demo application
 

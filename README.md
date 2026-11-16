@@ -171,7 +171,7 @@ For touch support do the following
 By default, the [bower dependencies for Gridstack](https://github.com/troolee/gridstack.js#requirements)
 will be installed automatically.
 
-[ci-badge]: https://github.com/yahoo/ember-gridstack/actions/workflows/ci.yml/badge.svg?branch=master
+[ci-badge]: https://github.com/yahoo/ember-gridstack/actions/workflows/ci.yml/badge.svg?branch=main
 [ci-badge-url]: https://github.com/yahoo/ember-gridstack/actions/workflows/ci.yml
 [npm-badge]: https://img.shields.io/npm/v/ember-gridstack.svg
 [npm-badge-url]: https://www.npmjs.com/package/ember-gridstack
