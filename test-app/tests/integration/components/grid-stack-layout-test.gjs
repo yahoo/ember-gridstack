@@ -27,11 +27,9 @@ const strip = (list) =>
     props,
   }));
 
-class Text extends Component {
-  <template>
-    <span class="text">{{@props.text}}{{@props.content}}</span>
-  </template>
-}
+const Text = <template>
+  <span class="text">{{@props.text}}{{@props.content}}</span>
+</template>;
 
 class Counter extends Component {
   @tracked count = this.args.props?.count ?? 0;
@@ -84,11 +82,7 @@ module('Integration | Component | grid stack layout', function (hooks) {
     await this.grid.render({
       template: (d) => <template>
         {{#if d.visible}}
-          <GridStack
-            @layout={{layout}}
-            @components={{components}}
-            as |widget grid|
-          >
+          <GridStack @layout={{layout}} @components={{components}} as |widget|>
             {{widget.id}}
           </GridStack>
         {{/if}}
@@ -193,13 +187,13 @@ module('Integration | Component | grid stack layout', function (hooks) {
     ];
 
     for (const f of fixtures) {
-      const input = JSON.parse(JSON.stringify(f.layout));
+      const fixture = JSON.parse(JSON.stringify(f.layout));
       await this.grid.render({
         template: (d) => <template>
           {{#if d.visible}}
             <GridStack
               @options={{hash column=12 cellHeight=50}}
-              @layout={{input}}
+              @layout={{fixture}}
               @components={{components}}
             />
           {{/if}}
@@ -231,7 +225,6 @@ module('Integration | Component | grid stack layout', function (hooks) {
               @options={{hash float=false}}
               @layout={{layout}}
               @components={{components}}
-              as |w grid|
             />
           </div>
         {{/if}}

@@ -37,11 +37,9 @@ class Counter extends Component {
   </template>
 }
 
-class Note extends Component {
-  <template>
-    <i class="note">{{@props.text}}</i>
-  </template>
-}
+const Note = <template>
+  <i class="note">{{@props.text}}</i>
+</template>;
 
 const components = { counter: Counter, note: Note };
 
