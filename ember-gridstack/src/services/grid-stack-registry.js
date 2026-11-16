@@ -2,6 +2,10 @@ import Service from '@ember/service';
 import { assert } from '@ember/debug';
 import { gridForElement } from '../utils/grid-elements.js';
 
+/**
+ * @deprecated Grids are found through their element; use the yielded
+ * `grid.Item` or a plain `<GridStackItem>` inside a `<GridStack>`.
+ */
 export default class GridstackService extends Service {
   _grids = {};
 

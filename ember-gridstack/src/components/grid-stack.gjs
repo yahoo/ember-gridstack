@@ -28,6 +28,7 @@ import { GridStack } from 'gridstack';
 import didInsert from '@ember/render-modifiers/modifiers/did-insert';
 import didUpdate from '@ember/render-modifiers/modifiers/did-update';
 import willDestroy from '@ember/render-modifiers/modifiers/will-destroy';
+import GridStackItem from './grid-stack-item.gjs';
 import {
   registerGridElement,
   unregisterGridElement,
@@ -86,6 +87,21 @@ const sameOption = (a, b) =>
 
 export default class GridStackComponent extends Component {
   @tracked elm;
+
+  constructor() {
+    super(...arguments);
+    const grid = this;
+    this.Item = <template>
+      <GridStackItem
+        @grid={{grid}}
+        @options={{@options}}
+        ...attributes
+        as |item|
+      >
+        {{yield item}}
+      </GridStackItem>
+    </template>;
+  }
 
   get options() {
     return {

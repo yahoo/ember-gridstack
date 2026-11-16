@@ -30,7 +30,12 @@ export default class GridStackItem extends Component {
   }
 
   // Resolved lazily: an initial item is inserted before its grid exists.
+  get grid() {
+    return this.args.grid ?? this.gridStackComponent;
+  }
+
   get gridStackComponent() {
+    if (this.args.grid) return this.args.grid;
     if (!this.elm) return undefined;
     const legacyId = this.elm.closest('.grid-stack')?.id;
     return (
