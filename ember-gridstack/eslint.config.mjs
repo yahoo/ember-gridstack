@@ -12,7 +12,7 @@
  *     npx eslint --inspect-config
  *
  */
-import babelParser from '@babel/eslint-parser';
+import emberParser from 'ember-eslint-parser';
 import js from '@eslint/js';
 import prettier from 'eslint-config-prettier';
 import ember from 'eslint-plugin-ember/recommended';
@@ -48,7 +48,7 @@ export default [
   {
     files: ['**/*.js'],
     languageOptions: {
-      parser: babelParser,
+      parser: emberParser,
     },
   },
   {

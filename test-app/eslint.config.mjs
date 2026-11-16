@@ -20,7 +20,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import qunit from 'eslint-plugin-qunit';
 import n from 'eslint-plugin-n';
 
-import babelParser from '@babel/eslint-parser';
+import emberParser from 'ember-eslint-parser';
 
 const esmParserOptions = {
   ecmaFeatures: { modules: true },
@@ -56,7 +56,7 @@ export default [
   {
     files: ['**/*.js'],
     languageOptions: {
-      parser: babelParser,
+      parser: emberParser,
     },
   },
   {

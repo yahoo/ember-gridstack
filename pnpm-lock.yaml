@@ -79,11 +79,14 @@ importers:
         specifier: ^6.0.4
         version: 6.1.0(@babel/core@7.29.13)(rollup@4.68.4)
       babel-plugin-ember-template-compilation:
-        specifier: ^2.2.5
-        version: 2.4.1
+        specifier: ^3.1.0
+        version: 3.1.0
       concurrently:
         specifier: ^9.0.1
         version: 9.2.5
+      ember-eslint-parser:
+        specifier: ^0.16.1
+        version: 0.16.1(@babel/eslint-parser@7.29.13(@babel/core@7.29.13)(eslint@9.39.5(jiti@2.7.0)))(typescript@6.0.3)
       ember-source:
         specifier: ~6.12.0
         version: 6.12.1(@glimmer/component@2.2.1)(rsvp@4.8.5)
@@ -133,7 +136,7 @@ importers:
         specifier: ^7.28.6
         version: 7.29.13(@babel/core@7.29.13)(eslint@9.39.5(jiti@2.7.0))
       '@babel/plugin-proposal-decorators':
-        specifier: ^7.29.0
+        specifier: ^7.29.7
         version: 7.29.7(@babel/core@7.29.13)
       '@ember/optional-features':
         specifier: ^2.3.0
@@ -198,6 +201,9 @@ importers:
       ember-cli-terser:
         specifier: ^4.0.2
         version: 4.0.2
+      ember-eslint-parser:
+        specifier: ^0.16.1
+        version: 0.16.1(@babel/eslint-parser@7.29.13(@babel/core@7.29.13)(eslint@9.39.5(jiti@2.7.0)))(typescript@6.0.3)
       ember-gridstack:
         specifier: workspace:*
         version: link:../ember-gridstack
@@ -1116,6 +1122,15 @@ packages:
     resolution: {integrity: sha512-CyvVye10wuCRCGjNjz+t3XogF55SEB2noSIXtLf+oAPI6EmbDv4hD1evwkGmr3M2t0pItvlYhTgoahv/nXrasQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@embroider/try/-/try-1.0.2.tgz}
     hasBin: true
 
+  '@emnapi/core@1.10.0':
+    resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@emnapi/core/-/core-1.10.0.tgz}
+
+  '@emnapi/runtime@1.10.0':
+    resolution: {integrity: sha512-ewvYlk86xUoGI0zQRNq/mC+16R1QeDlKQy21Ki3oSYXNgLb45GV1P6A0M+/s6nyCuNDqe5VpaY84BzXGwVbwFA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@emnapi/runtime/-/runtime-1.10.0.tgz}
+
+  '@emnapi/wasi-threads@1.2.1':
+    resolution: {integrity: sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@emnapi/wasi-threads/-/wasi-threads-1.2.1.tgz}
+
   '@eslint-community/eslint-utils@4.10.1':
     resolution: {integrity: sha512-cuadcxVFE8sDK6iWJbs8Sn0av2Nrh2QSGQhVlBW9AaAHqHwjWsZHT8LJ4hFGPh7ASBV2deFdM7H/DPjulmh8rg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@eslint-community/eslint-utils/-/eslint-utils-4.10.1.tgz}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -1406,6 +1421,13 @@ packages:
     resolution: {integrity: sha512-F5z53uvRIF4dYfFfJP3a2Cqg+4P1dgJchJsFnsZE0eZp0LK8X7g2J0CsJHRgns+skpXOlM7n5vFGwkWCWj8qJg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@lint-todo/utils/-/utils-13.1.1.tgz}
     engines: {node: 12.* || >= 14}
 
+  '@napi-rs/wasm-runtime@1.2.7':
+    resolution: {integrity: sha512-zJccwplOAbgfZju95IUHazLnx9RAPtPN2YGJXI6UbrgeaR9QfPjGrQL6ERkSAtnVCA4Q+83ApGyaX5zdpCaKkQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@napi-rs/wasm-runtime/-/wasm-runtime-1.2.7.tgz}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=23.5.0}
+    peerDependencies:
+      '@emnapi/core': ^1.7.1 || 2.0.0-beta.2 || 2.0.0-beta.3
+      '@emnapi/runtime': ^1.7.1 || 2.0.0-beta.2 || 2.0.0-beta.3
+
   '@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1':
     resolution: {integrity: sha512-54/JRvkLIzzDWshCWfuhadfrfZVPiElY8Fcgmg1HroEly/EDSszzhBAsarCux+D/kOslTRquNzuyGSmUSTTHGg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@nicolo-ribaudo/eslint-scope-5-internals/-/eslint-scope-5-internals-5.1.1-v1.tgz}
 
@@ -1474,6 +1496,136 @@ packages:
 
   '@octokit/types@18.0.0':
     resolution: {integrity: sha512-l6bAF43PNxkJp6g+W4PjoUSSkxHomXw2nOum5CTftJz1NlV3vu93NImgOYtLf6CbBUb5j+fiuzW0PPQ5JTSvZA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@octokit/types/-/types-18.0.0.tgz}
+
+  '@oxc-parser/binding-android-arm-eabi@0.130.0':
+    resolution: {integrity: sha512-h/xYU8/7ADWzVSf5I+YalLpj33LOy9CI/zgbJNIZ5eunRBG+Czqa3lZsvuPHHf3rOt6z1c5+UzoxjbAzAvhwVw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-android-arm-eabi/-/binding-android-arm-eabi-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm]
+    os: [android]
+
+  '@oxc-parser/binding-android-arm64@0.130.0':
+    resolution: {integrity: sha512-oFWFJrsGv9siFM4HjMqKNB7IuIZD/SMmZdCXl8xyx7lDplGvPKyewpOo272rSWgMXe2Wx7bWI0Yj+gkHv4qbeg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-android-arm64/-/binding-android-arm64-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [android]
+
+  '@oxc-parser/binding-darwin-arm64@0.130.0':
+    resolution: {integrity: sha512-sGUzupdTplK9jQg7eJZ878HfEgQjJNBc6dAYVWJ9W5aU+J8rLfRJhTVsKThiu1pNwm6Y1qKCcbC6WhNWSXR3Ig==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-darwin-arm64/-/binding-darwin-arm64-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@oxc-parser/binding-darwin-x64@0.130.0':
+    resolution: {integrity: sha512-PsB4cdCISbC00Uy8eiD8bc2AkGWjZqrSrJnkBFuG2ptrrf6mZ2F5gLFSjOAVMMgZPg8B1D7OydJwLWSfyI2Plg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-darwin-x64/-/binding-darwin-x64-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [darwin]
+
+  '@oxc-parser/binding-freebsd-x64@0.130.0':
+    resolution: {integrity: sha512-DgABp3l38hS77JbXCV4qk1+n6DPym5u8zzwuweokezm2tX194nDSJDENbDRECxVsiNbprKATLbk+Z5wlHT0OHw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-freebsd-x64/-/binding-freebsd-x64-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@oxc-parser/binding-linux-arm-gnueabihf@0.130.0':
+    resolution: {integrity: sha512-4Kn3CTEmwFrzhTSC/JuUW16qovmaMdX7jeSKbL8w0pLtLww7To1a2XJi9Z5uD8QWUkfUHhqfV+VD6dVzBnWzoA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-linux-arm-gnueabihf/-/binding-linux-arm-gnueabihf-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm]
+    os: [linux]
+
+  '@oxc-parser/binding-linux-arm-musleabihf@0.130.0':
+    resolution: {integrity: sha512-D35KZM3F4rRu1uAFKyBlg3Gaf/ybCjyaPR1hfgvk5ex8NtcTmRgc0JgSighEyNg96TPrFhemFba68SZuxaha8w==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-linux-arm-musleabihf/-/binding-linux-arm-musleabihf-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm]
+    os: [linux]
+
+  '@oxc-parser/binding-linux-arm64-gnu@0.130.0':
+    resolution: {integrity: sha512-Q9o7oVlo955KHwS8l1u0bCzIx+JsZUA3XToLXC+MsMhye/9LeBQbt84nh120cl2XLy+TEzvugYDiHShg5yaX6Q==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@oxc-parser/binding-linux-arm64-musl@0.130.0':
+    resolution: {integrity: sha512-EiJ/gC0ljbcwVpycC8YWw6ggMbtsPX8XMOt0mPx0aqWeMsNR+L9m05Flbvd5T+GlivG+GkSWQL7tM9SRFpM/dw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-linux-arm64-musl/-/binding-linux-arm64-musl-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@oxc-parser/binding-linux-ppc64-gnu@0.130.0':
+    resolution: {integrity: sha512-b+h/lsLLurp756dMGizNs5uPaJfyEdWrTcV5t8M609jWm1DEHB1StpRXCkyvwtkJx3m+qL5BNQ0dEKan/4yGFA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-linux-ppc64-gnu/-/binding-linux-ppc64-gnu-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [ppc64]
+    os: [linux]
+    libc: [glibc]
+
+  '@oxc-parser/binding-linux-riscv64-gnu@0.130.0':
+    resolution: {integrity: sha512-O19Cil83XAyjEFfo8WhkMwY58ALqZ7ckjGL+25mjMIuF84urWBeANH0FC8B8BsSSygWU3/1aY3ADdDbp+wlBnw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-linux-riscv64-gnu/-/binding-linux-riscv64-gnu-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [glibc]
+
+  '@oxc-parser/binding-linux-riscv64-musl@0.130.0':
+    resolution: {integrity: sha512-BgXRVC0+83n3YzCscLQjj6nbyeBIVeZYPTI4fFMAE4WNm2+4RXhWp03IVizL7esIz36kgmT48aebk1iM+cs8sw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-linux-riscv64-musl/-/binding-linux-riscv64-musl-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [musl]
+
+  '@oxc-parser/binding-linux-s390x-gnu@0.130.0':
+    resolution: {integrity: sha512-6tJz0xvnGhsokE7N1WlUSBXibpYmT9xSJFS1Ce41Km/+8gQvdlW8MLhRv8PD0L7ix8vRG0FDDepp3jdOFzdVdw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-linux-s390x-gnu/-/binding-linux-s390x-gnu-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [s390x]
+    os: [linux]
+    libc: [glibc]
+
+  '@oxc-parser/binding-linux-x64-gnu@0.130.0':
+    resolution: {integrity: sha512-9aCWj83dp3heTQGmGnZGdIWgxjZrr/7VQ0TGFHH5PKByxJKF2Hcr4qvaSUHhhGEa3MSsDjTL1YDP8RAgdL5/Cg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-linux-x64-gnu/-/binding-linux-x64-gnu-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@oxc-parser/binding-linux-x64-musl@0.130.0':
+    resolution: {integrity: sha512-afXt87aZBqrUVli8TB/I8H1G50RDWcwirjWtXGXYqJ2ZqWEiErH7V72j3LUSDZaivmtu2OLX0KQ/mbhP81mr7A==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-linux-x64-musl/-/binding-linux-x64-musl-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@oxc-parser/binding-openharmony-arm64@0.130.0':
+    resolution: {integrity: sha512-I0NCrZV/YZuCGWgqwNN/GO/iXlLF2z+Wgc7u+Aa9N4P51oYeIa0XT+zVBUne4csO9GqxskXgI4g8JzzWGRpfOw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-openharmony-arm64/-/binding-openharmony-arm64-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [openharmony]
+
+  '@oxc-parser/binding-wasm32-wasi@0.130.0':
+    resolution: {integrity: sha512-sJgQkGaBX0WJvPUDfwciex6IcTk5O5NLQ1bhEb6f3nBruh1GshKMRSMt2bxZlYrgBzjyBbJzsnO+InPG0bg+fA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-wasm32-wasi/-/binding-wasm32-wasi-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [wasm32]
+
+  '@oxc-parser/binding-win32-arm64-msvc@0.130.0':
+    resolution: {integrity: sha512-bjcma99sQrNh6RY4mPO9yTkfxql6TDFoN3HWdK31RCKXwNhcDgJXW/l8PUtzKNiQ+9vpKJfJtQq+LklBuxSOBA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-win32-arm64-msvc/-/binding-win32-arm64-msvc-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
+    os: [win32]
+
+  '@oxc-parser/binding-win32-ia32-msvc@0.130.0':
+    resolution: {integrity: sha512-hRYbv6HhpSTzT4xTiIkadLI7upLQxuOdLPR/9nL1fTjwhgutBTPXrwaAPb/jTFVx6/8C7Jb5HcUKhmNwloTbFA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-win32-ia32-msvc/-/binding-win32-ia32-msvc-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [ia32]
+    os: [win32]
+
+  '@oxc-parser/binding-win32-x64-msvc@0.130.0':
+    resolution: {integrity: sha512-RBpA9TsRucJq6HNVNCFF1iKg+QeTkLdZf7hi4xaOGCPvMZWvDHjQgSOEZMUpuW4JNciHbxNhLEYmz5CVygjVGQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-parser/binding-win32-x64-msvc/-/binding-win32-x64-msvc-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [x64]
+    os: [win32]
+
+  '@oxc-project/types@0.130.0':
+    resolution: {integrity: sha512-ibD2usx9JRu7f5pu2tMKMI4cpA4NgXJQoYRP4pQ7Pxmn1l6k/53qWtQWZayhYy3X4QZkt90Ot+mJEaeXouio6Q==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@oxc-project/types/-/types-0.130.0.tgz}
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@pkgjs/parseargs/-/parseargs-0.11.0.tgz}
@@ -1743,11 +1895,17 @@ packages:
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@socket.io/component-emitter/-/component-emitter-3.1.2.tgz}
 
+  '@tybys/wasm-util@0.10.5':
+    resolution: {integrity: sha512-dOGOPxlaNV+G046mZzN+9C0dAcQZeSKcXiVaM0TYy/LM4ttTmgSBDxYfovcYI8Em3+eAbiAYpvWLOv8+ZVRJKA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@tybys/wasm-util/-/wasm-util-0.10.5.tgz}
+
   '@types/cors@2.8.19':
     resolution: {integrity: sha512-mFNylyeyqN93lfe/9CSxOGREz8cpzAhH+E93xJ4xWQf62V8sQ/24reV2nyzUWM6H6Xji+GGHpkbLe7pVoUEskg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/cors/-/cors-2.8.19.tgz}
 
   '@types/eslint@8.56.12':
     resolution: {integrity: sha512-03ruubjWyOHlmljCVoxSuNDdmfZDzsrrz0P2LeJsOXr+ZwFQ+0yQIwNCwt/GYhV7Z31fgtXJTAEs+FYlEL851g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/eslint/-/eslint-8.56.12.tgz}
+
+  '@types/esrecurse@4.3.1':
+    resolution: {integrity: sha512-xJBAbDifo5hpffDBuHl0Y8ywswbiAp/Wi7Y/GtAgSlZyIABppyurxVueOPE8LUQOxdlgi6Zqce7uoEpqNTeiUw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/esrecurse/-/esrecurse-4.3.1.tgz}
 
   '@types/estree@1.0.10':
     resolution: {integrity: sha512-lTyOMnOcmRBzdCv6/4zUZCrEhV0xrqQiUZBZtVcbmLHBXKLnN8q89v/wKRF/Q0HbwVsqbIG3o5HDoFl9sduM+g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/estree/-/estree-1.0.10.tgz}
@@ -2106,6 +2264,10 @@ packages:
   babel-plugin-ember-template-compilation@2.4.1:
     resolution: {integrity: sha512-n+ktQ3JeyWrpRutSyPn2PsHeH+A94SVm+iUoogzf9VUqpP47FfWem24gpQXhn+p6+x5/BpuFJXMLXWt7ZoYAKA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/babel-plugin-ember-template-compilation/-/babel-plugin-ember-template-compilation-2.4.1.tgz}
     engines: {node: '>= 12.*'}
+
+  babel-plugin-ember-template-compilation@3.1.0:
+    resolution: {integrity: sha512-kk7cGyblE9n4MB98rqw2wuUW7YLD5FM+Tr97gNSYL4e8DBMQndLuWaWNx1wfd7o00NjFhhoTR+HZs2nj23g2Lw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/babel-plugin-ember-template-compilation/-/babel-plugin-ember-template-compilation-3.1.0.tgz}
+    engines: {node: '>= 18.*'}
 
   babel-plugin-htmlbars-inline-precompile@5.3.1:
     resolution: {integrity: sha512-QWjjFgSKtSRIcsBhJmEwS2laIdrA6na8HAlc/pEAhjHgQsah/gMiBFRZvbQTy//hWxR4BMwV7/Mya7q5H8uHeA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/babel-plugin-htmlbars-inline-precompile/-/babel-plugin-htmlbars-inline-precompile-5.3.1.tgz}
@@ -3140,6 +3302,18 @@ packages:
     engines: {node: '>= 20.19.0'}
     hasBin: true
 
+  ember-eslint-parser@0.16.1:
+    resolution: {integrity: sha512-1FSGhbknZwYG3nz3HK30lim4xVxM0B42ps5dOtrFrzz9cbdMtR5K+ftlOsfFjRLU7gL66zCJVVnsF1VuVlBSZg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-eslint-parser/-/ember-eslint-parser-0.16.1.tgz}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      '@babel/eslint-parser': ^7.28.6 || ^8.0.0
+      '@typescript-eslint/parser': '*'
+    peerDependenciesMeta:
+      '@babel/eslint-parser':
+        optional: true
+      '@typescript-eslint/parser':
+        optional: true
+
   ember-eslint-parser@0.5.13:
     resolution: {integrity: sha512-b6ALDaxs9Bb4v0uagWud/5lECb78qpXHFv7M340dUHFW4Y0RuhlsfA4Rb+765X1+6KHp8G7TaAs0UgggWUqD3g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-eslint-parser/-/ember-eslint-parser-0.5.13.tgz}
     engines: {node: '>=16.0.0'}
@@ -3149,6 +3323,9 @@ packages:
     peerDependenciesMeta:
       '@typescript-eslint/parser':
         optional: true
+
+  ember-estree@0.9.0:
+    resolution: {integrity: sha512-CExL0d6FbbffZaQkD0+zA5PaIgle3fbpzapuLVQ+QZfI2KLalnhuof0e85Zvfy/fh8+q9liw7dqUhQX4gibMBA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-estree/-/ember-estree-0.9.0.tgz}
 
   ember-load-initializers@3.0.1:
     resolution: {integrity: sha512-qV3vxJKw5+7TVDdtdLPy8PhVsh58MlK8jwzqh5xeOwJPNP7o0+BlhvwoIlLYTPzGaHdfjEIFCgVSyMRGd74E1g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-load-initializers/-/ember-load-initializers-3.0.1.tgz}
@@ -3424,6 +3601,10 @@ packages:
   eslint-scope@8.4.0:
     resolution: {integrity: sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/eslint-scope/-/eslint-scope-8.4.0.tgz}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  eslint-scope@9.1.2:
+    resolution: {integrity: sha512-xS90H51cKw0jltxmvmHy2Iai1LIqrfbw57b79w/J7MfvDfkIkFZ+kj6zC3BjtUwh150HsSSdxXZcsuv72miDFQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/eslint-scope/-/eslint-scope-9.1.2.tgz}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   eslint-utils@3.0.0:
     resolution: {integrity: sha512-uuQC43IGctw68pJA1RgbQS8/NP7rch6Cwd4j3ZBtgo4/8Flj4eGE7ZYSZRN3iq5pVUv6GPdW5Z1RFleo84uLDA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/eslint-utils/-/eslint-utils-3.0.0.tgz}
@@ -4073,6 +4254,10 @@ packages:
   html-tags@3.3.1:
     resolution: {integrity: sha512-ztqyC3kLto0e9WbNp0aeP+M3kTt+nbaIveGmUxAtZa+8iFgKLUOD4YKM5j+f3QD89bra7UeumolZHKuOXnTmeQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/html-tags/-/html-tags-3.3.1.tgz}
     engines: {node: '>=8'}
+
+  html-tags@5.1.0:
+    resolution: {integrity: sha512-n6l5uca7/y5joxZ3LUePhzmBFUJ+U2YWzhMa8XUTecSeSlQiZdF5XAd/Q3/WUl0VsXgUwWi8I7CNIwdI5WN1SQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/html-tags/-/html-tags-5.1.0.tgz}
+    engines: {node: '>=20.10'}
 
   http-errors@1.6.3:
     resolution: {integrity: sha512-lks+lVC8dgGyh97jxvxeYTWQFvh4uw4yC12gVl63Cg30sjPX4wuGcdkICVXDAESr6OJGjqGA8Iz5mkeN6zlD7A==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/http-errors/-/http-errors-1.6.3.tgz}
@@ -4736,6 +4921,9 @@ packages:
   mathml-tag-names@2.1.3:
     resolution: {integrity: sha512-APMBEanjybaPzUrfqU0IMU5I0AswKMH7k8OTLs0vvV4KZpExkTkY87nR/zpbuTPj+gARop7aGUbl11pnDfW6xg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/mathml-tag-names/-/mathml-tag-names-2.1.3.tgz}
 
+  mathml-tag-names@4.0.0:
+    resolution: {integrity: sha512-aa6AU2Pcx0VP/XWnh8IGL0SYSgQHDT6Ucror2j2mXeFAlN3ahaNs8EZtG1YiticMkSLj3Gt6VPFfZogt7G5iFQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/mathml-tag-names/-/mathml-tag-names-4.0.0.tgz}
+
   mdn-data@2.27.1:
     resolution: {integrity: sha512-9Yubnt3e8A0OKwxYSXyhLymGW4sCufcLG6VdiDdUGVkPhpqLxlvP5vl1983gQjJl3tqbrM731mjaZaP68AgosQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/mdn-data/-/mdn-data-2.27.1.tgz}
 
@@ -5212,6 +5400,10 @@ packages:
   own-keys@1.0.2:
     resolution: {integrity: sha512-19YVAg7T+WTrxggPukVq7DjTv6+PJ867TmhCvBsYwmbFCsZd344rq2Ld1p0wo8f8Qrrhgp82c6FJRqdXWtSEhg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/own-keys/-/own-keys-1.0.2.tgz}
     engines: {node: '>= 0.4'}
+
+  oxc-parser@0.130.0:
+    resolution: {integrity: sha512-X0PJ+NmOok8qP3vK9uaW431ngkdM9UPEK7KG466urtIL2+EYTEgbZK2yqe2MWKJKBjRlFweP/pJPx0x9muMEVw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/oxc-parser/-/oxc-parser-0.130.0.tgz}
+    engines: {node: ^20.19.0 || >=22.12.0}
 
   p-defer@1.0.0:
     resolution: {integrity: sha512-wB3wfAxZpk2AzOfUMJNL+d36xothRSyj8EXOa4f6GMqYDN9BJaaSISbsk+wS9abmnebVw95C2Kb5t85UmpCxuw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/p-defer/-/p-defer-1.0.0.tgz}
@@ -8043,6 +8235,22 @@ snapshots:
 
   '@embroider/try@1.0.2': {}
 
+  '@emnapi/core@1.10.0':
+    dependencies:
+      '@emnapi/wasi-threads': 1.2.1
+      tslib: 2.9.1
+    optional: true
+
+  '@emnapi/runtime@1.10.0':
+    dependencies:
+      tslib: 2.9.1
+    optional: true
+
+  '@emnapi/wasi-threads@1.2.1':
+    dependencies:
+      tslib: 2.9.1
+    optional: true
+
   '@eslint-community/eslint-utils@4.10.1(eslint@9.39.5(jiti@2.7.0))':
     dependencies:
       eslint: 9.39.5(jiti@2.7.0)
@@ -8351,6 +8559,13 @@ snapshots:
       tslib: 2.9.1
       upath: 2.0.1
 
+  '@napi-rs/wasm-runtime@1.2.7(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':
+    dependencies:
+      '@emnapi/core': 1.10.0
+      '@emnapi/runtime': 1.10.0
+      '@tybys/wasm-util': 0.10.5
+    optional: true
+
   '@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1':
     dependencies:
       eslint-scope: 5.1.1
@@ -8432,6 +8647,72 @@ snapshots:
   '@octokit/types@18.0.0':
     dependencies:
       '@octokit/openapi-types': 29.0.1
+
+  '@oxc-parser/binding-android-arm-eabi@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-android-arm64@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-darwin-arm64@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-darwin-x64@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-freebsd-x64@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-linux-arm-gnueabihf@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-linux-arm-musleabihf@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-linux-arm64-gnu@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-linux-arm64-musl@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-linux-ppc64-gnu@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-linux-riscv64-gnu@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-linux-riscv64-musl@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-linux-s390x-gnu@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-linux-x64-gnu@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-linux-x64-musl@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-openharmony-arm64@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-wasm32-wasi@0.130.0':
+    dependencies:
+      '@emnapi/core': 1.10.0
+      '@emnapi/runtime': 1.10.0
+      '@napi-rs/wasm-runtime': 1.2.7(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
+    optional: true
+
+  '@oxc-parser/binding-win32-arm64-msvc@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-win32-ia32-msvc@0.130.0':
+    optional: true
+
+  '@oxc-parser/binding-win32-x64-msvc@0.130.0':
+    optional: true
+
+  '@oxc-project/types@0.130.0': {}
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -8661,6 +8942,11 @@ snapshots:
 
   '@socket.io/component-emitter@3.1.2': {}
 
+  '@tybys/wasm-util@0.10.5':
+    dependencies:
+      tslib: 2.9.1
+    optional: true
+
   '@types/cors@2.8.19':
     dependencies:
       '@types/node': 26.6.6
@@ -8669,6 +8955,8 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.10
       '@types/json-schema': 7.0.15
+
+  '@types/esrecurse@4.3.1': {}
 
   '@types/estree@1.0.10': {}
 
@@ -9058,6 +9346,12 @@ snapshots:
     dependencies:
       '@glimmer/syntax': 0.97.0
       babel-import-util: 3.0.1
+
+  babel-plugin-ember-template-compilation@3.1.0:
+    dependencies:
+      '@glimmer/syntax': 0.97.0
+      babel-import-util: 3.0.1
+      import-meta-resolve: 4.2.0
 
   babel-plugin-htmlbars-inline-precompile@5.3.1:
     dependencies:
@@ -10477,6 +10771,21 @@ snapshots:
       - walrus
       - whiskers
 
+  ember-eslint-parser@0.16.1(@babel/eslint-parser@7.29.13(@babel/core@7.29.13)(eslint@9.39.5(jiti@2.7.0)))(typescript@6.0.3):
+    dependencies:
+      '@glimmer/syntax': 0.97.0
+      '@typescript-eslint/tsconfig-utils': 8.72.2(typescript@6.0.3)
+      content-tag: 4.2.1
+      ember-estree: 0.9.0
+      eslint-scope: 9.1.2
+      html-tags: 5.1.0
+      mathml-tag-names: 4.0.0
+      svg-tags: 1.0.0
+    optionalDependencies:
+      '@babel/eslint-parser': 7.29.13(@babel/core@7.29.13)(eslint@9.39.5(jiti@2.7.0))
+    transitivePeerDependencies:
+      - typescript
+
   ember-eslint-parser@0.5.13(@babel/core@7.29.13)(eslint@9.39.5(jiti@2.7.0))(typescript@6.0.3):
     dependencies:
       '@babel/core': 7.29.13
@@ -10491,6 +10800,13 @@ snapshots:
     transitivePeerDependencies:
       - eslint
       - typescript
+
+  ember-estree@0.9.0:
+    dependencies:
+      '@glimmer/env': 0.1.7
+      '@glimmer/syntax': 0.97.0
+      content-tag: 4.2.1
+      oxc-parser: 0.130.0
 
   ember-load-initializers@3.0.1(ember-source@6.12.1(@glimmer/component@2.2.1)(rsvp@4.8.5)):
     dependencies:
@@ -10909,6 +11225,13 @@ snapshots:
 
   eslint-scope@8.4.0:
     dependencies:
+      esrecurse: 4.3.0
+      estraverse: 5.3.0
+
+  eslint-scope@9.1.2:
+    dependencies:
+      '@types/esrecurse': 4.3.1
+      '@types/estree': 1.0.10
       esrecurse: 4.3.0
       estraverse: 5.3.0
 
@@ -11742,6 +12065,8 @@ snapshots:
 
   html-tags@3.3.1: {}
 
+  html-tags@5.1.0: {}
+
   http-errors@1.6.3:
     dependencies:
       depd: 1.1.2
@@ -12432,6 +12757,8 @@ snapshots:
 
   mathml-tag-names@2.1.3: {}
 
+  mathml-tag-names@4.0.0: {}
+
   mdn-data@2.27.1: {}
 
   mdurl@2.1.0: {}
@@ -12778,6 +13105,31 @@ snapshots:
       get-intrinsic: 1.3.0
       object-keys: 1.1.1
       safe-push-apply: 1.0.0
+
+  oxc-parser@0.130.0:
+    dependencies:
+      '@oxc-project/types': 0.130.0
+    optionalDependencies:
+      '@oxc-parser/binding-android-arm-eabi': 0.130.0
+      '@oxc-parser/binding-android-arm64': 0.130.0
+      '@oxc-parser/binding-darwin-arm64': 0.130.0
+      '@oxc-parser/binding-darwin-x64': 0.130.0
+      '@oxc-parser/binding-freebsd-x64': 0.130.0
+      '@oxc-parser/binding-linux-arm-gnueabihf': 0.130.0
+      '@oxc-parser/binding-linux-arm-musleabihf': 0.130.0
+      '@oxc-parser/binding-linux-arm64-gnu': 0.130.0
+      '@oxc-parser/binding-linux-arm64-musl': 0.130.0
+      '@oxc-parser/binding-linux-ppc64-gnu': 0.130.0
+      '@oxc-parser/binding-linux-riscv64-gnu': 0.130.0
+      '@oxc-parser/binding-linux-riscv64-musl': 0.130.0
+      '@oxc-parser/binding-linux-s390x-gnu': 0.130.0
+      '@oxc-parser/binding-linux-x64-gnu': 0.130.0
+      '@oxc-parser/binding-linux-x64-musl': 0.130.0
+      '@oxc-parser/binding-openharmony-arm64': 0.130.0
+      '@oxc-parser/binding-wasm32-wasi': 0.130.0
+      '@oxc-parser/binding-win32-arm64-msvc': 0.130.0
+      '@oxc-parser/binding-win32-ia32-msvc': 0.130.0
+      '@oxc-parser/binding-win32-x64-msvc': 0.130.0
 
   p-defer@1.0.0: {}
 
