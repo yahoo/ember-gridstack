@@ -8,12 +8,14 @@ import Nested from 'test-app/components/examples/nested';
 import SaveLoad from 'test-app/components/examples/save-load';
 import AddRemove from 'test-app/components/examples/add-remove';
 import Locked from 'test-app/components/examples/locked';
+import DataMode from 'test-app/components/examples/data-mode';
 import responsiveSrc from 'test-app/components/examples/responsive.gjs?raw';
 import fillHeightSrc from 'test-app/components/examples/fill-height.gjs?raw';
 import nestedSrc from 'test-app/components/examples/nested.gjs?raw';
 import saveLoadSrc from 'test-app/components/examples/save-load.gjs?raw';
 import addRemoveSrc from 'test-app/components/examples/add-remove.gjs?raw';
 import lockedSrc from 'test-app/components/examples/locked.gjs?raw';
+import dataModeSrc from 'test-app/components/examples/data-mode.gjs?raw';
 
 const MODE_DESCRIPTIONS = {
   top: 'pulls widgets up',
@@ -81,6 +83,12 @@ export default class ApplicationController extends Controller {
       title: 'locked, noMove, noResize',
       component: Locked,
       source: lockedSrc,
+    },
+    {
+      id: 'data-mode',
+      title: 'Data mode (@layout, spike)',
+      component: DataMode,
+      source: dataModeSrc,
     },
   ];
 
