@@ -14,6 +14,7 @@ jobs:
       - yarn-cache: yarn config set cache-folder ~/.yarn
       - install: yarn install --frozen-lockfile
       - test: yarn test
+      - test-compatibility: yarn test:ember-compatibility
     requires:
       - ~pr
       - ~commit
@@ -46,7 +47,8 @@ jobs:
           git clone https://github.com/screwdriver-cd/toolbox.git /tmp/ci
           yarn config set cache-folder ~/.yarn
           yarn install --frozen-lockfile
-          npx ember github-pages:commit --message "Deploy gh-pages from $SD_BUILD_SHA"
+          cd test-app
+          yarn ember github-pages:commit --message "Deploy gh-pages from $SD_BUILD_SHA"
           . /tmp/ci/git-ssh.sh
           git push origin gh-pages:gh-pages
     secrets:
