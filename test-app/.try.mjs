@@ -23,11 +23,22 @@ export default {
   scenarios: [
     {
       name: 'ember-lts-4.12',
-      npm: { devDependencies: { 'ember-source': '~4.12.0' } },
+      npm: {
+        devDependencies: {
+          'ember-source': '~4.12.0',
+          '@glimmer/component': '^1.1.2',
+          'ember-load-initializers': '^2.1.2',
+        },
+      },
     },
     {
       name: 'ember-lts-5.12',
-      npm: { devDependencies: { 'ember-source': '~5.12.0' } },
+      npm: {
+        devDependencies: {
+          'ember-source': '~5.12.0',
+          '@glimmer/component': '^1.1.2',
+        },
+      },
     },
     {
       name: 'ember-lts-6.12',

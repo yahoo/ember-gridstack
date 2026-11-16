@@ -3,9 +3,14 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import { modifier } from 'ember-modifier';
-import { isBlank } from '@ember/utils';
 
 const GS_PREFIX = 'gs-';
+
+// Same result as `isBlank` from `@ember/utils` (deprecated in ember-source 7)
+const isBlank = (value) =>
+  value == null ||
+  (typeof value === 'string' && value.trim() === '') ||
+  (Array.isArray(value) && value.length === 0);
 
 const dasherize = (str) =>
   str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
