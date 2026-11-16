@@ -7,7 +7,7 @@ root="$(git rev-parse --show-toplevel)"
 worktree="$(mktemp -d)"
 trap 'git -C "$root" worktree remove --force "$worktree" 2>/dev/null || rm -rf "$worktree"' EXIT
 
-(cd "$root/test-app" && yarn ember build --environment=production)
+(cd "$root/test-app" && pnpm exec ember build --environment=production)
 
 if git -C "$root" show-ref --verify --quiet refs/heads/gh-pages; then
   git -C "$root" worktree add "$worktree" gh-pages
