@@ -6,6 +6,7 @@
     <nav class="site-nav" aria-label="Sections">
       <a href="#install">Install</a>
       <a href="#demo">Demo</a>
+      <a href="#examples">Examples</a>
       <a href="#usage">Usage</a>
       <a href="#api">API</a>
       <a href="https://github.com/yahoo/ember-gridstack">GitHub</a>
@@ -22,7 +23,7 @@
       whose widgets can be dragged, resized and rearranged, with layout state
       kept in gridstack.js and content rendered by Ember.
     </p>
-    <p class="meta">Ember 4.12+ · gridstack.js 12 · Embroider-ready v2 addon</p>
+    <p class="meta">Ember 4.12+ · gridstack.js 14 · Embroider-ready v2 addon</p>
   </section>
 
   <section id="install">
@@ -36,35 +37,47 @@
   <section id="demo">
     <h2>Demo</h2>
     <p>
-      Drag a widget by its body, resize it from the bottom-right corner. With
-      <code>float</code>
-      off, widgets move up to fill empty rows.
+      Drag a widget by its body, resize it from the bottom-right corner. The
+      <code>mode</code>
+      option decides how widgets settle.
     </p>
 
     <div class="toolbar">
       <button type="button" class="button" {{on "click" this.changeItems}}>
         Add widget
       </button>
-      <label class="switch">
-        <input
-          type="checkbox"
-          role="switch"
-          aria-checked={{if this.shouldFloat "true" "false"}}
-          checked={{this.shouldFloat}}
-          {{on "change" this.toggleFloat}}
-        />
-        <span>float</span>
+      <label class="mode-picker">
+        <span>mode</span>
+        <select class="select" {{on "change" this.setMode}}>
+          {{#each this.modeOptions as |m|}}
+            <option
+              value={{m.value}}
+              selected={{m.selected}}
+            >{{m.value}}</option>
+          {{/each}}
+        </select>
       </label>
-      <span class="event-log">Last event:
-        <code>{{this.lastEvent}}</code></span>
+      <span class="mode-description">{{this.modeDescription}}</span>
     </div>
 
     <div class="example">
       <div class="example-preview">
         <GridStack
-          @onChange={{this.logChange}}
+          @onAdded={{fn this.log "added"}}
+          @onChange={{fn this.log "change"}}
+          @onRemoved={{fn this.log "removed"}}
+          @onDragstart={{fn this.log "dragstart"}}
+          @onDrag={{fn this.log "drag"}}
+          @onDragstop={{fn this.log "dragstop"}}
+          @onResizestart={{fn this.log "resizestart"}}
+          @onResize={{fn this.log "resize"}}
+          @onResizestop={{fn this.log "resizestop"}}
+          @onResizecontent={{fn this.log "resizecontent"}}
+          @onEnable={{fn this.log "enable"}}
+          @onDisable={{fn this.log "disable"}}
+          @onDropped={{fn this.log "dropped"}}
           @options={{hash
-            float=this.shouldFloat
+            mode=this.mode
             cellHeight=80
             margin=6
             columnOpts=(hash
@@ -74,7 +87,7 @@
             )
           }}
         >
-          <GridStackItem @options={{hash x=0 y=0 w=3 h=2}}>
+          <GridStackItem @options={{hash id="requests" x=0 y=0 w=3 h=2}}>
             <StatWidget
               @label="Requests / min"
               @value="12,480"
@@ -82,7 +95,7 @@
             />
           </GridStackItem>
 
-          <GridStackItem @options={{hash x=3 y=0 w=3 h=2}}>
+          <GridStackItem @options={{hash id="errors" x=3 y=0 w=3 h=2}}>
             <StatWidget
               @label="Error rate"
               @value="0.42%"
@@ -91,7 +104,7 @@
             />
           </GridStackItem>
 
-          <GridStackItem @options={{hash x=6 y=0 w=6 h=2}}>
+          <GridStackItem @options={{hash id="latency" x=6 y=0 w=6 h=2}}>
             <div class="widget">
               <div class="widget-label">p95 latency (ms), last 12 h</div>
               <svg
@@ -107,7 +120,7 @@
             </div>
           </GridStackItem>
 
-          <GridStackItem @options={{hash x=0 y=2 w=5 h=4}}>
+          <GridStackItem @options={{hash id="traffic" x=0 y=2 w=5 h=4}}>
             <div class="widget">
               <div class="widget-label">Weekly traffic (k sessions)</div>
               <svg
@@ -124,7 +137,7 @@
             </div>
           </GridStackItem>
 
-          <GridStackItem @options={{hash x=5 y=2 w=4 h=4}}>
+          <GridStackItem @options={{hash id="deploys" x=5 y=2 w=4 h=4}}>
             <div class="widget">
               <div class="widget-label">Recent deploys</div>
               <ul class="list">
@@ -139,7 +152,7 @@
             </div>
           </GridStackItem>
 
-          <GridStackItem @options={{hash x=9 y=2 w=3 h=4}}>
+          <GridStackItem @options={{hash id="uptime" x=9 y=2 w=3 h=4}}>
             <div class="widget">
               <div class="widget-label">Uptime, 30 d</div>
               <ul class="list status-list">
@@ -162,7 +175,9 @@
           </GridStackItem>
 
           {{#each this.items as |item|}}
-            <GridStackItem @options={{hash w=3 h=2}}>
+            <GridStackItem
+              @options={{hash id=(concat "widget-" item.id) w=3 h=2}}
+            >
               <div class="widget">
                 <div class="widget-label">Widget {{item.id}}</div>
                 <p class="widget-body">Added at runtime.</p>
@@ -176,11 +191,47 @@
           {{/each}}
         </GridStack>
       </div>
-      <pre class="code"><code
-          class="language-javascript"
-          {{highlight}}
-        >{{this.snippets.demo}}</code></pre>
+      <div class="example-side">
+        <div class="event-log" aria-live="polite">
+          <div class="event-log-title">Events</div>
+          {{#if this.events.length}}
+            <ol class="event-list">
+              {{#each this.events as |e|}}
+                <li>
+                  <code>{{e.name}}</code>
+                  {{#if e.ids}}<span class="event-ids">{{e.ids}}</span>{{/if}}
+                  {{#if e.repeat}}<span
+                      class="event-count"
+                    >{{e.repeat}}</span>{{/if}}
+                </li>
+              {{/each}}
+            </ol>
+          {{else}}
+            <p class="event-empty">Drag, resize or add a widget.</p>
+          {{/if}}
+        </div>
+        <pre class="code"><code
+            class="language-javascript"
+            {{highlight}}
+          >{{this.snippets.demo}}</code></pre>
+      </div>
     </div>
+  </section>
+
+  <section id="examples">
+    <h2>Examples</h2>
+    {{#each this.examples as |example|}}
+      <h3 id="example-{{example.id}}">{{example.title}}</h3>
+      <div class="example">
+        <div class="example-preview">
+          <example.component />
+        </div>
+        <pre class="code"><code
+            class="language-javascript"
+            {{highlight}}
+          >{{example.source}}</code></pre>
+      </div>
+    {{/each}}
   </section>
 
   <section id="usage">
@@ -206,9 +257,13 @@
 
     <h3><code>&lt;GridStack&gt;</code></h3>
     <p>
-      Creates the gridstack.js instance on insert and recreates it when
+      Creates the gridstack.js instance on insert and applies changed
       <code>@options</code>
-      change. Event actions run after render.
+      with
+      <code>updateOptions()</code>
+      (a few options, such as
+      <code>handle</code>, still re-create it). Event actions run after render.
+      DOM order is owned by Ember.
     </p>
     <pre class="code"><code
         class="language-handlebars"
@@ -296,7 +351,8 @@
           <tr>
             <td><code>@onEnable</code>,
               <code>@onDisable</code>,
-              <code>@onDropped</code></td>
+              <code>@onDropped</code>,
+              <code>@onResizecontent</code></td>
             <td>function</td>
             <td>Forwarded gridstack.js events of the same name.</td>
           </tr>

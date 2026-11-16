@@ -2,6 +2,27 @@ import Controller from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import * as snippets from 'test-app/utils/snippets';
+import Responsive from 'test-app/components/examples/responsive';
+import FillHeight from 'test-app/components/examples/fill-height';
+import Nested from 'test-app/components/examples/nested';
+import SaveLoad from 'test-app/components/examples/save-load';
+import AddRemove from 'test-app/components/examples/add-remove';
+import Locked from 'test-app/components/examples/locked';
+import responsiveSrc from 'test-app/components/examples/responsive.gjs?raw';
+import fillHeightSrc from 'test-app/components/examples/fill-height.gjs?raw';
+import nestedSrc from 'test-app/components/examples/nested.gjs?raw';
+import saveLoadSrc from 'test-app/components/examples/save-load.gjs?raw';
+import addRemoveSrc from 'test-app/components/examples/add-remove.gjs?raw';
+import lockedSrc from 'test-app/components/examples/locked.gjs?raw';
+
+const MODE_DESCRIPTIONS = {
+  top: 'pulls widgets up',
+  float: 'widgets stay where placed',
+  list: 'one column, order by position',
+  compact: 'reflow to fill gaps',
+};
+
+const LOG_SIZE = 8;
 
 const TRAFFIC = [
   { label: 'Mon', value: 42 },
@@ -17,10 +38,62 @@ const LATENCY = [212, 198, 205, 187, 240, 226, 190, 181, 176, 184, 172, 168];
 
 export default class ApplicationController extends Controller {
   @tracked items = [];
-  @tracked shouldFloat = true;
-  @tracked lastEvent = 'none yet';
+  @tracked mode = 'float';
+  @tracked events = [];
 
   snippets = snippets;
+  modes = Object.keys(MODE_DESCRIPTIONS);
+  modeDescriptions = MODE_DESCRIPTIONS;
+
+  examples = [
+    {
+      id: 'responsive',
+      title: 'Responsive columns',
+      component: Responsive,
+      source: responsiveSrc,
+    },
+    {
+      id: 'fill',
+      title: "cellHeight: 'fill'",
+      component: FillHeight,
+      source: fillHeightSrc,
+    },
+    {
+      id: 'nested',
+      title: 'Nested grid',
+      component: Nested,
+      source: nestedSrc,
+    },
+    {
+      id: 'save-load',
+      title: 'Save and load a layout',
+      component: SaveLoad,
+      source: saveLoadSrc,
+    },
+    {
+      id: 'add-remove',
+      title: 'Add and remove widgets',
+      component: AddRemove,
+      source: addRemoveSrc,
+    },
+    {
+      id: 'locked',
+      title: 'locked, noMove, noResize',
+      component: Locked,
+      source: lockedSrc,
+    },
+  ];
+
+  get modeOptions() {
+    return this.modes.map((value) => ({
+      value,
+      selected: value === this.mode,
+    }));
+  }
+
+  get modeDescription() {
+    return MODE_DESCRIPTIONS[this.mode];
+  }
   nextId = 1;
 
   deploys = [
@@ -67,13 +140,26 @@ export default class ApplicationController extends Controller {
   }
 
   @action
-  toggleFloat() {
-    this.shouldFloat = !this.shouldFloat;
+  setMode(event) {
+    this.mode = event.target.value;
   }
 
+  // args are (event, nodes[]) or (event, element) or (event, prev, node)
   @action
-  logChange(event, nodes) {
-    const count = nodes?.length ?? 0;
-    this.lastEvent = `change (${count} item${count === 1 ? '' : 's'})`;
+  log(name, event, ...args) {
+    const ids = args
+      .flat()
+      .filter(Boolean)
+      .map((x) => (x instanceof Element ? x.gridstackNode?.id : x.id))
+      .filter(Boolean);
+    const entry = { name, ids: [...new Set(ids)].join(', '), count: 1 };
+    const [last, ...rest] = this.events;
+    // drag/resize fire on every move; fold repeats into one row
+    if (last && last.name === entry.name && last.ids === entry.ids) {
+      const count = last.count + 1;
+      this.events = [{ ...last, count, repeat: `×${count}` }, ...rest];
+    } else {
+      this.events = [entry, ...this.events].slice(0, LOG_SIZE);
+    }
   }
 }

@@ -14,6 +14,12 @@ import GridStackItem from
 
 export default class Demo extends Component {
   @tracked items = [];
+  @tracked mode = 'float'; // 'top' | 'float' | 'list' | 'compact'
+  @tracked events = [];
+
+  @action log(name, event) {
+    this.events = [name, ...this.events].slice(0, 8);
+  }
 
   @action remove(item) {
     this.items = this.items.filter(
@@ -24,9 +30,10 @@ export default class Demo extends Component {
   <template>
     <GridStack
       @options={{hash
-        float=true
+        mode=this.mode
         cellHeight=80
       }}
+      @onChange={{fn this.log "change"}}
     >
       <GridStackItem
         @options={{hash x=0 y=0 w=3 h=2}}
@@ -50,10 +57,10 @@ export default class Demo extends Component {
 
 export const demoClassic = `<GridStack
   @options={{hash
-    float=this.shouldFloat
+    mode=this.mode
     cellHeight=80
   }}
-  @onChange={{this.logChange}}
+  @onChange={{fn this.log "change"}}
 >
   <GridStackItem
     @options={{hash x=0 y=0 w=3 h=2}}
@@ -90,7 +97,7 @@ import GridStackItem from
 export const gridStack = `<GridStack
   @options={{hash
     column=12
-    float=true
+    mode="float"
     animate=true
   }}
   @onDragstop={{this.saveLayout}}
