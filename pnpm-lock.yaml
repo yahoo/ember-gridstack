@@ -162,9 +162,6 @@ importers:
       '@glimmer/tracking':
         specifier: ^1.1.2
         version: 1.1.2
-      broccoli-asset-rev:
-        specifier: ^3.0.0
-        version: 3.0.0
       concurrently:
         specifier: ^9.2.1
         version: 9.2.5
@@ -174,30 +171,15 @@ importers:
       ember-cli:
         specifier: ~6.12.0
         version: 6.12.0(@babel/core@7.29.13)(@types/node@26.6.6)(ejs@3.1.10)(handlebars@4.7.10)(underscore@1.13.8)
-      ember-cli-app-version:
-        specifier: ^7.0.0
-        version: 7.0.0(ember-source@6.12.1(@glimmer/component@2.2.1)(rsvp@4.8.5))
       ember-cli-babel:
         specifier: ^8.3.1
         version: 8.3.2(@babel/core@7.29.13)
-      ember-cli-clean-css:
-        specifier: ^3.0.0
-        version: 3.0.0
-      ember-cli-dependency-checker:
-        specifier: ^3.4.0
-        version: 3.4.0(@babel/core@7.29.13)(ember-cli@6.12.0(@babel/core@7.29.13)(@types/node@26.6.6)(ejs@3.1.10)(handlebars@4.7.10)(underscore@1.13.8))(eslint@9.39.5(jiti@2.7.0))
       ember-cli-deprecation-workflow:
         specifier: ^3.4.0
         version: 3.4.0(ember-source@6.12.1(@glimmer/component@2.2.1)(rsvp@4.8.5))
       ember-cli-htmlbars:
         specifier: ^7.0.1
         version: 7.0.1(@babel/core@7.29.13)(ember-source@6.12.1(@glimmer/component@2.2.1)(rsvp@4.8.5))
-      ember-cli-inject-live-reload:
-        specifier: ^2.1.0
-        version: 2.1.0
-      ember-cli-sri:
-        specifier: ^2.1.1
-        version: 2.1.1
       ember-cli-terser:
         specifier: ^4.0.2
         version: 4.0.2
@@ -474,13 +456,6 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0-0
 
-  '@babel/plugin-proposal-private-property-in-object@7.21.11':
-    resolution: {integrity: sha512-0QZ8qP/3RLDVBwBFoWAwCtgcDZJVwA5LUJRZU8x2YFfKNuFq161wK3cuGrALu5yiPu+vzwTAg/sMWVNeWeNyaw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@babel/plugin-proposal-private-property-in-object/-/plugin-proposal-private-property-in-object-7.21.11.tgz}
-    engines: {node: '>=6.9.0'}
-    deprecated: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-private-property-in-object instead.
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
   '@babel/plugin-syntax-decorators@7.29.7':
     resolution: {integrity: sha512-9MTTLbF39X6sqM92JPEsoI7++26hjZvzkxKZy64aMhWLH2mPkJ/Q3AV4QLmls3R14FpSpkOwQQfUh962JGQxxg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@babel/plugin-syntax-decorators/-/plugin-syntax-decorators-7.29.7.tgz}
     engines: {node: '>=6.9.0'}
@@ -495,12 +470,6 @@ packages:
 
   '@babel/plugin-syntax-import-attributes@7.29.7':
     resolution: {integrity: sha512-zGYcYfq/WmZ4V+kBIXQon9dSSc8ircGZqw9ZaNhhGj9nZkeBu1jHLBDQqYYi5WA9uawvA2sIMbry2nCFhf5Djg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@babel/plugin-syntax-import-attributes/-/plugin-syntax-import-attributes-7.29.7.tgz}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-
-  '@babel/plugin-syntax-private-property-in-object@7.14.5':
-    resolution: {integrity: sha512-0wVnp9dxJ72ZUJDV27ZfbSj6iHLoytYZmh3rFcxNnvsJF3ktkzLDZPy/mA17HGsaQT3/DQsWYX1f1QGWkCoVUg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@babel/plugin-syntax-private-property-in-object/-/plugin-syntax-private-property-in-object-7.14.5.tgz}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
@@ -835,10 +804,6 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0
 
-  '@babel/polyfill@7.12.1':
-    resolution: {integrity: sha512-X0pi0V6gxLi6lFZpGmeNa4zxtwEmCs42isWLNjZZDE0Y8yVfgu0T2OAHlzBbdYlqbW/YXVvoBHpATEM+goCj8g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@babel/polyfill/-/polyfill-7.12.1.tgz}
-    deprecated: 🚨 This package has been deprecated in favor of separate inclusion of a polyfill and regenerator-runtime (when needed). See the @babel/polyfill docs (https://babeljs.io/docs/en/babel-polyfill) for more information.
-
   '@babel/preset-env@7.29.14':
     resolution: {integrity: sha512-Vigj5vlTvQVUUzw5geGRE7SLQ3wEDHWP00PMxmM80eWNUfLPCrvaKttN+bqqu6ev4g+GJ24ILel4stUN+DPAUw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@babel/preset-env/-/preset-env-7.29.14.tgz}
     engines: {node: '>=6.9.0'}
@@ -849,9 +814,6 @@ packages:
     resolution: {integrity: sha512-HrcgcIESLm9aIR842yhJ5RWan/gebQUJ6E/E5+rf0y9o6oj7w0Br+sWuL6kEQ/o/AdfvR1Je9jG18/gnpwjEyA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@babel/preset-modules/-/preset-modules-0.1.6-no-external-plugins.tgz}
     peerDependencies:
       '@babel/core': ^7.0.0-0 || ^8.0.0-0 <8.0.0
-
-  '@babel/runtime@7.12.18':
-    resolution: {integrity: sha512-BogPQ7ciE6SYAUPtlm9tWbgI9+2AgqSam6QivMgXgAT+fKbgppaj4ZX15MHeLC1PVF5sNk70huBu20XxWOs8Cg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@babel/runtime/-/runtime-7.12.18.tgz}
 
   '@babel/runtime@7.29.14':
     resolution: {integrity: sha512-Y5tqevQaUAZhhj82BpYMNC1ssvLQTVAfwKdm8iy8qwmhvC2/CpcAu8OC+QEtjM7pMk7knx83u1Qj8gzkicyelw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@babel/runtime/-/runtime-7.29.14.tgz}
@@ -1910,18 +1872,11 @@ packages:
   '@types/estree@1.0.10':
     resolution: {integrity: sha512-lTyOMnOcmRBzdCv6/4zUZCrEhV0xrqQiUZBZtVcbmLHBXKLnN8q89v/wKRF/Q0HbwVsqbIG3o5HDoFl9sduM+g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/estree/-/estree-1.0.10.tgz}
 
-  '@types/fs-extra@5.1.0':
-    resolution: {integrity: sha512-AInn5+UBFIK9FK5xc9yP5e3TQSPNNgjHByqYcj9g5elVBnDQcQL7PlO1CIRy2gWlbwK7UPYqi7vRvFA44dCmYQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/fs-extra/-/fs-extra-5.1.0.tgz}
-
   '@types/fs-extra@8.1.5':
     resolution: {integrity: sha512-0dzKcwO+S8s2kuF5Z9oUWatQJj5Uq/iqphEtE3GQJVRRYm/tD1LglU2UnXi2A8jLq5umkGouOXOR9y0n613ZwQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/fs-extra/-/fs-extra-8.1.5.tgz}
 
   '@types/glob@7.2.0':
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/glob/-/glob-7.2.0.tgz}
-
-  '@types/glob@9.0.0':
-    resolution: {integrity: sha512-00UxlRaIUvYm4R4W9WYkN8/J+kV8fmOQ7okeH6YFtGWFMt3odD45tpG5yA5wnL7HE6lLgjaTW5n14ju2hl2NNA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/glob/-/glob-9.0.0.tgz}
-    deprecated: This is a stub types definition. glob provides its own type definitions, so you do not need this installed.
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/json-schema/-/json-schema-7.0.15.tgz}
@@ -1941,9 +1896,6 @@ packages:
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/normalize-package-data/-/normalize-package-data-2.4.4.tgz}
-
-  '@types/rimraf@2.0.5':
-    resolution: {integrity: sha512-YyP+VfeaqAyFmXoTh3HChxOQMyjByRMsHU7kc5KOJkSlXudhMhQIALbYV7rHh/l8d2lX3VUQzprrcAgWdRuU8g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/rimraf/-/rimraf-2.0.5.tgz}
 
   '@types/symlink-or-copy@1.2.2':
     resolution: {integrity: sha512-MQ1AnmTLOncwEf9IVU+B2e4Hchrku5N67NkgcAHW0p3sdzPe0FNMANxEm6OJUzPniEQGkeT3OROLlCwZJLWFZA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/symlink-or-copy/-/symlink-or-copy-1.2.2.tgz}
@@ -2273,10 +2225,6 @@ packages:
     resolution: {integrity: sha512-QWjjFgSKtSRIcsBhJmEwS2laIdrA6na8HAlc/pEAhjHgQsah/gMiBFRZvbQTy//hWxR4BMwV7/Mya7q5H8uHeA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/babel-plugin-htmlbars-inline-precompile/-/babel-plugin-htmlbars-inline-precompile-5.3.1.tgz}
     engines: {node: 10.* || >= 12.*}
 
-  babel-plugin-module-resolver@3.2.0:
-    resolution: {integrity: sha512-tjR0GvSndzPew/Iayf4uICWZqjBwnlMWjSx6brryfQ81F9rxBVqwDJtFCV8oOs0+vJeefK9TmdZtkIFdFe1UnA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/babel-plugin-module-resolver/-/babel-plugin-module-resolver-3.2.0.tgz}
-    engines: {node: '>= 6.0.0'}
-
   babel-plugin-module-resolver@5.0.3:
     resolution: {integrity: sha512-h8h6H71ZvdLJZxZrYkaeR30BojTaV7O9GfqacY14SNj5CNB8ocL9tydNzTC0JrnNN7vY3eJhwCmkDj7tuEUaqQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/babel-plugin-module-resolver/-/babel-plugin-module-resolver-5.0.3.tgz}
 
@@ -2378,24 +2326,11 @@ packages:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/braces/-/braces-3.0.3.tgz}
     engines: {node: '>=8'}
 
-  broccoli-asset-rev@3.0.0:
-    resolution: {integrity: sha512-gAHQZnwvtl74tGevUqGuWoyOdJUdMMv0TjGSMzbdyGImr9fZcnM6xmggDA8bUawrMto9NFi00ZtNUgA4dQiUBw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-asset-rev/-/broccoli-asset-rev-3.0.0.tgz}
-
-  broccoli-asset-rewrite@2.0.0:
-    resolution: {integrity: sha512-dqhxdQpooNi7LHe8J9Jdxp6o3YPFWl4vQmint6zrsn2sVbOo+wpyiX3erUSt0IBtjNkAxqJjuvS375o2cLBHTA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-asset-rewrite/-/broccoli-asset-rewrite-2.0.0.tgz}
-
-  broccoli-babel-transpiler@7.8.1:
-    resolution: {integrity: sha512-6IXBgfRt7HZ61g67ssBc6lBb3Smw3DPZ9dEYirgtvXWpRZ2A9M22nxy6opEwJDgDJzlu/bB7ToppW33OFkA1gA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-babel-transpiler/-/broccoli-babel-transpiler-7.8.1.tgz}
-    engines: {node: '>= 6'}
-
   broccoli-babel-transpiler@8.1.0:
     resolution: {integrity: sha512-ca3QcjNzX7umqQ06PeDDjAf2WJ9DcgzoECuXT638YDpNC+gCJeoDDKYk0KieeE7VeX7YHyrkfyynQzMvZZ/4ew==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-babel-transpiler/-/broccoli-babel-transpiler-8.1.0.tgz}
     engines: {node: 16.* || >= 18}
     peerDependencies:
       '@babel/core': ^7.17.9 || ^8.0.0
-
-  broccoli-caching-writer@2.3.1:
-    resolution: {integrity: sha512-lfoDx98VaU8tG4mUXCxKdKyw2Lr+iSIGUjCgV83KC2zRC07SzYTGuSsMqpXFiOQlOGuoJxG3NRoyniBa1BWOqA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-caching-writer/-/broccoli-caching-writer-2.3.1.tgz}
 
   broccoli-caching-writer@3.1.0:
     resolution: {integrity: sha512-3TWi92ogzUhLmCF5V4DjhN7v4t6OjXYO21p9GkuOZQ1SiVmM1sYio364y64dREHUzjFEcH8mdVCiRDdrwUGVTw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-caching-writer/-/broccoli-caching-writer-3.1.0.tgz}
@@ -2417,9 +2352,6 @@ packages:
     resolution: {integrity: sha512-YpjOExWr92C5vhnK0kmD81kM7U09kdIRZk9w4ZDCDHuHXW+VE/x6AGEOQQW3loBQQ6Jk+k+TSm8dESy4uZsnjw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-file-creator/-/broccoli-file-creator-2.1.1.tgz}
     engines: {node: ^4.5 || 6.* || >= 7.*}
 
-  broccoli-filter@1.3.0:
-    resolution: {integrity: sha512-VXJXw7eBfG82CFxaBDjYmyN7V72D4In2zwLVQJd/h3mBfF3CMdRTsv2L20lmRTtCv1sAHcB+LgMso90e/KYiLw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-filter/-/broccoli-filter-1.3.0.tgz}
-
   broccoli-funnel-reducer@1.0.0:
     resolution: {integrity: sha512-SaOCEdh+wnt2jFUV2Qb32m7LXyElvFwW3NKNaEJyi5PGQNwxfqpkc0KI6AbQANKgdj/40U2UC0WuGThFwuEUaA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-funnel-reducer/-/broccoli-funnel-reducer-1.0.0.tgz}
 
@@ -2430,12 +2362,6 @@ packages:
   broccoli-funnel@3.0.8:
     resolution: {integrity: sha512-ng4eIhPYiXqMw6SyGoxPHR3YAwEd2lr9FgBI1CyTbspl4txZovOsmzFkMkGAlu88xyvYXJqHiM2crfLa65T1BQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-funnel/-/broccoli-funnel-3.0.8.tgz}
     engines: {node: 10.* || >= 12.*}
-
-  broccoli-kitchen-sink-helpers@0.2.9:
-    resolution: {integrity: sha512-C+oEqivDofZv/h80rgN4WJkbZkbfwkrIeu8vFn4bb4m4jPd3ICNNplhkXGl3ps439pzc2yjZ1qIwz0yy8uHcQg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-kitchen-sink-helpers/-/broccoli-kitchen-sink-helpers-0.2.9.tgz}
-
-  broccoli-kitchen-sink-helpers@0.3.1:
-    resolution: {integrity: sha512-gqYnKSJxBSjj/uJqeuRAzYVbmjWhG0mOZ8jrp6+fnUIOgLN6MvI7XxBECDHkYMIFPJ8Smf4xaI066Q2FqQDnXg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-kitchen-sink-helpers/-/broccoli-kitchen-sink-helpers-0.3.1.tgz}
 
   broccoli-merge-trees@3.0.2:
     resolution: {integrity: sha512-ZyPAwrOdlCddduFbsMyyFzJUrvW6b04pMvDiAQZrCwghlvgowJDY+EfoXn+eR1RRA5nmGHJ+B68T63VnpRiT1A==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-merge-trees/-/broccoli-merge-trees-3.0.2.tgz}
@@ -2471,9 +2397,6 @@ packages:
     resolution: {integrity: sha512-Q+8iezprZzL9voaBsDY3rQVl7c7H5h+bvv8SpzCZXPZgfBFCbx7KFQ2c3rZR6lW5k4Kwoqt7jG+rZMUg67Gwxw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-persistent-filter/-/broccoli-persistent-filter-3.1.3.tgz}
     engines: {node: 10.* || >= 12.*}
 
-  broccoli-plugin@1.1.0:
-    resolution: {integrity: sha512-dY1QsA20of9wWEto8yhN7JQjpfjySmgeIMsvnQ9aBAv1wEJJCe04B0ekdgq7Bduyx9yWXdoC5CngGy81swmp2w==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-plugin/-/broccoli-plugin-1.1.0.tgz}
-
   broccoli-plugin@1.3.1:
     resolution: {integrity: sha512-DW8XASZkmorp+q7J4EeDEZz+LoyKLAd2XZULXyD9l4m9/hAKV3vjHmB1kiUshcWAYMgTP1m2i4NnqCE/23h6AQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-plugin/-/broccoli-plugin-1.3.1.tgz}
 
@@ -2488,16 +2411,9 @@ packages:
   broccoli-slow-trees@3.1.0:
     resolution: {integrity: sha512-FRI7mRTk2wjIDrdNJd6znS7Kmmne4VkAkl8Ix1R/VoePFMD0g0tEl671xswzFqaRjpT9Qu+CC4hdXDLDJBuzMw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-slow-trees/-/broccoli-slow-trees-3.1.0.tgz}
 
-  broccoli-source@2.1.2:
-    resolution: {integrity: sha512-1lLayO4wfS0c0Sj50VfHJXNWf94FYY0WUhxj0R77thbs6uWI7USiOWFqQV5dRmhAJnoKaGN4WyLGQbgjgiYFwQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-source/-/broccoli-source-2.1.2.tgz}
-    engines: {node: 6.* || 8.* || >= 10.*}
-
   broccoli-source@3.0.1:
     resolution: {integrity: sha512-ZbGVQjivWi0k220fEeIUioN6Y68xjMy0xiLAc0LdieHI99gw+tafU8w0CggBDYVNsJMKUr006AZaM7gNEwCxEg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-source/-/broccoli-source-3.0.1.tgz}
     engines: {node: 8.* || 10.* || >= 12.*}
-
-  broccoli-sri-hash@2.1.2:
-    resolution: {integrity: sha512-toLD/v7ut2ajcH8JsdCMG2Bpq2qkwTcKM6CMzVMSAJjaz/KpK69fR+gSqe1dsjh+QTdxG0yVvkq3Sij/XMzV6A==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-sri-hash/-/broccoli-sri-hash-2.1.2.tgz}
 
   broccoli-stew@3.0.0:
     resolution: {integrity: sha512-NXfi+Vas24n3Ivo21GvENTI55qxKu7OwKRnCLWXld8MiLiQKQlWIq28eoARaFj0lTUFwUa4jKZeA7fW9PiWQeg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/broccoli-stew/-/broccoli-stew-3.0.0.tgz}
@@ -2613,10 +2529,6 @@ packages:
 
   clean-base-url@1.0.0:
     resolution: {integrity: sha512-9q6ZvUAhbKOSRFY7A/irCQ/rF0KIpa3uXpx6izm8+fp7b2H4hLeUJ+F1YYk9+gDQ/X8Q0MEyYs+tG3cht//HTg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/clean-base-url/-/clean-base-url-1.0.0.tgz}
-
-  clean-css@5.3.3:
-    resolution: {integrity: sha512-D5J+kHaVb/wKSFcyyV75uCn8fiY4sV38XJoe4CUyGQ+mOU/fMVYUdH1hJC+CJQ5uY3EnW27SbJYS4X8BiLrAFg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/clean-css/-/clean-css-5.3.3.tgz}
-    engines: {node: '>= 10.0'}
 
   clean-stack@2.2.0:
     resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/clean-stack/-/clean-stack-2.2.0.tgz}
@@ -2987,16 +2899,9 @@ packages:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/cookie/-/cookie-0.7.2.tgz}
     engines: {node: '>= 0.6'}
 
-  copy-dereference@1.0.0:
-    resolution: {integrity: sha512-40TSLuhhbiKeszZhK9LfNdazC67Ue4kq/gGwN5sdxEUWPXTIMmKmGmgD9mPfNKVAeecEW+NfEIpBaZoACCQLLw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/copy-dereference/-/copy-dereference-1.0.0.tgz}
-
   core-js-compat@3.51.0:
     resolution: {integrity: sha512-52r6fkXgxv4GLMjmFcMWRx7X9bw071xTTdrDcdyPGRqU2oE+9pCG0bAOMifSBdLw0JRBZKEF0q3B55qPlLuE8g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/core-js-compat/-/core-js-compat-3.51.0.tgz}
     engines: {node: '>=6.4.0'}
-
-  core-js@2.6.12:
-    resolution: {integrity: sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/core-js/-/core-js-2.6.12.tgz}
-    deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
 
   core-object@3.1.5:
     resolution: {integrity: sha512-sA2/4+/PZ/KV6CKgjrVrrUVBKCkdDO02CUlQ0YKTQoYUwPYNOtOAcWlbYhd5v/1JqYaA6oZ4sDlOU4ppVw6Wbg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/core-object/-/core-object-3.1.5.tgz}
@@ -3208,18 +3113,8 @@ packages:
     resolution: {integrity: sha512-MjxJK2nfCJmmQI/rju2TrycmAa1AxmTarfvygbcrrgW0s4WeZHtbGXCO2z1lW9wfrShqeTo/o+3Mgk+9xcDTWg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-auto-import/-/ember-auto-import-2.13.1.tgz}
     engines: {node: 12.* || 14.* || >= 16}
 
-  ember-cli-app-version@7.0.0:
-    resolution: {integrity: sha512-zWIkxvlRrW7w1/vp+bGkmS27QsVum7NKp8N9DgAjhFMWuKewVqGyl/jeYaujMS/I4WSKBzSG9WHwBy2rjbUWxA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-app-version/-/ember-cli-app-version-7.0.0.tgz}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      ember-source: ^3.28.0 || >= 4.0.0
-
   ember-cli-babel-plugin-helpers@1.1.1:
     resolution: {integrity: sha512-sKvOiPNHr5F/60NLd7SFzMpYPte/nnGkq/tMIfXejfKHIhaiIkYFqX8Z9UFTKWLLn+V7NOaby6niNPZUdvKCRw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-babel-plugin-helpers/-/ember-cli-babel-plugin-helpers-1.1.1.tgz}
-    engines: {node: 6.* || 8.* || >= 10.*}
-
-  ember-cli-babel@7.26.11:
-    resolution: {integrity: sha512-JJYeYjiz/JTn34q7F5DSOjkkZqy8qwFOOxXfE6pe9yEJqWGu4qErKxlz8I22JoVEQ/aBUO+OcKTpmctvykM9YA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-babel/-/ember-cli-babel-7.26.11.tgz}
     engines: {node: 6.* || 8.* || >= 10.*}
 
   ember-cli-babel@8.3.2:
@@ -3227,16 +3122,6 @@ packages:
     engines: {node: 16.* || 18.* || >= 20}
     peerDependencies:
       '@babel/core': ^7.12.0
-
-  ember-cli-clean-css@3.0.0:
-    resolution: {integrity: sha512-BbveJCyRvzzkaTH1llLW+MpHe/yzA5zpHOpMIg2vp/3JD9mban9zUm7lphaB0TSpPuMuby9rAhTI8pgXq0ifIA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-clean-css/-/ember-cli-clean-css-3.0.0.tgz}
-    engines: {node: 16.* || >= 18}
-
-  ember-cli-dependency-checker@3.4.0:
-    resolution: {integrity: sha512-hlQRRCz2W2ZVg1l2Lz7zO0vfeYEXOYVc6hI1CUoy8mBvETauPtvo3Pi+CECUOa2kjXjyuNtclPc3ged6kNMumw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-dependency-checker/-/ember-cli-dependency-checker-3.4.0.tgz}
-    engines: {node: '>= 20'}
-    peerDependencies:
-      ember-cli: ^3.2.0 || >=4.0.0
 
   ember-cli-deprecation-workflow@3.4.0:
     resolution: {integrity: sha512-Ksrmib4mjD4xa0dqFgxJLBwkSp9EVYH6jSqe2NpODlBKEAZhsVzQj5wKPnC1dXfK3Erq/r1Fh3q4g46FZiCUiw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-deprecation-workflow/-/ember-cli-deprecation-workflow-3.4.0.tgz}
@@ -3254,10 +3139,6 @@ packages:
       '@babel/core': '>= 7'
       ember-source: '>= 4.0.0'
 
-  ember-cli-inject-live-reload@2.1.0:
-    resolution: {integrity: sha512-YV5wYRD5PJHmxaxaJt18u6LE6Y+wo455BnmcpN+hGNlChy2piM9/GMvYgTAz/8Vin8RJ5KekqP/w/NEaRndc/A==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-inject-live-reload/-/ember-cli-inject-live-reload-2.1.0.tgz}
-    engines: {node: 6.* || 8.* || >= 10.*}
-
   ember-cli-is-package-missing@1.0.0:
     resolution: {integrity: sha512-9hEoZj6Au5onlSDdcoBqYEPT8ehlYntZPxH8pBKV0GO7LNel88otSAQsCfXvbi2eKE+MaSeLG/gNaCI5UdWm9g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-is-package-missing/-/ember-cli-is-package-missing-1.0.0.tgz}
 
@@ -3271,10 +3152,6 @@ packages:
     resolution: {integrity: sha512-Jb2zbE5Kfe56Nf4IpdaQ10zZ72p/RyLdgE5j5/lKG3I94QHlq+7AkAd18nPpb5OUeRUT13yQTAYpU+MbjpKTtg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-preprocess-registry/-/ember-cli-preprocess-registry-5.0.1.tgz}
     engines: {node: 16.* || >= 18}
 
-  ember-cli-sri@2.1.1:
-    resolution: {integrity: sha512-YG/lojDxkur9Bnskt7xB6gUOtJ6aPl/+JyGYm9HNDk3GECVHB3SMN3rlGhDKHa1ndS5NK2W2TSLb9bzRbGlMdg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-sri/-/ember-cli-sri-2.1.1.tgz}
-    engines: {node: '>= 0.10.0'}
-
   ember-cli-string-utils@1.1.0:
     resolution: {integrity: sha512-PlJt4fUDyBrC/0X+4cOpaGCiMawaaB//qD85AXmDRikxhxVzfVdpuoec02HSiTGTTB85qCIzWBIh8lDOiMyyFg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-string-utils/-/ember-cli-string-utils-1.1.0.tgz}
 
@@ -3284,14 +3161,6 @@ packages:
 
   ember-cli-typescript-blueprint-polyfill@0.1.0:
     resolution: {integrity: sha512-g0weUTOnHmPGqVZzkQTl3Nbk9fzEdFkEXydCs5mT1qBjXh8eQ6VlmjjGD5/998UXKuA0pLSCVVMbSp/linLzGA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-typescript-blueprint-polyfill/-/ember-cli-typescript-blueprint-polyfill-0.1.0.tgz}
-
-  ember-cli-version-checker@3.1.3:
-    resolution: {integrity: sha512-PZNSvpzwWgv68hcXxyjREpj3WWb81A7rtYNQq1lLEgrWIchF8ApKJjWP3NBpHjaatwILkZAV8klair5WFlXAKg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-version-checker/-/ember-cli-version-checker-3.1.3.tgz}
-    engines: {node: 6.* || 8.* || >= 10.*}
-
-  ember-cli-version-checker@4.1.1:
-    resolution: {integrity: sha512-bzEWsTMXUGEJfxcAGWPe6kI7oHEGD3jaxUWDYPTqzqGhNkgPwXTBgoWs9zG1RaSMaOPFnloWuxRcoHi4TrYS3Q==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-version-checker/-/ember-cli-version-checker-4.1.1.tgz}
-    engines: {node: 8.* || 10.* || >= 12.*}
 
   ember-cli-version-checker@5.1.2:
     resolution: {integrity: sha512-rk7GY+FmLn/2e22HsZs0Ycrz8HQ1W3Fv+2TFOuEFW9optnDXDgkntPBIl6gact/LHsfBM5RKbM3dHsIIeLgl0Q==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/ember-cli-version-checker/-/ember-cli-version-checker-5.1.2.tgz}
@@ -3823,10 +3692,6 @@ packages:
     resolution: {integrity: sha512-S8KoZgRZN+a5rNwqTxlZZePjT/4cnm0ROV70LedRHZ0p8u9fRID0hJUZQpkKLzro8LfmC8sx23bY6tVNxv8pQA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/finalhandler/-/finalhandler-2.1.1.tgz}
     engines: {node: '>= 18.0.0'}
 
-  find-babel-config@1.2.2:
-    resolution: {integrity: sha512-oK59njMyw2y3yxto1BCfVK7MQp/OYf4FleHu0RgosH3riFJ1aOuo/7naLDLAObfrgn3ueFhw5sAT/cp0QuJI3Q==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/find-babel-config/-/find-babel-config-1.2.2.tgz}
-    engines: {node: '>=4.0.0'}
-
   find-babel-config@2.1.2:
     resolution: {integrity: sha512-ZfZp1rQyp4gyuxqt1ZqjFGVeVBvmpURMqdIWXbPRfB97Bf6BzdK/xSIbylEINzQ0kB5tlDQfn9HkNXXWsqTqLg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/find-babel-config/-/find-babel-config-2.1.2.tgz}
 
@@ -3875,13 +3740,6 @@ packages:
   findup-sync@5.0.0:
     resolution: {integrity: sha512-MzwXju70AuyflbgeOhzvQWAvvQdo1XL0A9bVvlXsYcFEBM87WR4OakL4OfZq+QRmr+duJubio+UtNQCPsVESzQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/findup-sync/-/findup-sync-5.0.0.tgz}
     engines: {node: '>= 10.13.0'}
-
-  fixturify-project@1.10.0:
-    resolution: {integrity: sha512-L1k9uiBQuN0Yr8tA9Noy2VSQ0dfg0B8qMdvT7Wb5WQKc7f3dn3bzCbSrqlb+etLW+KDV4cBC7R1OvcMg3kcxmA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/fixturify-project/-/fixturify-project-1.10.0.tgz}
-
-  fixturify@1.3.0:
-    resolution: {integrity: sha512-tL0svlOy56pIMMUQ4bU1xRe6NZbFSa/ABTWMxW2mH38lFGc9TrNAKWcMBQ7eIjo3wqSS8f2ICabFaatFyFmrVQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/fixturify/-/fixturify-1.3.0.tgz}
-    engines: {node: 6.* || 8.* || >= 10.*}
 
   flat-cache@4.0.1:
     resolution: {integrity: sha512-f7ccFPK3SXFHpx15UIGyRJ/FJQctuKZ0zVuN3frBo4HnK3cay9VEW0R6yPYFHC0AgqhukPzKjq22t5DmAyqGyw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/flat-cache/-/flat-cache-4.0.1.tgz}
@@ -4075,10 +3933,6 @@ packages:
   glob@14.0.6:
     resolution: {integrity: sha512-OwXjVP2svY5EyLY75Vek96C8qK43gqrt4xsZ+qSILdnaEiJPXkd62mcfUSNx/TQErQRdu5uM5kF67sfONragKw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/glob/-/glob-14.0.6.tgz}
     engines: {node: 18 || 20 || >=22}
-
-  glob@5.0.15:
-    resolution: {integrity: sha512-c9IPMazfRITpmAAKi22dK1VKxGDX9ehhqfABDriL/lzO92xcUKEJPQHrVA/2YHSNFB4iFlykVmWvwo48nr3OxA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/glob/-/glob-5.0.15.tgz}
-    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/glob/-/glob-7.2.3.tgz}
@@ -5615,10 +5469,6 @@ packages:
     resolution: {integrity: sha512-bmmM+SdLXNNetFr4o53QiiZRZicls2apmzj8HRpo4bU+3nJHiPO/omv8TXHIOzTcirua3YBAwTlKE+7zkICh4g==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/pkg-entry-points/-/pkg-entry-points-1.1.2.tgz}
     engines: {node: '>=20.19.5'}
 
-  pkg-up@2.0.0:
-    resolution: {integrity: sha512-fjAPuiws93rm7mPUu21RdBnkeZNrbfCFCwfAhPWY+rR3zG0ubpe5cEReHOw5fIbfmsxEV/g2kSxGTATY3Bpnwg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/pkg-up/-/pkg-up-2.0.0.tgz}
-    engines: {node: '>=4'}
-
   pkg-up@3.1.0:
     resolution: {integrity: sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/pkg-up/-/pkg-up-3.1.0.tgz}
     engines: {node: '>=8'}
@@ -5848,9 +5698,6 @@ packages:
   regenerate@1.5.0:
     resolution: {integrity: sha512-1s+CxXjJ71i7LNVy8nYwg47XV4y6lAnOEhsMtSKq3WpmPfhl9LuKlTqKIn/3yUpE8lBz+W+TT88Bxyhnr0U4yw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/regenerate/-/regenerate-1.5.0.tgz}
 
-  regenerator-runtime@0.13.11:
-    resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz}
-
   regexp.prototype.flags@1.5.4:
     resolution: {integrity: sha512-dYqgNSZbDwkaJ2ceRd9ojCGjBq+mOm9LmtXnAnEGyHhN/5R7iDW2TRw3h+o/jCFxus3P2LfWIIiwowAjANm7IA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/regexp.prototype.flags/-/regexp.prototype.flags-1.5.4.tgz}
     engines: {node: '>= 0.4'}
@@ -5888,9 +5735,6 @@ packages:
   requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/requires-port/-/requires-port-1.0.0.tgz}
 
-  reselect@3.0.1:
-    resolution: {integrity: sha512-b/6tFZCmRhtBMa4xGqiiRp9jh9Aqi2A687Lo265cN0/QohJQEBPiQ52f4QB6i0eF3yp3hmLL21LSGBcML2dlxA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/reselect/-/reselect-3.0.1.tgz}
-
   reselect@4.1.8:
     resolution: {integrity: sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/reselect/-/reselect-4.1.8.tgz}
 
@@ -5908,10 +5752,6 @@ packages:
 
   resolve-package-path@1.2.7:
     resolution: {integrity: sha512-fVEKHGeK85bGbVFuwO9o1aU0n3vqQGrezPc51JGu9UTXpFQfWq5qCeKxyaRUSvephs+06c5j5rPq/dzHGEo8+Q==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/resolve-package-path/-/resolve-package-path-1.2.7.tgz}
-
-  resolve-package-path@2.0.0:
-    resolution: {integrity: sha512-/CLuzodHO2wyyHTzls5Qr+EFeG6RcW4u6//gjYvUfcfyuplIX1SSccU+A5A9A78Gmezkl3NBkFAMxLbzTY9TJA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/resolve-package-path/-/resolve-package-path-2.0.0.tgz}
-    engines: {node: 8.* || 10.* || >= 12}
 
   resolve-package-path@3.1.0:
     resolution: {integrity: sha512-2oC2EjWbMJwvSN6Z7DbDfJMnD8MYEouaLn5eIX0j8XwPsYCVIyY9bbnX88YHVkbr8XHqvZrYbxaLPibfTYKZMA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/resolve-package-path/-/resolve-package-path-3.1.0.tgz}
@@ -6290,10 +6130,6 @@ packages:
 
   sprintf-js@1.1.3:
     resolution: {integrity: sha512-Oo+0REFV59/rz3gfJNKQiBlwfHaSESl1pcGyABQsnnIfWOFt6JNj5gCog2U6MLZ//IGYD+nA8nI+mTShREReaA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/sprintf-js/-/sprintf-js-1.1.3.tgz}
-
-  sri-toolbox@0.2.0:
-    resolution: {integrity: sha512-DQIMWCAr/M7phwo+d3bEfXwSBEwuaJL+SJx9cuqt1Ty7K96ZFoHpYnSbhrQZEr0+0/GtmpKECP8X/R4RyeTAfw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/sri-toolbox/-/sri-toolbox-0.2.0.tgz}
-    engines: {node: '>= 0.10.4'}
 
   statuses@1.5.0:
     resolution: {integrity: sha512-OpZ3zP+jT1PI7I8nemJX4AKmAX070ZkYPVWV/AaKTJl+tXCTGyVdC1a4SL8RUQYEwk/f34ZX8UTykN68FwrqAA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/statuses/-/statuses-1.5.0.tgz}
@@ -6811,9 +6647,6 @@ packages:
     resolution: {integrity: sha512-o8qghlI8NZHU1lLPrpi2+Uq7abh4GGPpYANlalzWxyWteJOCsr/P+oPBA49TOLu5FTZO4d3F9MnWJfiMo4BkmA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/w3c-xmlserializer/-/w3c-xmlserializer-5.0.0.tgz}
     engines: {node: '>=18'}
 
-  walk-sync@0.2.7:
-    resolution: {integrity: sha512-OH8GdRMowEFr0XSHQeX5fGweO6zSVHo7bG/0yJQx6LAj9Oukz0C8heI3/FYectT66gY0IPGe89kOvU410/UNpg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/walk-sync/-/walk-sync-0.2.7.tgz}
-
   walk-sync@0.3.4:
     resolution: {integrity: sha512-ttGcuHA/OBnN2pcM6johpYlEms7XpO5/fyKIr48541xXedan4roO8cS1Q2S/zbbjGH/BarYDAMeS2Mi9HE5Tig==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/walk-sync/-/walk-sync-0.3.4.tgz}
 
@@ -6931,9 +6764,6 @@ packages:
 
   workerpool@10.0.3:
     resolution: {integrity: sha512-6z2Iis68Wqth93/G/wJP9u+R3O+d2XTlgWChGCwuT1qLbBsOYueGRZuJ++v3mtDP5KjYdy+WzvWC+VWETSVXJA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/workerpool/-/workerpool-10.0.3.tgz}
-
-  workerpool@3.1.2:
-    resolution: {integrity: sha512-WJFA0dGqIK7qj7xPTqciWBH5DlJQzoPjsANvc3Y4hNB0SScT+Emjvt0jPPkDBUjBNngX1q9hHgt1Gfwytu6pug==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/workerpool/-/workerpool-3.1.2.tgz}
 
   workerpool@6.5.1:
     resolution: {integrity: sha512-Fs4dNYcsdpYSAfVxhnl1L5zTksjvOJxtC5hzMNl+1t9B8hTJTdKDyZ5ju7ztgPy+ft9tBFXoOlDNiOT9WUXZlA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/workerpool/-/workerpool-6.5.1.tgz}
@@ -7331,16 +7161,6 @@ snapshots:
     dependencies:
       '@babel/core': 7.29.13
 
-  '@babel/plugin-proposal-private-property-in-object@7.21.11(@babel/core@7.29.13)':
-    dependencies:
-      '@babel/core': 7.29.13
-      '@babel/helper-annotate-as-pure': 7.29.7
-      '@babel/helper-create-class-features-plugin': 7.29.13(@babel/core@7.29.13)
-      '@babel/helper-plugin-utils': 7.29.7
-      '@babel/plugin-syntax-private-property-in-object': 7.14.5(@babel/core@7.29.13)
-    transitivePeerDependencies:
-      - supports-color
-
   '@babel/plugin-syntax-decorators@7.29.7(@babel/core@7.29.13)':
     dependencies:
       '@babel/core': 7.29.13
@@ -7352,11 +7172,6 @@ snapshots:
       '@babel/helper-plugin-utils': 7.29.7
 
   '@babel/plugin-syntax-import-attributes@7.29.7(@babel/core@7.29.13)':
-    dependencies:
-      '@babel/core': 7.29.13
-      '@babel/helper-plugin-utils': 7.29.7
-
-  '@babel/plugin-syntax-private-property-in-object@7.14.5(@babel/core@7.29.13)':
     dependencies:
       '@babel/core': 7.29.13
       '@babel/helper-plugin-utils': 7.29.7
@@ -7728,11 +7543,6 @@ snapshots:
       '@babel/helper-create-regexp-features-plugin': 7.29.14(@babel/core@7.29.13)
       '@babel/helper-plugin-utils': 7.29.7
 
-  '@babel/polyfill@7.12.1':
-    dependencies:
-      core-js: 2.6.12
-      regenerator-runtime: 0.13.11
-
   '@babel/preset-env@7.29.14(@babel/core@7.29.13)':
     dependencies:
       '@babel/compat-data': 7.29.7
@@ -7816,10 +7626,6 @@ snapshots:
       '@babel/helper-plugin-utils': 7.29.7
       '@babel/types': 7.29.14
       esutils: 2.0.3
-
-  '@babel/runtime@7.12.18':
-    dependencies:
-      regenerator-runtime: 0.13.11
 
   '@babel/runtime@7.29.14': {}
 
@@ -8960,10 +8766,6 @@ snapshots:
 
   '@types/estree@1.0.10': {}
 
-  '@types/fs-extra@5.1.0':
-    dependencies:
-      '@types/node': 26.6.6
-
   '@types/fs-extra@8.1.5':
     dependencies:
       '@types/node': 26.6.6
@@ -8972,10 +8774,6 @@ snapshots:
     dependencies:
       '@types/minimatch': 6.0.0
       '@types/node': 26.6.6
-
-  '@types/glob@9.0.0':
-    dependencies:
-      glob: 14.0.6
 
   '@types/json-schema@7.0.15': {}
 
@@ -8992,11 +8790,6 @@ snapshots:
       undici-types: 8.9.0
 
   '@types/normalize-package-data@2.4.4': {}
-
-  '@types/rimraf@2.0.5':
-    dependencies:
-      '@types/glob': 9.0.0
-      '@types/node': 26.6.6
 
   '@types/symlink-or-copy@1.2.2': {}
 
@@ -9361,14 +9154,6 @@ snapshots:
       parse-static-imports: 1.1.0
       string.prototype.matchall: 4.1.0
 
-  babel-plugin-module-resolver@3.2.0:
-    dependencies:
-      find-babel-config: 1.2.2
-      glob: 7.2.3
-      pkg-up: 2.0.0
-      reselect: 3.0.1
-      resolve: 1.22.14
-
   babel-plugin-module-resolver@5.0.3:
     dependencies:
       find-babel-config: 2.1.2
@@ -9498,40 +9283,6 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
-  broccoli-asset-rev@3.0.0:
-    dependencies:
-      broccoli-asset-rewrite: 2.0.0
-      broccoli-filter: 1.3.0
-      broccoli-persistent-filter: 1.4.6
-      json-stable-stringify: 1.3.0
-      minimatch: 3.1.5
-      rsvp: 3.6.2
-    transitivePeerDependencies:
-      - supports-color
-
-  broccoli-asset-rewrite@2.0.0:
-    dependencies:
-      broccoli-filter: 1.3.0
-    transitivePeerDependencies:
-      - supports-color
-
-  broccoli-babel-transpiler@7.8.1:
-    dependencies:
-      '@babel/core': 7.29.13
-      '@babel/polyfill': 7.12.1
-      broccoli-funnel: 2.0.2
-      broccoli-merge-trees: 3.0.2
-      broccoli-persistent-filter: 2.3.1
-      clone: 2.1.2
-      hash-for-dep: 1.5.2
-      heimdalljs: 0.2.6
-      heimdalljs-logger: 0.1.10
-      json-stable-stringify: 1.3.0
-      rsvp: 4.8.5
-      workerpool: 3.1.2
-    transitivePeerDependencies:
-      - supports-color
-
   broccoli-babel-transpiler@8.1.0(@babel/core@7.29.13):
     dependencies:
       '@babel/core': 7.29.13
@@ -9543,17 +9294,6 @@ snapshots:
       json-stable-stringify: 1.3.0
       rsvp: 4.8.5
       workerpool: 6.5.1
-    transitivePeerDependencies:
-      - supports-color
-
-  broccoli-caching-writer@2.3.1:
-    dependencies:
-      broccoli-kitchen-sink-helpers: 0.2.9
-      broccoli-plugin: 1.1.0
-      debug: 2.6.9
-      rimraf: 2.7.1
-      rsvp: 3.6.2
-      walk-sync: 0.2.7
     transitivePeerDependencies:
       - supports-color
 
@@ -9610,20 +9350,6 @@ snapshots:
       broccoli-plugin: 1.3.1
       mkdirp: 0.5.6
 
-  broccoli-filter@1.3.0:
-    dependencies:
-      broccoli-kitchen-sink-helpers: 0.3.1
-      broccoli-plugin: 1.3.1
-      copy-dereference: 1.0.0
-      debug: 2.6.9
-      mkdirp: 0.5.6
-      promise-map-series: 0.2.3
-      rsvp: 3.6.2
-      symlink-or-copy: 1.3.1
-      walk-sync: 0.3.4
-    transitivePeerDependencies:
-      - supports-color
-
   broccoli-funnel-reducer@1.0.0: {}
 
   broccoli-funnel@2.0.2:
@@ -9655,16 +9381,6 @@ snapshots:
       walk-sync: 2.2.0
     transitivePeerDependencies:
       - supports-color
-
-  broccoli-kitchen-sink-helpers@0.2.9:
-    dependencies:
-      glob: 5.0.15
-      mkdirp: 0.5.6
-
-  broccoli-kitchen-sink-helpers@0.3.1:
-    dependencies:
-      glob: 5.0.15
-      mkdirp: 0.5.6
 
   broccoli-merge-trees@3.0.2:
     dependencies:
@@ -9752,13 +9468,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  broccoli-plugin@1.1.0:
-    dependencies:
-      promise-map-series: 0.2.3
-      quick-temp: 0.1.9
-      rimraf: 2.7.1
-      symlink-or-copy: 1.3.1
-
   broccoli-plugin@1.3.1:
     dependencies:
       promise-map-series: 0.2.3
@@ -9789,21 +9498,9 @@ snapshots:
     dependencies:
       heimdalljs: 0.2.6
 
-  broccoli-source@2.1.2: {}
-
   broccoli-source@3.0.1:
     dependencies:
       broccoli-node-api: 1.7.0
-
-  broccoli-sri-hash@2.1.2:
-    dependencies:
-      broccoli-caching-writer: 2.3.1
-      mkdirp: 0.5.6
-      rsvp: 3.6.2
-      sri-toolbox: 0.2.0
-      symlink-or-copy: 1.3.1
-    transitivePeerDependencies:
-      - supports-color
 
   broccoli-stew@3.0.0:
     dependencies:
@@ -9970,10 +9667,6 @@ snapshots:
   ci-info@4.5.0: {}
 
   clean-base-url@1.0.0: {}
-
-  clean-css@5.3.3:
-    dependencies:
-      source-map: 0.6.1
 
   clean-stack@2.2.0: {}
 
@@ -10199,13 +9892,9 @@ snapshots:
 
   cookie@0.7.2: {}
 
-  copy-dereference@1.0.0: {}
-
   core-js-compat@3.51.0:
     dependencies:
       browserslist: 4.29.5
-
-  core-js@2.6.12: {}
 
   core-object@3.1.5:
     dependencies:
@@ -10441,50 +10130,7 @@ snapshots:
       - supports-color
       - webpack
 
-  ember-cli-app-version@7.0.0(ember-source@6.12.1(@glimmer/component@2.2.1)(rsvp@4.8.5)):
-    dependencies:
-      ember-cli-babel: 7.26.11
-      ember-source: 6.12.1(@glimmer/component@2.2.1)(rsvp@4.8.5)
-      git-repo-info: 2.1.1
-    transitivePeerDependencies:
-      - supports-color
-
   ember-cli-babel-plugin-helpers@1.1.1: {}
-
-  ember-cli-babel@7.26.11:
-    dependencies:
-      '@babel/core': 7.29.13
-      '@babel/helper-compilation-targets': 7.29.13
-      '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.29.13)
-      '@babel/plugin-proposal-decorators': 7.29.7(@babel/core@7.29.13)
-      '@babel/plugin-proposal-private-methods': 7.18.6(@babel/core@7.29.13)
-      '@babel/plugin-proposal-private-property-in-object': 7.21.11(@babel/core@7.29.13)
-      '@babel/plugin-transform-modules-amd': 7.29.14(@babel/core@7.29.13)
-      '@babel/plugin-transform-runtime': 7.29.7(@babel/core@7.29.13)
-      '@babel/plugin-transform-typescript': 7.29.9(@babel/core@7.29.13)
-      '@babel/polyfill': 7.12.1
-      '@babel/preset-env': 7.29.14(@babel/core@7.29.13)
-      '@babel/runtime': 7.12.18
-      amd-name-resolver: 1.3.1
-      babel-plugin-debug-macros: 0.3.4(@babel/core@7.29.13)
-      babel-plugin-ember-data-packages-polyfill: 0.1.2
-      babel-plugin-ember-modules-api-polyfill: 3.5.0
-      babel-plugin-module-resolver: 3.2.0
-      broccoli-babel-transpiler: 7.8.1
-      broccoli-debug: 0.6.5
-      broccoli-funnel: 2.0.2
-      broccoli-source: 2.1.2
-      calculate-cache-key-for-tree: 2.0.0
-      clone: 2.1.2
-      ember-cli-babel-plugin-helpers: 1.1.1
-      ember-cli-version-checker: 4.1.1
-      ensure-posix-path: 1.1.1
-      fixturify-project: 1.10.0
-      resolve-package-path: 3.1.0
-      rimraf: 3.0.2
-      semver: 5.7.3
-    transitivePeerDependencies:
-      - supports-color
 
   ember-cli-babel@8.3.2(@babel/core@7.29.13):
     dependencies:
@@ -10520,27 +10166,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-cli-clean-css@3.0.0:
-    dependencies:
-      broccoli-persistent-filter: 3.1.3
-      clean-css: 5.3.3
-      json-stable-stringify: 1.3.0
-    transitivePeerDependencies:
-      - supports-color
-
-  ember-cli-dependency-checker@3.4.0(@babel/core@7.29.13)(ember-cli@6.12.0(@babel/core@7.29.13)(@types/node@26.6.6)(ejs@3.1.10)(handlebars@4.7.10)(underscore@1.13.8))(eslint@9.39.5(jiti@2.7.0)):
-    dependencies:
-      '@babel/eslint-parser': 7.29.13(@babel/core@7.29.13)(eslint@9.39.5(jiti@2.7.0))
-      chalk: 4.1.2
-      ember-cli: 6.12.0(@babel/core@7.29.13)(@types/node@26.6.6)(ejs@3.1.10)(handlebars@4.7.10)(underscore@1.13.8)
-      find-yarn-workspace-root: 2.0.0
-      is-git-url: 1.0.0
-      resolve: 1.22.14
-      semver: 7.8.6
-    transitivePeerDependencies:
-      - '@babel/core'
-      - eslint
-
   ember-cli-deprecation-workflow@3.4.0(ember-source@6.12.1(@glimmer/component@2.2.1)(rsvp@4.8.5)):
     dependencies:
       '@babel/core': 7.29.13
@@ -10568,11 +10193,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-cli-inject-live-reload@2.1.0:
-    dependencies:
-      clean-base-url: 1.0.0
-      ember-cli-version-checker: 3.1.3
-
   ember-cli-is-package-missing@1.0.0: {}
 
   ember-cli-normalize-entity-name@1.0.0:
@@ -10590,12 +10210,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-cli-sri@2.1.1:
-    dependencies:
-      broccoli-sri-hash: 2.1.2
-    transitivePeerDependencies:
-      - supports-color
-
   ember-cli-string-utils@1.1.0: {}
 
   ember-cli-terser@4.0.2:
@@ -10608,19 +10222,6 @@ snapshots:
     dependencies:
       chalk: 4.1.2
       remove-types: 1.0.0
-    transitivePeerDependencies:
-      - supports-color
-
-  ember-cli-version-checker@3.1.3:
-    dependencies:
-      resolve-package-path: 1.2.7
-      semver: 5.7.3
-
-  ember-cli-version-checker@4.1.1:
-    dependencies:
-      resolve-package-path: 2.0.0
-      semver: 6.3.2
-      silent-error: 1.1.1
     transitivePeerDependencies:
       - supports-color
 
@@ -11536,11 +11137,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  find-babel-config@1.2.2:
-    dependencies:
-      json5: 1.0.2
-      path-exists: 3.0.0
-
   find-babel-config@2.1.2:
     dependencies:
       json5: 2.2.3
@@ -11599,19 +11195,6 @@ snapshots:
       is-glob: 4.0.3
       micromatch: 4.0.8
       resolve-dir: 1.0.1
-
-  fixturify-project@1.10.0:
-    dependencies:
-      fixturify: 1.3.0
-      tmp: 0.0.33
-
-  fixturify@1.3.0:
-    dependencies:
-      '@types/fs-extra': 5.1.0
-      '@types/minimatch': 3.0.5
-      '@types/rimraf': 2.0.5
-      fs-extra: 7.0.1
-      matcher-collection: 2.0.1
 
   flat-cache@4.0.1:
     dependencies:
@@ -11857,14 +11440,6 @@ snapshots:
       minimatch: 11.0.8
       minipass: 7.1.3
       path-scurry: 3.0.0
-
-  glob@5.0.15:
-    dependencies:
-      inflight: 1.0.6
-      inherits: 2.0.4
-      minimatch: 3.1.5
-      once: 1.4.0
-      path-is-absolute: 1.0.1
 
   glob@7.2.3:
     dependencies:
@@ -13297,10 +12872,6 @@ snapshots:
 
   pkg-entry-points@1.1.2: {}
 
-  pkg-up@2.0.0:
-    dependencies:
-      find-up: 2.1.0
-
   pkg-up@3.1.0:
     dependencies:
       find-up: 3.0.0
@@ -13551,8 +13122,6 @@ snapshots:
 
   regenerate@1.5.0: {}
 
-  regenerator-runtime@0.13.11: {}
-
   regexp.prototype.flags@1.5.4:
     dependencies:
       call-bind: 1.0.9
@@ -13598,8 +13167,6 @@ snapshots:
 
   requires-port@1.0.0: {}
 
-  reselect@3.0.1: {}
-
   reselect@4.1.8: {}
 
   resolve-dir@1.0.1:
@@ -13612,11 +13179,6 @@ snapshots:
   resolve-from@5.0.0: {}
 
   resolve-package-path@1.2.7:
-    dependencies:
-      path-root: 0.1.1
-      resolve: 1.22.14
-
-  resolve-package-path@2.0.0:
     dependencies:
       path-root: 0.1.1
       resolve: 1.22.14
@@ -14108,8 +13670,6 @@ snapshots:
       through2: 2.0.5
 
   sprintf-js@1.1.3: {}
-
-  sri-toolbox@0.2.0: {}
 
   statuses@1.5.0: {}
 
@@ -14755,11 +14315,6 @@ snapshots:
     dependencies:
       xml-name-validator: 5.0.0
 
-  walk-sync@0.2.7:
-    dependencies:
-      ensure-posix-path: 1.1.1
-      matcher-collection: 1.1.2
-
   walk-sync@0.3.4:
     dependencies:
       ensure-posix-path: 1.1.1
@@ -14936,14 +14491,6 @@ snapshots:
   wordwrap@1.0.0: {}
 
   workerpool@10.0.3: {}
-
-  workerpool@3.1.2:
-    dependencies:
-      '@babel/core': 7.29.13
-      object-assign: 4.1.1
-      rsvp: 4.8.5
-    transitivePeerDependencies:
-      - supports-color
 
   workerpool@6.5.1: {}
 
