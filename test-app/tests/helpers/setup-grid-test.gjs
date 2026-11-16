@@ -163,23 +163,28 @@ export class GridDriver {
     return pointerDrag(this.el(id), dx, dy);
   }
 
+  /** Cell size in screen pixels; #ember-testing is CSS-scaled, so not cellWidth(). */
+  cellSize() {
+    const gs = this.instance;
+    const scale =
+      this.element.getBoundingClientRect().width / this.element.offsetWidth;
+    return {
+      w: gs.cellWidth() * scale,
+      h: gs.getCellHeight(true) * scale,
+    };
+  }
+
   /** Drags an item to a cell. */
   dragTo(id, { x, y }) {
     const { x: x0, y: y0 } = this.node(id);
-    return this.drag(
-      id,
-      (x - x0) * this.instance.cellWidth(),
-      (y - y0) * this.instance.getCellHeight(true),
-    );
+    const { w, h } = this.cellSize();
+    return this.drag(id, (x - x0) * w, (y - y0) * h);
   }
 
   /** Resizes an item by a number of cells with the bottom-right handle. */
   resize(id, dw, dh) {
-    return resizeDrag(
-      this.el(id),
-      dw * this.instance.cellWidth(),
-      dh * this.instance.getCellHeight(true),
-    );
+    const { w, h } = this.cellSize();
+    return resizeDrag(this.el(id), dw * w, dh * h);
   }
 
   async setOptions(patch) {

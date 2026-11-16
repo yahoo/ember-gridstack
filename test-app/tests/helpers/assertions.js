@@ -20,10 +20,11 @@ export function registerGridAssertions(assert) {
         if (layout[id]) actual[id][key] = layout[id][key];
       }
     }
+    // JSON so testem's TAP output shows the values, not [object Object]
     this.pushResult({
       result: QUnit.equiv(actual, expected),
-      actual,
-      expected,
+      actual: JSON.stringify(actual),
+      expected: JSON.stringify(expected),
       message,
     });
   };

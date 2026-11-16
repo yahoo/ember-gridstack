@@ -18,22 +18,10 @@ pnpm exec testem ci --port 0 --test_page "tests/index.html?hidepassed&filter=reo
 
 ## Writing a grid test
 
-```js
-import { module, test } from "qunit";
-import { setupGridTest } from "../../helpers/setup-grid-test";
-
-module("Integration | Component | my feature", function (hooks) {
-  setupGridTest(hooks);
-
-  test("dragging moves the item", async function (assert) {
-    await this.grid.render({ items: [{ id: "a", x: 0, y: 0, w: 2, h: 1 }] });
-    await this.grid.dragTo("a", { x: 4, y: 0 });
-    assert.layout({ a: { x: 4 } });
-    assert.events(["dragstart", "drag", "dragstop", "change"]);
-    assert.inSync();
-  });
-});
-```
+Copy
+[`integration/components/grid-stack-example-test.gjs`](integration/components/grid-stack-example-test.gjs).
+It runs with the suite, so it stays correct: render one item, `dragTo` a
+cell, then check the layout, the events and that everything is in sync.
 
 `setupGridTest(hooks)` calls `setupRenderingTest` and adds `this.grid`,
 `this.events` and the teardown check.
@@ -91,7 +79,10 @@ gridstack's DD layer listens for `mousedown` on the drag handle (default
 `.grid-stack-item-content`) and `mousemove`/`mouseup` on `document`, and only
 starts after 3px of movement. `helpers/grid.js` (`pointerDrag`, `resizeDrag`)
 sends those events in 8 steps; resize grabs the `.ui-resizable-se` handle.
-`triggerEvent('.x', 'dragstart')` does not drive gridstack.
+`pointerDrag` first sends a 4px move to start the drag, so the steps cover
+the full distance. `dragTo` and `resize` convert cells to screen pixels,
+because `#ember-testing` is CSS-scaled. `triggerEvent('.x', 'dragstart')`
+does not drive gridstack.
 
 ## Conventions
 
