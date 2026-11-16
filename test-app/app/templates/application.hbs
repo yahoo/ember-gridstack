@@ -60,8 +60,8 @@
       <span class="mode-description">{{this.modeDescription}}</span>
     </div>
 
-    <div class="example">
-      <div class="example-preview">
+    <ExampleCard @id="demo-card" @source={{this.snippets.demo}} @lang="gjs">
+      <div class="demo-layout">
         <GridStack
           @onAdded={{fn this.log "added"}}
           @onChange={{fn this.log "change"}}
@@ -190,8 +190,6 @@
             </GridStackItem>
           {{/each}}
         </GridStack>
-      </div>
-      <div class="example-side">
         <div class="event-log" aria-live="polite">
           <div class="event-log-title">Events</div>
           {{#if this.events.length}}
@@ -210,27 +208,17 @@
             <p class="event-empty">Drag, resize or add a widget.</p>
           {{/if}}
         </div>
-        <pre class="code"><code
-            class="language-javascript"
-            {{highlight}}
-          >{{this.snippets.demo}}</code></pre>
       </div>
-    </div>
+    </ExampleCard>
   </section>
 
   <section id="examples">
     <h2>Examples</h2>
     {{#each this.examples as |example|}}
       <h3 id="example-{{example.id}}">{{example.title}}</h3>
-      <div class="example">
-        <div class="example-preview">
-          <example.component />
-        </div>
-        <pre class="code"><code
-            class="language-javascript"
-            {{highlight}}
-          >{{example.source}}</code></pre>
-      </div>
+      <ExampleCard @id={{example.id}} @source={{example.source}} @lang="gjs">
+        <example.component />
+      </ExampleCard>
     {{/each}}
   </section>
 

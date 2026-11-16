@@ -16,7 +16,7 @@ export default modifier((elm, _p, { lang } = {}) => {
   if (lang === 'gjs') {
     elm.dataset.src ??= elm.textContent;
     const src = elm.dataset.src;
-    const i = src.search(/^<template>/m);
+    const i = src.search(/^[ \t]*<template>/m);
     elm.innerHTML =
       i === -1
         ? html(src, 'javascript')
