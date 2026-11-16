@@ -76,6 +76,11 @@
     "stylelint-config-standard": "^36.0.1",
     "webpack": "^5.106.0"
   },
+  "dependenciesMeta": {
+    "ember-gridstack": {
+      "injected": true
+    }
+  },
   "engines": {
     "node": ">= 20.19"
   },

@@ -122,6 +122,9 @@ importers:
         version: 3.5.0
 
   test-app:
+    dependenciesMeta:
+      ember-gridstack:
+        injected: true
     devDependencies:
       '@babel/core':
         specifier: ^7.29.0
