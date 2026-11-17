@@ -18,7 +18,21 @@ import {
   type LayoutWidgetContext,
   type WidgetComponent,
   type WidgetComponentSignature,
+  applyItemAttributes,
+  type GridStackItemSignature,
+  type GridStackLayoutSignature,
+  type GsItemAttributesSignature,
 } from 'ember-gridstack';
+import DeepGridStack from 'ember-gridstack/components/grid-stack';
+import DeepGridStackJs from 'ember-gridstack/components/grid-stack.js';
+import DeepGridStackItem from 'ember-gridstack/components/grid-stack-item';
+import DeepGridStackItemJs from 'ember-gridstack/components/grid-stack-item.js';
+import DeepGridStackLayout from 'ember-gridstack/components/grid-stack-layout';
+import DeepGridStackLayoutJs from 'ember-gridstack/components/grid-stack-layout.js';
+import DeepGsItemAttributes from 'ember-gridstack/modifiers/gs-item-attributes';
+import DeepGsItemAttributesJs from 'ember-gridstack/modifiers/gs-item-attributes.js';
+import DeepRegistry from 'ember-gridstack/services/grid-stack-registry';
+import DeepRegistryJs from 'ember-gridstack/services/grid-stack-registry.js';
 
 type Args = GridStackSignature['Args'];
 
@@ -111,3 +125,97 @@ const counted = (item: GridStackItem): number => {
     ? item.droppedFrom.state
     : 0;
 };
+
+// every documented deep path resolves to the root export's type, with and without .js
+const sameGridStack: [typeof GridStack, typeof GridStack] = [
+  DeepGridStack,
+  DeepGridStackJs,
+];
+const sameItem: [typeof GridStackItem, typeof GridStackItem] = [
+  DeepGridStackItem,
+  DeepGridStackItemJs,
+];
+const sameLayout: [typeof GridStackLayout, typeof GridStackLayout] = [
+  DeepGridStackLayout,
+  DeepGridStackLayoutJs,
+];
+const sameModifier: [typeof gsItemAttributes, typeof gsItemAttributes] = [
+  DeepGsItemAttributes,
+  DeepGsItemAttributesJs,
+];
+const sameRegistry: [typeof GridStackRegistry, typeof GridStackRegistry] = [
+  DeepRegistry,
+  DeepRegistryJs,
+];
+export const deepPaths = [
+  sameGridStack,
+  sameItem,
+  sameLayout,
+  sameModifier,
+  sameRegistry,
+];
+
+type ItemArgs = GridStackItemSignature['Args'];
+export const itemArgs: ItemArgs = { options: { id: 'a', w: 2 } };
+// @ts-expect-error options must be gridstack widget options
+export const badItemArgs: ItemArgs = { options: { w: 'wide' } };
+export const itemElement: GridStackItemSignature['Element'] =
+  document.createElement('div');
+
+type ModifierPositional = GsItemAttributesSignature['Args']['Positional'];
+export const modifierArgs: ModifierPositional = [{ x: 1 }];
+// @ts-expect-error at most one positional arg
+export const badModifierArgs: ModifierPositional = [{ x: 1 }, { y: 2 }];
+
+applyItemAttributes(document.body, { x: 1 }, { onlyRemovals: true });
+// @ts-expect-error onlyRemovals is a boolean
+applyItemAttributes(document.body, { x: 1 }, { onlyRemovals: 'yes' });
+
+export const found: GridStack | GridStackLayout | undefined = registry.find(
+  document.body,
+);
+export const named: GridStack | GridStackLayout | undefined =
+  registry.get('board');
+// @ts-expect-error find may return undefined
+export const foundStrict: GridStack = registry.find(document.body);
+// @ts-expect-error get takes a name
+registry.get(1);
+
+export const keepCtx: BeforeRemoveContext = {};
+// @ts-expect-error unstable_keep is a function
+export const badKeepCtx: BeforeRemoveContext = { unstable_keep: true };
+
+declare const layoutGrid: GridStackLayout;
+export const from: DroppedFrom = { grid: layoutGrid, state: 1 };
+// @ts-expect-error a data-mode DroppedFrom comes from a layout grid
+export const badFrom: DroppedFrom = { grid: registry, state: 1 };
+
+export const widget: LayoutWidget = { id: 'a', component: 'note', props: {} };
+// @ts-expect-error component is a name
+export const badWidget: LayoutWidget = { component: Note };
+
+declare const ctx: LayoutWidgetContext;
+export const ctxGrid: GridStackLayout = ctx.grid;
+export const ctxId: string = ctx.id;
+// @ts-expect-error widget context is read-only
+ctx.id = 'b';
+
+export const layoutArgs: GridStackLayoutSignature['Args'] = {
+  layout: [widget],
+  components,
+};
+export const badLayoutArgs: GridStackLayoutSignature['Args'] = {
+  // @ts-expect-error components map names to components
+  components: { note: 'note' },
+};
+
+export const widgetArgs: WidgetComponentSignature['Args'] = {
+  grid: layoutGrid,
+  widget: ctx,
+};
+// @ts-expect-error a widget component needs its widget context
+export const badWidgetArgs: WidgetComponentSignature['Args'] = {
+  grid: layoutGrid,
+};
+// @ts-expect-error a widget component must be a component
+export const badComponents: Record<string, WidgetComponent> = { note: 1 };
