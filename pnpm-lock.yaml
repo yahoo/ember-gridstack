@@ -4,8 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-packageExtensionsChecksum: sha256-0GGUAhPPvE63qiv0YJTNnTfdHiXBV3NwauIYUMKrHKc=
-
 importers:
 
   .:
@@ -76,19 +74,19 @@ importers:
         version: 10.0.1(eslint@10.15.0(jiti@2.7.0))
       '@glimmer/component':
         specifier: ^2.2.1
-        version: 2.2.1(ember-source@7.4.1)
+        version: 2.2.1
       '@glimmer/tracking':
         specifier: ^1.1.2
         version: 1.1.2
       '@glint/ember-tsc':
         specifier: ^1.14.4
-        version: 1.14.4(ember-source@7.4.1)(typescript@6.0.3)
+        version: 1.14.4(ember-source@7.4.1(@glimmer/component@2.2.1))(typescript@6.0.3)
       '@glint/template':
         specifier: ^1.11.1
         version: 1.11.1
       '@glint/tsserver-plugin':
         specifier: ^2.7.17
-        version: 2.7.17(ember-source@7.4.1)
+        version: 2.7.17(ember-source@7.4.1(@glimmer/component@2.2.1))
       '@rollup/plugin-babel':
         specifier: ^7.1.0
         version: 7.1.0(@babel/core@8.1.2)(rollup@4.68.5)
@@ -199,13 +197,13 @@ importers:
         version: 10.0.1(eslint@10.15.0(jiti@2.7.0))
       '@glimmer/component':
         specifier: ^2.2.1
-        version: 2.2.1(ember-source@7.4.1)
+        version: 2.2.1
       '@glimmer/tracking':
         specifier: ^1.1.2
         version: 1.1.2
       '@glint/ember-tsc':
         specifier: ^1.14.4
-        version: 1.14.4(ember-source@7.4.1)(typescript@6.0.3)
+        version: 1.14.4(ember-source@7.4.1(@glimmer/component@2.2.1))(typescript@6.0.3)
       '@glint/template':
         specifier: ^1.11.1
         version: 1.11.1
@@ -235,10 +233,10 @@ importers:
         version: 0.16.1(@babel/eslint-parser@8.1.2(@babel/core@8.1.2)(eslint@10.15.0(jiti@2.7.0)))(@typescript-eslint/parser@8.73.0(eslint@10.15.0(jiti@2.7.0))(typescript@6.0.3))(typescript@6.0.3)
       ember-gridstack:
         specifier: workspace:*
-        version: file:ember-gridstack(@babel/core@8.1.2)(@glimmer/component@2.2.1)(@glimmer/tracking@1.1.2)(ember-source@7.4.1)
+        version: file:ember-gridstack(@babel/core@8.1.2)(@glimmer/component@2.2.1)(@glimmer/tracking@1.1.2)(ember-source@7.4.1(@glimmer/component@2.2.1))
       ember-load-initializers:
         specifier: ^3.0.1
-        version: 3.0.1(ember-source@7.4.1)
+        version: 3.0.1(ember-source@7.4.1(@glimmer/component@2.2.1))
       ember-modifier:
         specifier: ^4.3.0
         version: 4.3.0(@babel/core@8.1.2)
@@ -1327,8 +1325,6 @@ packages:
   '@glimmer/component@2.2.1':
     resolution: {integrity: sha512-EfbDXxqz/50uM0DqiqFi1cwZifN8M2Zqe1vEpLirImZTaAVGul3WJDgE8fhItF+SQ63Lnbru/gFO4Kb+I90zZg==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@glimmer/component/-/component-2.2.1.tgz}
     engines: {node: '>= 18'}
-    peerDependencies:
-      ember-source: '*'
 
   '@glimmer/env@0.1.7':
     resolution: {integrity: sha512-JKF/a9I9jw6fGoz8kA7LEQslrwJ5jms5CXhu/aqkBWk+PmZ6pTl8mlb/eJ/5ujBGTiQzBhy5AIWF712iA+4/mw==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@glimmer/env/-/env-0.1.7.tgz}
@@ -9317,10 +9313,9 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@glimmer/component@2.2.1(ember-source@7.4.1)':
+  '@glimmer/component@2.2.1':
     dependencies:
       '@embroider/addon-shim': 1.11.0
-      ember-source: 7.4.1(@glimmer/component@2.2.1)
 
   '@glimmer/env@0.1.7': {}
 
@@ -9335,7 +9330,7 @@ snapshots:
 
   '@glimmer/validator@0.44.0': {}
 
-  '@glint/ember-tsc@1.14.4(ember-source@7.4.1)(typescript@5.9.3)':
+  '@glint/ember-tsc@1.14.4(ember-source@7.4.1(@glimmer/component@2.2.1))(typescript@5.9.3)':
     dependencies:
       '@glimmer/syntax': 0.97.0
       '@glint/template': 1.11.1
@@ -9360,7 +9355,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@glint/ember-tsc@1.14.4(ember-source@7.4.1)(typescript@6.0.3)':
+  '@glint/ember-tsc@1.14.4(ember-source@7.4.1(@glimmer/component@2.2.1))(typescript@6.0.3)':
     dependencies:
       '@glimmer/syntax': 0.97.0
       '@glint/template': 1.11.1
@@ -9387,9 +9382,9 @@ snapshots:
 
   '@glint/template@1.11.1': {}
 
-  '@glint/tsserver-plugin@2.7.17(ember-source@7.4.1)':
+  '@glint/tsserver-plugin@2.7.17(ember-source@7.4.1(@glimmer/component@2.2.1))':
     dependencies:
-      '@glint/ember-tsc': 1.14.4(ember-source@7.4.1)(typescript@5.9.3)
+      '@glint/ember-tsc': 1.14.4(ember-source@7.4.1(@glimmer/component@2.2.1))(typescript@5.9.3)
       '@volar/language-core': 2.4.31
       '@volar/typescript': 2.4.31(typescript@5.9.3)
       jiti: 2.7.0
@@ -11899,10 +11894,10 @@ snapshots:
       content-tag: 4.2.1
       oxc-parser: 0.130.0
 
-  ember-gridstack@file:ember-gridstack(@babel/core@8.1.2)(@glimmer/component@2.2.1)(@glimmer/tracking@1.1.2)(ember-source@7.4.1):
+  ember-gridstack@file:ember-gridstack(@babel/core@8.1.2)(@glimmer/component@2.2.1)(@glimmer/tracking@1.1.2)(ember-source@7.4.1(@glimmer/component@2.2.1)):
     dependencies:
       '@embroider/addon-shim': 1.11.0
-      '@glimmer/component': 2.2.1(ember-source@7.4.1)
+      '@glimmer/component': 2.2.1
       '@glimmer/tracking': 1.1.2
       decorator-transforms: 2.4.0(@babel/core@8.1.2)
       ember-modifier: 4.3.0(@babel/core@8.1.2)
@@ -11911,7 +11906,7 @@ snapshots:
     transitivePeerDependencies:
       - '@babel/core'
 
-  ember-load-initializers@3.0.1(ember-source@7.4.1):
+  ember-load-initializers@3.0.1(ember-source@7.4.1(@glimmer/component@2.2.1)):
     dependencies:
       ember-source: 7.4.1(@glimmer/component@2.2.1)
 
@@ -11956,7 +11951,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.29.13
       '@embroider/addon-shim': 1.11.0
-      '@glimmer/component': 2.2.1(ember-source@7.4.1)
+      '@glimmer/component': 2.2.1
       '@simple-dom/interface': 1.4.0
       backburner.js: 2.8.0
       broccoli-file-creator: 2.1.1
