@@ -105,8 +105,8 @@
   "release-plan": {
     "semverIncrementAs": {
       "major": "premajor",
-      "minor": "prerelease",
-      "patch": "prerelease"
+      "minor": "preminor",
+      "patch": "prepatch"
     },
     "semverIncrementTag": "alpha",
     "publishTag": "alpha"
