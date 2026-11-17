@@ -38,9 +38,16 @@ jobs:
       # Trusted publishing needs npm >= 11.5.1; Node 22 ships npm 10.
       - run: npm install -g npm@^11.5.1
       - run: pnpm install --frozen-lockfile
-      # Drop --github-prerelease together with the release-plan block in ember-gridstack/package.json for 6.0.0.
+      - id: channel
+        run: node build-scripts/release-channel.ts status --github-output >> "$GITHUB_OUTPUT"
       - name: Publish to npm
         env:
           GITHUB_AUTH: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: 'true'
-        run: pnpm exec release-plan publish --provenance --github-prerelease
+          PRERELEASE: ${{ steps.channel.outputs.prerelease }}
+        run: |
+          if [ "$PRERELEASE" = true ]; then
+            pnpm exec release-plan publish --provenance --github-prerelease
+          else
+            pnpm exec release-plan publish --provenance
+          fi

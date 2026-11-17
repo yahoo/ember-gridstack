@@ -84,8 +84,28 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: bash build-scripts/check-pack.sh
+      - id: channel
+        run: node build-scripts/release-channel.ts status --github-output >> "$GITHUB_OUTPUT"
       - working-directory: ember-gridstack
-        run: npm publish --dry-run --tag alpha --provenance=false
+        env:
+          PUBLISH_TAG: ${{ steps.channel.outputs.publish-tag }}
+        run: npm publish --dry-run --tag "$PUBLISH_TAG" --provenance=false
+      - name: Release channel summary
+        env:
+          CHANNEL: ${{ steps.channel.outputs.channel }}
+          PUBLISH_TAG: ${{ steps.channel.outputs.publish-tag }}
+        run: |
+          {
+            echo "### Release channel"
+            echo
+            echo "| channel | dist-tag |"
+            echo "| --- | --- |"
+            echo "| $CHANNEL | $PUBLISH_TAG |"
+            echo
+            echo '```'
+            node build-scripts/release-channel.ts next
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
       # Non-blocking: release-plan exits non-zero while any merged PR is unlabelled.
       - name: Release plan preview
         continue-on-error: true

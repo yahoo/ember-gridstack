@@ -58,7 +58,7 @@ jobs:
           body: |
             This PR is a preview of the release that [release-plan](https://github.com/embroider-build/release-plan) has prepared. To release you should just merge this PR 👍
 
-            Before merging an alpha release, see [RELEASE.md](https://github.com/yahoo/ember-gridstack/blob/main/RELEASE.md#prereleases): after `6.0.0-alpha.0` is published, change `"major": "premajor"` to `"major": "prerelease"` in `ember-gridstack/package.json`; for `6.0.0` stable, delete the `release-plan` block and `--github-prerelease`.
+            To change the release channel (alpha, beta, rc, stable), run `pnpm release:channel <channel>` in a separate PR (see [RELEASE.md](https://github.com/yahoo/ember-gridstack/blob/main/RELEASE.md#channels)).
 
             -----------------------------------------
 
