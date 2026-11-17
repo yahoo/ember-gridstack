@@ -16,8 +16,8 @@ class Counter extends Component {
   constructor() {
     super(...arguments);
     lifecycle.created++;
-    this.state = this.args.widget.state;
-    this.state.count ??= 0;
+    this.count = this.args.widget.droppedFrom?.state ?? 0;
+    this.args.widget.beforeRemove(() => this.count);
   }
 
   willDestroy() {
@@ -27,7 +27,6 @@ class Counter extends Component {
 
   inc = () => {
     this.count++;
-    this.state.count++;
   };
 
   <template>
@@ -151,17 +150,11 @@ module('Integration | Component | grid stack layout dnd', function (hooks) {
       1,
       'content rendered exactly once',
     );
-    // FINDING: Glimmer re-creates the component in the new grid's {{#each}}
     assert.strictEqual(lifecycle.destroyed, 1, 'old instance destroyed');
-    assert.strictEqual(lifecycle.created, 3, 'new instance created');
+    assert.strictEqual(lifecycle.created, 3, 'rebuilt in the target');
     assert
       .dom('[gs-id="a"] .inc')
-      .hasText('0', 'component @tracked state lost');
-    assert.strictEqual(
-      B.widgets.find((w) => w.id === 'a').state.count,
-      2,
-      'widget.state (held by the record) survives',
-    );
+      .hasText('2', 'state handed over via beforeRemove/droppedFrom');
 
     const saveA = A.save();
     const saveB = B.save();

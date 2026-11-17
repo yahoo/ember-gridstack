@@ -9,7 +9,7 @@ import 'gridstack/dist/gridstack.css';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { schedule } from '@ember/runloop';
+import { next, schedule } from '@ember/runloop';
 import { GridStack } from 'gridstack';
 import lifecycle from '../utils/lifecycle.js';
 import { installLayoutCallbacks } from '../utils/layout-callbacks.js';
@@ -19,12 +19,16 @@ import {
 } from '../utils/grid-elements.js';
 import { GRID_STACK_EVENTS, capitalize } from '../utils/events.js';
 
+// source grid's `removed` fires before the target's `added`, both inside one drop
+const pendingDrops = new Map();
+
 class Widget {
   @tracked node;
   @tracked props;
-  /** survives a cross-grid move; component instances do not */
-  state = {};
+  @tracked grid;
   serializers = new Set();
+  beforeRemoveFns = new Set();
+  droppedFrom = undefined;
 
   constructor(id, w, el, grid) {
     this.id = id;
@@ -40,6 +44,20 @@ class Widget {
     this.serializers.add(fn);
     return () => this.serializers.delete(fn);
   };
+
+  beforeRemove = (fn) => {
+    this.beforeRemoveFns.add(fn);
+    return () => this.beforeRemoveFns.delete(fn);
+  };
+
+  runBeforeRemove() {
+    let state;
+    this.beforeRemoveFns.forEach((fn) => {
+      const result = fn({});
+      if (state === undefined) state = result;
+    });
+    return state;
+  }
 
   resizeToContent = () => {
     this.grid.gridStack?.resizeToContent(this.element);
@@ -78,6 +96,31 @@ export default class GridStackLayoutComponent extends Component {
     this._flushScheduled = false;
     if (this.isDestroying || this.isDestroyed) return;
     this.widgets = [...this._records.values()];
+    // plain property read by the rebuilt component's constructor; the rerender
+    // this triggers runs after any afterRender job queued here, so wait a loop
+    next(this, this._clearDroppedFrom);
+  }
+
+  _clearDroppedFrom() {
+    this._records.forEach((r) => (r.droppedFrom = undefined));
+  }
+
+  /** Cross-grid drop out of this grid: collect state before the target rebuilds. */
+  _collectDrops(nodes) {
+    nodes?.forEach((n) => {
+      const el = n.el;
+      const ref = el?._gridItemRef;
+      const target = el?.gridstackNode?.grid;
+      if (ref?.gridComp !== this || !target || target === this.gridStack) {
+        return;
+      }
+      const record = this._records.get(ref.id);
+      if (!record) return;
+      pendingDrops.set(ref.id, {
+        grid: this.api,
+        state: record.runBeforeRemove(),
+      });
+    });
   }
 
   registerWidget(id, w, el) {
@@ -89,23 +132,24 @@ export default class GridStackLayoutComponent extends Component {
     if (this._records.delete(id)) this._scheduleFlush();
   }
 
-  /** Cross-grid drop: move the same record from its old grid to this one. */
+  /** Cross-grid drop into this grid: rebuild the widget here. */
   adoptWidget(el) {
     const ref = el._gridItemRef;
     if (!ref || ref.gridComp === this) return;
     const old = ref.gridComp;
     if (!old?.isEmberLayoutGrid) return;
-    const record = old._records.get(ref.id);
-    old.unregisterWidget(ref.id);
+    const { id } = ref;
+    const prev = old._records.get(id);
+    const node = el.gridstackNode;
+    const widget = new Widget(id, node, el, this);
+    widget.props = prev?.props ?? node.props;
+    widget.component = prev?.component ?? node.component;
+    widget.droppedFrom = pendingDrops.get(id);
+    pendingDrops.delete(id);
+    old.unregisterWidget(id);
     ref.gridComp = this;
-    if (record) {
-      record.grid = this;
-      record.node = el.gridstackNode;
-      this._records.set(ref.id, record);
-      this._scheduleFlush();
-    } else {
-      this.registerWidget(ref.id, el.gridstackNode, el);
-    }
+    this._records.set(id, widget);
+    this._scheduleFlush();
   }
 
   mergeWidgetPropsForSave(id, w) {
@@ -141,6 +185,7 @@ export default class GridStackLayoutComponent extends Component {
       const argName = `on${capitalize(eventName)}`;
       const gridStack = this.gridStack;
       gridStack.on(eventName, (event, ...rest) => {
+        if (eventName === 'removed') this._collectDrops(rest[0]);
         if (eventName === 'added') {
           rest[0]?.forEach((n) => n.el && this.adoptWidget(n.el));
         }
