@@ -236,12 +236,23 @@ Changing `@options` calls `GridStack.update()` once; an option set to a blank va
 Template mode follows data mode's rule: an item dropped into another grid is removed from the source and created fresh in the target. Ember owns the items, so your `@onDropped(event, previousNode, newNode)` on the target moves the record from one list to the other; the new `<GridStackItem>` is placed at the drop spot. Items need `@options.id`. To carry state over, return it from `item.beforeRemove(fn)`; the new item reads `item.droppedFrom.state` (and `droppedFrom.grid`, the source grid's yielded API) while it renders.
 
 ```gjs
+// <GridStack @name="left"> and <GridStack @name="right">, lists keyed by name
+@tracked lists = { left: [...], right: [...] };
+
+// find() returns the same object the grid yields as `as |grid|`, which is
+// also what get(name) returns, so compare them to map a grid to its list
+keyOf = (grid) =>
+  Object.keys(this.lists).find((name) => this.registry.get(name) === grid);
+
 moveItem = (event, previousNode, newNode) => {
-  const from = this.registry.find(previousNode.grid); // source grid API
-  const to = this.registry.find(newNode.grid);
-  const record = this.lists.get(from).find((r) => r.id === newNode.id);
-  this.lists.set(from, without(this.lists.get(from), record));
-  this.lists.set(to, [...this.lists.get(to), record]);
+  const from = this.keyOf(this.registry.find(previousNode.grid));
+  const to = this.keyOf(this.registry.find(newNode.grid));
+  const record = this.lists[from].find((r) => r.id === newNode.id);
+  this.lists = {
+    ...this.lists,
+    [from]: this.lists[from].filter((r) => r !== record),
+    [to]: [...this.lists[to], record],
+  };
 };
 ```
 
