@@ -12,6 +12,7 @@ import { action } from '@ember/object';
 import { run, next, schedule } from '@ember/runloop';
 import { GridStack } from 'gridstack';
 import lifecycle from '../utils/lifecycle.js';
+import { patchTrashOverlap } from '../utils/trash-overlap.js';
 import {
   installLayoutCallbacks,
   layoutSave,
@@ -238,6 +239,7 @@ export default class GridStackLayoutComponent extends Component {
     elm._gridComp = this;
     this._lastLayout = this.args.layout;
     this._lastOptions = this.args.options;
+    if (this.args.options?.removable) patchTrashOverlap();
     try {
       this.gridStack = GridStack.init(
         {
