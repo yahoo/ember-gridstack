@@ -9,7 +9,7 @@ import 'gridstack/dist/gridstack.css';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { next, schedule } from '@ember/runloop';
+import { run, next, schedule } from '@ember/runloop';
 import { GridStack } from 'gridstack';
 import lifecycle from '../utils/lifecycle.js';
 import { installLayoutCallbacks } from '../utils/layout-callbacks.js';
@@ -21,6 +21,7 @@ import { GRID_STACK_EVENTS, capitalize } from '../utils/events.js';
 
 // source grid's `removed` fires before the target's `added`, both inside one drop
 const pendingDrops = new Map();
+const KEEP = Symbol('unstable_keep');
 
 class Widget {
   @tracked node;
@@ -29,6 +30,8 @@ class Widget {
   serializers = new Set();
   beforeRemoveFns = new Set();
   droppedFrom = undefined;
+  /** source grid that still renders this record after `unstable_keep` */
+  lentBy = null;
 
   constructor(id, w, el, grid) {
     this.id = id;
@@ -50,13 +53,16 @@ class Widget {
     return () => this.beforeRemoveFns.delete(fn);
   };
 
-  runBeforeRemove() {
+  runBeforeRemove(allowKeep) {
+    const ctx = { unstable_keep: allowKeep ? () => KEEP : undefined };
     let state;
+    let keep = false;
     this.beforeRemoveFns.forEach((fn) => {
-      const result = fn({});
-      if (state === undefined) state = result;
+      const result = fn(ctx);
+      if (result === KEEP) keep = true;
+      else if (state === undefined) state = result;
     });
-    return state;
+    return { keep, state };
   }
 
   resizeToContent = () => {
@@ -72,6 +78,8 @@ export default class GridStackLayoutComponent extends Component {
   gridStack = null;
   subscribedEvents = [];
   _records = new Map();
+  /** records owned by another grid that this grid keeps rendering */
+  _lent = new Map();
   _flushScheduled = false;
 
   get api() {
@@ -95,7 +103,8 @@ export default class GridStackLayoutComponent extends Component {
   _flush() {
     this._flushScheduled = false;
     if (this.isDestroying || this.isDestroyed) return;
-    this.widgets = [...this._records.values()];
+    const own = [...this._records.values()].filter((r) => !r.lentBy);
+    this.widgets = [...own, ...this._lent.values()];
     // plain property read by the rebuilt component's constructor; the rerender
     // this triggers runs after any afterRender job queued here, so wait a loop
     next(this, this._clearDroppedFrom);
@@ -116,11 +125,36 @@ export default class GridStackLayoutComponent extends Component {
       }
       const record = this._records.get(ref.id);
       if (!record) return;
-      pendingDrops.set(ref.id, {
-        grid: this.api,
-        state: record.runBeforeRemove(),
-      });
+      const { keep, state } = record.runBeforeRemove(true);
+      if (keep) {
+        const lender = record.lentBy ?? this;
+        lender._lent.set(ref.id, record);
+        record.lentBy = lender;
+        pendingDrops.set(ref.id, { keep: true });
+      } else {
+        pendingDrops.set(ref.id, { grid: this.api, state });
+      }
     });
+  }
+
+  /** The lender stops rendering `record`; returns its final state. */
+  _release(record) {
+    const lender = record.lentBy;
+    record.lentBy = null;
+    if (!lender || lender._lent.get(record.id) !== record) return undefined;
+    lender._lent.delete(record.id);
+    lender._scheduleFlush();
+    return record.runBeforeRemove(false).state;
+  }
+
+  /** Replaces `record` with a fresh one so this grid renders it itself. */
+  _rebuild(record, droppedFrom, node = record.node) {
+    const widget = new Widget(record.id, node, record.element, this);
+    widget.props = record.props ?? node.props;
+    widget.component = record.component ?? node.component;
+    widget.droppedFrom = droppedFrom;
+    this._records.set(record.id, widget);
+    this._scheduleFlush();
   }
 
   registerWidget(id, w, el) {
@@ -129,7 +163,11 @@ export default class GridStackLayoutComponent extends Component {
   }
 
   unregisterWidget(id) {
-    if (this._records.delete(id)) this._scheduleFlush();
+    const record = this._records.get(id);
+    if (!record) return;
+    this._records.delete(id);
+    this._release(record);
+    this._scheduleFlush();
   }
 
   /** Cross-grid drop into this grid: rebuild the widget here. */
@@ -141,15 +179,31 @@ export default class GridStackLayoutComponent extends Component {
     const { id } = ref;
     const prev = old._records.get(id);
     const node = el.gridstackNode;
-    const widget = new Widget(id, node, el, this);
-    widget.props = prev?.props ?? node.props;
-    widget.component = prev?.component ?? node.component;
-    widget.droppedFrom = pendingDrops.get(id);
+    const pending = pendingDrops.get(id);
     pendingDrops.delete(id);
-    old.unregisterWidget(id);
+    old._records.delete(id);
+    old._scheduleFlush();
     ref.gridComp = this;
-    this._records.set(id, widget);
-    this._scheduleFlush();
+    if (prev && pending?.keep) {
+      prev.grid = this;
+      prev.node = node;
+      if (prev.lentBy === this) {
+        this._lent.delete(id);
+        prev.lentBy = null;
+      }
+      this._records.set(id, prev);
+      this._scheduleFlush();
+      return;
+    }
+    if (prev?.lentBy) {
+      prev.lentBy._lent.delete(id);
+      prev.lentBy._scheduleFlush();
+    }
+    this._rebuild(
+      prev ?? { id, element: el },
+      pending?.keep ? undefined : pending,
+      node,
+    );
   }
 
   mergeWidgetPropsForSave(id, w) {
@@ -214,6 +268,18 @@ export default class GridStackLayoutComponent extends Component {
       gridStack.destroy(false);
       this.gridStack = null;
     }
+    const owners = new Set();
+    this._lent.forEach((record) => {
+      this._lent.delete(record.id);
+      record.lentBy = null;
+      const { state } = record.runBeforeRemove(false);
+      record.grid._rebuild(record, { grid: this.api, state });
+      owners.add(record.grid);
+    });
+    // destructors run after this grid's DOM is gone and a flush queued here
+    // renders in a later autorun (observed); a nested run renders it now
+    if (owners.size) run(() => owners.forEach((o) => o._flush()));
+    this._records.forEach((record) => this._release(record));
     this._records.clear();
     delete this.elm._gridComp;
     this._uninstall?.();
