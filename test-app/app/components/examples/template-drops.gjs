@@ -120,6 +120,27 @@ export default class TemplateDrops extends Component {
 
   <template>
     <div class="template-drops">
+      <p class="example-lead">Two grids rendered from Ember lists with
+        <code>grid.Item</code>. A drop moves the record between the
+        lists; the trash bar removes it.</p>
+      <dl class="hook-legend">
+        <dt><code>@name</code>
+          +
+          <code>registry.find</code>
+          /
+          <code>get</code></dt>
+        <dd>Map the grid of a dropped node back to its list.</dd>
+        <dt><code>@onDropped</code></dt>
+        <dd>Move the record (or add a new one from the toolbox).</dd>
+        <dt><code>@onRemoved</code></dt>
+        <dd>Drop a trashed record from its list.</dd>
+        <dt><code>beforeRemove</code></dt>
+        <dd>Returns the count handed to the new item.</dd>
+        <dt><code>droppedFrom</code></dt>
+        <dd>Read in the new item:
+          <code>droppedFrom.state</code>
+          is that count.</dd>
+      </dl>
       <div class="data-mode-grids">
         <figure class="data-mode-pane">
           <figcaption>Left grid</figcaption>

@@ -17,9 +17,7 @@ class Counter extends Component {
     if (typeof widget.droppedFrom?.state === 'number') {
       this.count = widget.droppedFrom.state;
     }
-    widget.beforeRemove(
-      ({ unstable_keep }) => unstable_keep?.() ?? this.count,
-    );
+    widget.beforeRemove(() => this.count);
     widget.registerSerializer(() => ({ count: this.count }));
   }
 
@@ -134,6 +132,26 @@ export default class DataMode extends Component {
 
   <template>
     <div class="data-mode" {{this.setHost}}>
+      <p class="example-lead">Two grids built from JSON layouts; Ember
+        renders each widget. Drag a counter to the other grid and its
+        count comes along, drop it on the bar below to delete it.</p>
+      <dl class="hook-legend">
+        <dt><code>@layout</code> / <code>@components</code></dt>
+        <dd>JSON items and the component each
+          <code>component</code>
+          name renders.</dd>
+        <dt><code>beforeRemove</code></dt>
+        <dd>Returns the state handed to the rebuilt widget.</dd>
+        <dt><code>droppedFrom</code></dt>
+        <dd>Read in the new widget:
+          <code>droppedFrom.state</code>
+          is that value.</dd>
+        <dt><code>registerSerializer</code></dt>
+        <dd>Adds the live count to <code>props</code> on save.</dd>
+        <dt><code>removable</code></dt>
+        <dd>Selector of the trash bar; a drop there destroys the
+          widget.</dd>
+      </dl>
       <div class="toolbar">
         <button type="button" class="button" {{on "click" this.save}}>
           Save both
