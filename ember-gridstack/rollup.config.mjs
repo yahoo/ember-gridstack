@@ -54,8 +54,11 @@ export default {
     // Ensure that .gjs files are properly integrated as Javascript
     addon.gjs(),
 
-    // Emit .d.ts declaration files
-    addon.declarations('declarations', 'pnpm ember-tsc --declaration'),
+    // Emit .d.ts declaration files; try scenarios swap the hoisted ember-source
+    // for one without Glint types and only test runtime, so they skip this
+    ...(process.env.SKIP_DECLARATIONS
+      ? []
+      : [addon.declarations('declarations', 'pnpm ember-tsc --declaration')]),
 
     // addons are allowed to contain imports of .css files, which we want rollup
     // to leave alone and keep in the published output.

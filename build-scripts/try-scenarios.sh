@@ -27,7 +27,7 @@ restore() {
 failed=()
 for name in "${scenarios[@]}"; do
   echo "=== $name"
-  if pnpm exec try apply "$name" && pnpm install --no-frozen-lockfile && pnpm test:ember; then
+  if pnpm exec try apply "$name" && SKIP_DECLARATIONS=1 pnpm install --no-frozen-lockfile && pnpm test:ember; then
     echo "=== $name: PASS"
   else
     echo "=== $name: FAIL"
