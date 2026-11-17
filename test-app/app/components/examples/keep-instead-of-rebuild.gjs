@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { on } from '@ember/modifier';
+/* eslint-disable ember/no-runloop -- settled() waits for runloop timers */
 import { cancel, later, next } from '@ember/runloop';
 import GridStack from 'ember-gridstack/components/grid-stack';
 
@@ -139,6 +140,7 @@ export default class KeepInsteadOfRebuild extends Component {
   constructor() {
     super(...arguments);
     shared.keep = false;
+    shared.created = 0;
   }
 
   @action toggleKeep(event) {

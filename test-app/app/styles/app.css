@@ -652,7 +652,7 @@ h3 code {
   font-size: 0.8125rem;
 }
 
-.hook-legend dt code {
+.hook-legend code {
   font-family: var(--font-mono);
 }
 

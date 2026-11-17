@@ -44,7 +44,6 @@ module('Integration | Example | keep instead of rebuild', function (hooks) {
         <div style="width: 1000px"><Keep /></div>
       </template>,
     );
-    await settled();
   };
 
   test('keep off: a move rebuilds and reloads the report', async function (assert) {
@@ -86,7 +85,6 @@ module('Integration | Example | keep instead of rebuild', function (hooks) {
     const ticks = find('.keep-ticks').textContent;
     const n = created();
     await click('.keep-destroy');
-    await settled();
     assert.dom('.keep-left').doesNotExist();
     assert.dom('.keep-destroy').hasText('Restore left grid');
     assert.strictEqual(created(), n + 1, 'rebuilt once');
