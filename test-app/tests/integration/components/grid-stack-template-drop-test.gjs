@@ -79,6 +79,10 @@ class Lists {
   };
 }
 
+class Options {
+  @tracked value = { acceptWidgets: true, column: 6, minRow: 4 };
+}
+
 const twoGrids =
   (lists, h, hr = h) =>
   (d) => <template>
@@ -455,6 +459,90 @@ module('Integration | Component | grid stack template drop', function (hooks) {
       await this.grid.destroy();
     });
   }
+
+  test('toggling acceptWidgets off and on', async function (assert) {
+    const lists = new Lists();
+    const opts = new Options();
+    const h = moveHandler(lists, []);
+    await this.grid.render({
+      template: (d) => <template>
+        {{! template-lint-disable no-inline-styles }}
+        {{#if d.visible}}
+          <div style="display: flex; width: 1000px">
+            <div style="width: 500px">
+              <GridStack
+                id="left"
+                @options={{hash acceptWidgets=true column=6 minRow=4}}
+                @onDropped={{h.onDropped}}
+              >
+                {{#each lists.left key="id" as |item|}}
+                  <GridStackItem
+                    data-id={{item.id}}
+                    @options={{item.options}}
+                    as |gi|
+                  ><Counter @item={{gi}} /></GridStackItem>
+                {{/each}}
+              </GridStack>
+            </div>
+            <div style="width: 500px">
+              <GridStack
+                id="right"
+                @options={{opts.value}}
+                @onDropped={{h.onDropped}}
+              >
+                {{#each lists.right key="id" as |item|}}
+                  <GridStackItem
+                    data-id={{item.id}}
+                    @options={{item.options}}
+                    as |gi|
+                  ><Counter @item={{gi}} /></GridStackItem>
+                {{/each}}
+              </GridStack>
+            </div>
+          </div>
+        {{/if}}
+      </template>,
+    });
+    const gs = find('#right').gridstack;
+    opts.value = { ...opts.value, acceptWidgets: false };
+    await settled();
+    assert.strictEqual(find('#right').gridstack, gs, 'not re-created');
+    await dragIntoRight(find('[data-id="a"]'));
+    await settled();
+    assert.deepEqual(ids('#right'), ['b'], 'off: refused');
+    assert.deepEqual(ids('#left'), ['a']);
+
+    opts.value = { ...opts.value, acceptWidgets: true };
+    await settled();
+    assert.strictEqual(find('#right').gridstack, gs, 'not re-created');
+    await dragIntoRight(find('[data-id="a"]'));
+    await settled();
+    assert.deepEqual(ids('#right'), ['b', 'a'], 'on: accepted');
+    assert.deepEqual(ids('#left'), []);
+    assert.deepEqual(warnings, []);
+    assert.deepEqual(this.errors, []);
+    await this.grid.destroy();
+  });
+
+  test('removeWidget(el, true) on the component removes the DOM', async function (assert) {
+    const lists = new Lists();
+    await this.grid.render({ template: twoGrids(lists, {}) });
+    const A = lists.grids.left;
+    const el = document.createElement('div');
+    el.className = 'grid-stack-item extra';
+    el.innerHTML = '<div class="grid-stack-item-content"></div>';
+    A.elm.appendChild(el);
+    A.addWidget(el);
+    A.removeWidget(el, true);
+    assert.false(el.isConnected, 'explicit removeDOM=true is honored');
+    assert.deepEqual(nodeIds('#left'), ['a']);
+    A.instance.removeWidget(find('[data-id="a"]'));
+    assert.true(
+      find('#left').contains(find('[data-id="a"]')),
+      "gridstack's own calls leave Ember's DOM alone",
+    );
+    await this.grid.destroy();
+  });
 
   test('drag-in from a setupDragIn toolbox', async function (assert) {
     const lists = new Lists();

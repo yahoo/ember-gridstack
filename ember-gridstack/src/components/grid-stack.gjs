@@ -182,6 +182,7 @@ export default class GridStackComponent extends Component {
 
     // Glimmer owns the DOM: trash drops must not remove the element
     const removeWidget = this.gridStack.removeWidget;
+    this._removeWidget = removeWidget;
     this.gridStack.removeWidget = function (els, removeDOM, triggerEvent) {
       return removeWidget.call(this, els, false, triggerEvent);
     };
@@ -339,7 +340,7 @@ export default class GridStackComponent extends Component {
       this._createGridStack();
     } else if (Object.keys(changed).length) {
       this._appliedOptions = next;
-      if ('acceptWidgets' in changed) changed.acceptWidgets = this._accept;
+      if (changed.acceptWidgets) changed.acceptWidgets = this._accept;
       this.gridStack.updateOptions(changed);
     }
   }
@@ -404,7 +405,9 @@ export default class GridStackComponent extends Component {
   @action
   removeWidget(element, removeDOM = false, triggerEvent = true) {
     triggerEvent = triggerEvent && !this.isDestroying && !this.isDestroyed;
-    this.gridStack?.removeWidget(element, removeDOM, triggerEvent);
+    if (this.gridStack) {
+      this._removeWidget.call(this.gridStack, element, removeDOM, triggerEvent);
+    }
   }
 
   get isLayoutMode() {
