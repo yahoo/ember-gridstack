@@ -6,8 +6,10 @@
   "license": "BSD-3-Clause",
   "scripts": {
     "build": "pnpm --filter ember-gridstack build",
-    "lint": "pnpm --filter '*' lint",
+    "lint": "pnpm --filter '*' lint && pnpm lint:scripts",
     "lint:fix": "pnpm --filter '*' lint:fix",
+    "lint:scripts": "prettier --check build-scripts && node --test build-scripts/release-channel.test.ts && ./build-scripts/check-lockfile.sh",
+    "release:channel": "node build-scripts/release-channel.ts",
     "prepare": "husky && pnpm build",
     "start": "concurrently 'pnpm:start:*' --restart-after 5000 --prefixColors auto",
     "start:addon": "pnpm --filter ember-gridstack start --no-watch.clearScreen",
@@ -17,12 +19,14 @@
     "test:try": "./build-scripts/try-scenarios.sh"
   },
   "devDependencies": {
+    "@types/semver": "^7.7.1",
     "concurrently": "^10.0.7",
     "husky": "^9.1.7",
     "prettier": "^3.10.1",
     "prettier-plugin-ember-template-tag": "^2.1.8",
     "pretty-quick": "^4.2.2",
-    "release-plan": "^0.20.1"
+    "release-plan": "^0.20.1",
+    "semver": "^7.8.6"
   },
   "engines": {
     "node": ">= 20.19"
