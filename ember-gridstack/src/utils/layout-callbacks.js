@@ -4,6 +4,7 @@
  * (`_gridComp` on the grid, `_gridItemRef` on items). Callbacks installed by
  * another wrapper are chained: anything that isn't ours is passed to them.
  */
+import { assert } from '@ember/debug';
 import { GridStack, Utils } from 'gridstack';
 
 let syntheticIdSeq = 0;
@@ -22,14 +23,11 @@ function nearestGridComp(el) {
 export function layoutAddRemove(parent, w, add, isGrid) {
   if (add) {
     if (isGrid) {
-      const inherited = nearestGridComp(parent);
-      if (!isOurs(inherited)) {
-        return previous?.addRemoveCB?.(parent, w, add, isGrid);
-      }
-      const el = Utils.createDiv(['grid-stack', ...splitClass(w.class)]);
-      el._gridComp = inherited;
-      parent.appendChild(el);
-      return el;
+      assert(
+        'ember-gridstack: nested grids (subGridOpts) are not supported in data mode yet; use the template API <GridStackItem> for nesting',
+        !isOurs(nearestGridComp(parent)),
+      );
+      return previous?.addRemoveCB?.(parent, w, add, isGrid);
     }
     const gridComp = parent._gridComp;
     if (!isOurs(gridComp)) {
@@ -74,9 +72,10 @@ export function layoutAddRemove(parent, w, add, isGrid) {
   return undefined;
 }
 
+/** Passed per call by data-mode grids' `save()`, never installed statically. */
 export function layoutSave(node, w) {
   const ref = node.el?._gridItemRef;
-  if (!isOurs(ref?.gridComp)) return previous?.saveCB?.(node, w);
+  if (!isOurs(ref?.gridComp)) return;
   if (node.component != null) w.component = node.component;
   if (node.props != null) w.props = { ...node.props };
   ref.gridComp.mergeWidgetPropsForSave(ref.id, w);
@@ -93,11 +92,9 @@ export function installLayoutCallbacks() {
   if (installs++ === 0) {
     previous = {
       addRemoveCB: GridStack.addRemoveCB,
-      saveCB: GridStack.saveCB,
       updateCB: GridStack.updateCB,
     };
     GridStack.addRemoveCB = layoutAddRemove;
-    GridStack.saveCB = layoutSave;
     GridStack.updateCB = layoutUpdate;
   }
   let done = false;
@@ -108,7 +105,6 @@ export function installLayoutCallbacks() {
       // only restore if nobody replaced ours in the meantime
       if (GridStack.addRemoveCB === layoutAddRemove)
         GridStack.addRemoveCB = previous.addRemoveCB;
-      if (GridStack.saveCB === layoutSave) GridStack.saveCB = previous.saveCB;
       if (GridStack.updateCB === layoutUpdate)
         GridStack.updateCB = previous.updateCB;
       previous = null;

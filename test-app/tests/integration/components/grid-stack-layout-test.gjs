@@ -436,7 +436,11 @@ module('Integration | Component | grid stack layout', function (hooks) {
       </template>,
     });
     const saved = find('#tpl').gridstack.save();
-    assert.strictEqual(saved[0]?.content, '<b>hello</b>', 'content saved');
+    assert.strictEqual(
+      saved[0]?.content?.trim(),
+      '<b>hello</b>',
+      'content saved',
+    );
     const data = find('[gs-id="a"]').closest('.grid-stack')._gridComp.save();
     assert.strictEqual(data[0].component, 'text', 'data grid still saves');
     assert.notOk('content' in data[0]);

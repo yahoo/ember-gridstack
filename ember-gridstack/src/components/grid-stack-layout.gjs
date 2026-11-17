@@ -12,7 +12,10 @@ import { action } from '@ember/object';
 import { run, next, schedule } from '@ember/runloop';
 import { GridStack } from 'gridstack';
 import lifecycle from '../utils/lifecycle.js';
-import { installLayoutCallbacks } from '../utils/layout-callbacks.js';
+import {
+  installLayoutCallbacks,
+  layoutSave,
+} from '../utils/layout-callbacks.js';
 import {
   registerGridElement,
   unregisterGridElement,
@@ -229,13 +232,24 @@ export default class GridStackLayoutComponent extends Component {
     elm._gridComp = this;
     this._lastLayout = this.args.layout;
     this._lastOptions = this.args.options;
-    this.gridStack = GridStack.init(
-      {
-        ...this.args.options,
-        children: this.args.layout ?? this.args.options?.children ?? [],
-      },
-      elm,
-    );
+    try {
+      this.gridStack = GridStack.init(
+        {
+          ...this.args.options,
+          children: this.args.layout ?? this.args.options?.children ?? [],
+        },
+        elm,
+      );
+    } catch (e) {
+      // e.g. the nested-grid assert, thrown while gridstack loads children
+      elm.gridstack?.destroy(false);
+      throw e;
+    }
+    // scoped to this instance so template-API grids still save `content`
+    const gs = this.gridStack;
+    const save = GridStack.prototype.save;
+    gs.save = (content, gridOpt, cb = layoutSave, column) =>
+      save.call(gs, content, gridOpt, cb, column);
 
     GRID_STACK_EVENTS.forEach((eventName) => {
       const argName = `on${capitalize(eventName)}`;
