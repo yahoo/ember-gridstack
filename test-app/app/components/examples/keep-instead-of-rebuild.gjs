@@ -130,7 +130,7 @@ const OPTIONS = {
   margin: 6,
   column: 4,
   minRow: 2,
-  columnOpts: { breakpoints: [{ w: 640, c: 1 }] },
+  columnOpts: { breakpoints: [{ w: 400, c: 1 }] },
 };
 
 export default class KeepInsteadOfRebuild extends Component {
