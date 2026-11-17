@@ -1,0 +1,73 @@
+name: npm deprecate
+
+on:
+  workflow_dispatch:
+    inputs:
+      range:
+        description: 'Semver range, e.g. "6.0.0-alpha.0 - 6.0.0-rc.9"'
+        type: string
+        required: true
+      message:
+        description: 'Deprecation message (empty = undeprecate)'
+        type: string
+        required: false
+        default: ''
+      dry_run:
+        description: 'Only print what would happen'
+        type: boolean
+        default: true
+
+permissions: {}
+
+jobs:
+  deprecate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    environment: npm-admin
+    concurrency:
+      group: npm-admin
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      - run: npm install -g npm@^11.5.1
+      - name: Validate inputs and list matches
+        env:
+          RANGE: ${{ inputs.range }}
+          MESSAGE: ${{ inputs.message }}
+        run: |
+          [[ "$RANGE" =~ ^[0-9A-Za-z.\<\>=^~\ \|*-]{1,100}$ ]] || { echo "invalid range"; exit 1; }
+          pnpm exec node -e 'if (require("semver").validRange(process.env.RANGE) === null) process.exit(1)' || { echo "invalid semver range"; exit 1; }
+          (( ${#MESSAGE} <= 500 )) || { echo "message longer than 500 chars"; exit 1; }
+          if [[ "$MESSAGE" =~ [[:cntrl:]] ]]; then echo "message contains control characters"; exit 1; fi
+          npm view ember-gridstack versions --json --registry https://registry.npmjs.org/ > "$RUNNER_TEMP/versions.json"
+          pnpm exec node -e '
+            const semver = require("semver");
+            const all = [].concat(JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")));
+            const hits = all.filter((v) => semver.satisfies(v, process.env.RANGE, { includePrerelease: true }));
+            if (!hits.length) { console.error("no published versions match"); process.exit(1); }
+            console.log(hits.join("\n"));
+          ' "$RUNNER_TEMP/versions.json" > "$RUNNER_TEMP/matches.txt"
+          cat "$RUNNER_TEMP/matches.txt"
+          {
+            echo "### Matching versions"
+            echo; echo '```'; cat "$RUNNER_TEMP/matches.txt"; echo '```'; echo
+            echo "### Command"
+            echo; echo '```'; echo "npm deprecate \"ember-gridstack@$RANGE\" \"$MESSAGE\""; echo '```'
+            if [[ -z "$MESSAGE" ]]; then echo; echo "Empty message: undeprecates the matching versions."; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Apply
+        if: ${{ !inputs.dry_run }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          RANGE: ${{ inputs.range }}
+          MESSAGE: ${{ inputs.message }}
+        run: npm deprecate "ember-gridstack@$RANGE" "$MESSAGE"
