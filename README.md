@@ -227,6 +227,77 @@ Changing `@options` calls `GridStack.update()` once; an option set to a blank va
 </grid.Item>
 ```
 
+### Data mode (`@layout`)
+
+Pass `@layout` (or `@components`) to `<GridStack>` and gridstack builds the items from JSON, as in gridstack's React and Vue wrappers; Ember renders each widget's content into its `.grid-stack-item-content`.
+
+```gjs
+<GridStack
+  @layout={{this.layout}}
+  @components={{hash note=Note}}
+  @options={{hash acceptWidgets=true}}
+  as |widget grid|
+>
+  {{! rendered for widgets whose component has no @components entry }}
+  {{widget.id}}
+</GridStack>
+```
+
+#### Args
+
+| Arg           | Type                              | Description                                                                                                                 |
+| ------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `@layout`     | `LayoutWidget[]`                  | `{ id, x, y, w, h, component, props }` entries; changes are applied with `grid.load()` (see below)                          |
+| `@components` | `Record<string, WidgetComponent>` | component per `component` name, invoked with `@props`, `@widget` and `@grid`; others use the yielded block                  |
+| `@options`    | `GridStackOptions`                | as for `<GridStack>`; `children` is ignored when `@layout` is set                                                           |
+| `@on*`        | handlers                          | the same 13 events as `<GridStack>`; `@onDropped(event, previousNode, newNode)` (`previousNode` is `undefined` for drag-in) |
+
+#### `widget`
+
+| Member                          | Description                                                                                         |
+| ------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `widget.id`, `component`        | from the layout entry (ids are generated for drag-in specs without one)                             |
+| `widget.props`, `widget.node`   | the entry's props and gridstack node (tracked)                                                      |
+| `widget.element`                | the `.grid-stack-item` element; `contentElement` is its `.grid-stack-item-content`                  |
+| `widget.grid`                   | the data-mode grid that owns the widget (tracked)                                                   |
+| `widget.registerSerializer(fn)` | `fn()` returns props merged into this widget's `save()` output; returns an unregister function      |
+| `widget.beforeRemove(fn)`       | `fn({ unstable_keep })` runs before a cross-grid drop; its return value is handed to the new widget |
+| `widget.droppedFrom`            | `{ grid, state }` while a widget rebuilt by a cross-grid drop first renders, then `undefined`       |
+| `widget.resizeToContent()`      | `GridStack.resizeToContent()` for this widget                                                       |
+
+#### `grid`
+
+`instance`, `addWidget(w)`, `removeWidget(idOrEl)`, `save()`, `load(layout)`, `compact()`, `enableMove()`, `enableResize()`, `setMode()`, `removeAll()`, as on the template-API `grid`.
+
+#### Save and load
+
+`grid.save()` returns the React/Vue schema `[{ id, x, y, w, h, component, props }]` (`w`/`h` of 1 are left out, no `content`), with each widget's serializer output merged into `props`. `beforeRemove` and `droppedFrom` are never saved. `grid.load(json)` takes the same list.
+
+Replacing `@layout` calls `grid.load(layout)`, which diffs by `id`: an entry with an existing id is moved and resized in place and keeps its component instance and state, new ids are added, and ids that are missing are removed.
+
+#### Moving widgets between grids
+
+A widget dropped on another grid (`acceptWidgets`) is removed from the source grid and rebuilt in the target: its component is destroyed and a new instance is created with the same `id`, `component` and `props`. To carry state over, return it from `widget.beforeRemove(fn)`; the new instance reads it from `widget.droppedFrom.state` in its constructor, along with `widget.droppedFrom.grid`. `@onRemoved` fires on the source grid and `@onDropped` on the target.
+
+```gjs
+class Counter extends Component {
+  @tracked count = this.args.widget.droppedFrom?.state ?? 0;
+
+  constructor() {
+    super(...arguments);
+    this.args.widget.beforeRemove(() => this.count);
+    this.args.widget.registerSerializer(() => ({ count: this.count }));
+  }
+}
+```
+
+**Unstable:** `beforeRemove` callbacks get `unstable_keep` while the source grid is still rendered. Returning `unstable_keep()` keeps the same component instance alive: the source grid keeps rendering it, the target owns it (`widget.grid`, `save()`), and when the source is destroyed the widget is rebuilt in the target with `droppedFrom.state` from a second `beforeRemove` call (`unstable_keep` is then `undefined`). This API may change.
+
+#### Limits
+
+- Nested grids (`subGridOpts`) are not supported in data mode yet and throw a development assertion; use `<GridStackItem>` for nesting.
+- On a server render (FastBoot) the grid renders as an empty `<div class="grid-stack">` and fills in on the client.
+
 ### `{{gs-item-attributes}}`
 
 Sets `gs-*` attributes from an options hash on any element (blank values remove the attribute):
@@ -242,13 +313,14 @@ Sets `gs-*` attributes from an options hash on any element (blank values remove 
 
 ## Exports
 
-| Import                                         | Exports                                                                                                                                                                                              |
-| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ember-gridstack`                              | `GridStack`, `GridStackItem`, `gsItemAttributes`, `applyItemAttributes`, `GridStackRegistry`, `GRID_STACK_EVENTS`; types `GridStackSignature`, `GridStackItemSignature`, `GsItemAttributesSignature` |
-| `ember-gridstack/components/grid-stack`        | default `GridStack`, `GRID_STACK_EVENTS`, `REINIT_OPTIONS`, `capitalize`                                                                                                                             |
-| `ember-gridstack/components/grid-stack-item`   | default `GridStackItem`                                                                                                                                                                              |
-| `ember-gridstack/modifiers/gs-item-attributes` | default modifier, `applyItemAttributes(element, options)`                                                                                                                                            |
-| `ember-gridstack/services/grid-stack-registry` | default service class (deprecated)                                                                                                                                                                   |
+| Import                                         | Exports                                                                                                                                                                                                                                                                                                                                                                         |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ember-gridstack`                              | `GridStack`, `GridStackItem`, `GridStackLayout`, `gsItemAttributes`, `applyItemAttributes`, `GridStackRegistry`, `GRID_STACK_EVENTS`; types `GridStackSignature`, `GridStackItemSignature`, `GsItemAttributesSignature`, `GridStackLayoutSignature`, `LayoutWidget`, `LayoutWidgetContext`, `WidgetComponent`, `WidgetComponentSignature`, `BeforeRemoveContext`, `DroppedFrom` |
+| `ember-gridstack/components/grid-stack`        | default `GridStack`, `GRID_STACK_EVENTS`, `REINIT_OPTIONS`, `capitalize`                                                                                                                                                                                                                                                                                                        |
+| `ember-gridstack/components/grid-stack-item`   | default `GridStackItem`                                                                                                                                                                                                                                                                                                                                                         |
+| `ember-gridstack/components/grid-stack-layout` | default `GridStackLayout` (data mode; `<GridStack @layout>` renders it)                                                                                                                                                                                                                                                                                                         |
+| `ember-gridstack/modifiers/gs-item-attributes` | default modifier, `applyItemAttributes(element, options)`                                                                                                                                                                                                                                                                                                                       |
+| `ember-gridstack/services/grid-stack-registry` | default service class (deprecated)                                                                                                                                                                                                                                                                                                                                              |
 
 Each deep path also resolves with a `.js` suffix. Types ship in `declarations/` and are picked up through `exports`.
 
