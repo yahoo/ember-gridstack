@@ -259,7 +259,7 @@ moveItem = (event, previousNode, newNode) => {
 - A grid with `acceptWidgets` and no `@onDropped`, or a dragged item without `@options.id`, refuses the drop (development warning).
 - If `@onDropped` does not render the item in the target, it goes back to its source grid (development warning).
 - Drag-in (`GridStack.setupDragIn`): `previousNode` is `undefined`; add a record built from `newNode` (`x`, `y`, `w`, `h`). gridstack's helper element is removed.
-- Trash (`removable`): `@onRemoved` fires; remove the record and Ember removes the element.
+- Trash (`removable`): `@onRemoved` fires; remove the record and Ember removes the element. gridstack takes a drop on a removable trash when the item's centre is over it and the overlap covers at least half of the smaller of the two (item or trash). A long, thin bar much wider than your widgets can therefore never be hit; make the trash at least half as tall as your tallest widget, or no wider than about twice the widget.
 
 ### Data mode (`@layout`)
 
