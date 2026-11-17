@@ -51,7 +51,7 @@ Commit the resulting `ember-gridstack/package.json` change in its own PR. The co
 - **Right after the first prerelease is published** (e.g. `6.0.0-alpha.0`), run `pnpm release:channel alpha` again so the block switches to `prerelease`; otherwise the next `breaking` PR produces `7.0.0-alpha.0`.
 - Switching channel on a prerelease resets the counter: `6.0.0-alpha.3` -> `beta` gives `6.0.0-beta.0`.
 - **Going stable:** `pnpm release:channel stable` deletes the block; the next release of `6.0.0-rc.N` is `6.0.0` on `latest`.
-- `publish.yml` and the CI dry run read the channel from `package.json` (`release-channel.ts status`), so no workflow edits are needed; release-plan itself has no `--tag` option and uses `publishTag`.
+- `publish.yml` and the CI dry run read the channel from `package.json` (`release-channel.mts status`), so no workflow edits are needed; release-plan itself has no `--tag` option and uses `publishTag`.
 
 Promoting an already published version (e.g. make `6.0.0-rc.2` `latest`, or fix a wrong tag): run the **npm dist-tag** workflow (`.github/workflows/dist-tag.yml`) with `action: add`, `tag: latest`. Remove a stale tag (e.g. `alpha` after 6.0.0 ships) with `action: rm`; `latest` cannot be removed. Both start as a dry run; uncheck `dry_run` to apply.
 
@@ -74,7 +74,7 @@ Locally:
 ```sh
 pnpm build
 bash build-scripts/check-pack.sh
-(cd ember-gridstack && npm publish --dry-run --tag "$(node ../build-scripts/release-channel.ts status --package package.json | sed -n 's/^publish-tag=//p')" --provenance=false)
+(cd ember-gridstack && npm publish --dry-run --tag "$(node ../build-scripts/release-channel.mts status --package package.json | sed -n 's/^publish-tag=//p')" --provenance=false)
 GITHUB_AUTH=<read-only token> pnpm exec release-plan explain-plan
 ```
 

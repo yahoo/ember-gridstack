@@ -16,7 +16,7 @@ export interface Block {
 
 export const CHANNELS: readonly Channel[] = ['alpha', 'beta', 'rc', 'stable'];
 const KEY = 'release-plan';
-const USAGE = `usage: node build-scripts/release-channel.ts <alpha|beta|rc|stable|status [--github-output]|next> [--package <path>]`;
+const USAGE = `usage: node build-scripts/release-channel.mts <alpha|beta|rc|stable|status [--github-output]|next> [--package <path>]`;
 
 export function configFor(
   channel: Channel,
@@ -147,6 +147,6 @@ export function main(argv: string[]): number {
   return 0;
 }
 
-if (process.argv[1]?.endsWith('release-channel.ts')) {
+if (process.argv[1]?.endsWith('release-channel.mts')) {
   process.exitCode = main(process.argv.slice(2));
 }

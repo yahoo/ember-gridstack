@@ -39,7 +39,7 @@ jobs:
       - run: npm install -g npm@^11.5.1
       - run: pnpm install --frozen-lockfile
       - id: channel
-        run: node build-scripts/release-channel.ts status --github-output >> "$GITHUB_OUTPUT"
+        run: node build-scripts/release-channel.mts status --github-output >> "$GITHUB_OUTPUT"
       - name: Publish to npm
         env:
           GITHUB_AUTH: ${{ secrets.GITHUB_TOKEN }}

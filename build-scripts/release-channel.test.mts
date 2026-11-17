@@ -8,7 +8,7 @@ import {
   writeFileSync,
 } from 'node:fs';
 import { join } from 'node:path';
-import { main, configFor, nextVersions } from './release-channel.ts';
+import { main, configFor, nextVersions } from './release-channel.mts';
 
 const SCRATCH = 'node_modules/.cache/channels';
 
