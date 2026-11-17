@@ -36,7 +36,7 @@ class Counter extends Component {
 const OPTIONS = {
   acceptWidgets: true,
   removable: '.template-drops-trash',
-  cellHeight: 60,
+  cellHeight: 80,
   margin: 6,
   column: 4,
   minRow: 3,
@@ -121,36 +121,42 @@ export default class TemplateDrops extends Component {
   <template>
     <div class="template-drops">
       <div class="data-mode-grids">
-        <GridStack
-          class="data-mode-grid"
-          aria-label="Left grid"
-          @name="drops-left"
-          @options={{OPTIONS}}
-          @onDropped={{this.onDropped}}
-          @onRemoved={{this.onRemoved}}
-          as |grid|
-        >
-          {{#each this.lists.left key="id" as |r|}}
-            <grid.Item @options={{r.options}} as |item|>
-              <Counter @item={{item}} @label={{r.label}} />
-            </grid.Item>
-          {{/each}}
-        </GridStack>
-        <GridStack
-          class="data-mode-grid"
-          aria-label="Right grid"
-          @name="drops-right"
-          @options={{OPTIONS}}
-          @onDropped={{this.onDropped}}
-          @onRemoved={{this.onRemoved}}
-          as |grid|
-        >
-          {{#each this.lists.right key="id" as |r|}}
-            <grid.Item @options={{r.options}} as |item|>
-              <Counter @item={{item}} @label={{r.label}} />
-            </grid.Item>
-          {{/each}}
-        </GridStack>
+        <figure class="data-mode-pane">
+          <figcaption>Left grid</figcaption>
+          <GridStack
+            class="data-mode-grid"
+            aria-label="Left grid"
+            @name="drops-left"
+            @options={{OPTIONS}}
+            @onDropped={{this.onDropped}}
+            @onRemoved={{this.onRemoved}}
+            as |grid|
+          >
+            {{#each this.lists.left key="id" as |r|}}
+              <grid.Item @options={{r.options}} as |item|>
+                <Counter @item={{item}} @label={{r.label}} />
+              </grid.Item>
+            {{/each}}
+          </GridStack>
+        </figure>
+        <figure class="data-mode-pane">
+          <figcaption>Right grid</figcaption>
+          <GridStack
+            class="data-mode-grid"
+            aria-label="Right grid"
+            @name="drops-right"
+            @options={{OPTIONS}}
+            @onDropped={{this.onDropped}}
+            @onRemoved={{this.onRemoved}}
+            as |grid|
+          >
+            {{#each this.lists.right key="id" as |r|}}
+              <grid.Item @options={{r.options}} as |item|>
+                <Counter @item={{item}} @label={{r.label}} />
+              </grid.Item>
+            {{/each}}
+          </GridStack>
+        </figure>
       </div>
       <div class="data-mode-tools">
         <div
@@ -162,8 +168,7 @@ export default class TemplateDrops extends Component {
             <div class="grid-stack-item-content">Counter</div>
           </div>
         </div>
-        <div class="data-mode-trash template-drops-trash">Drop to
-          delete</div>
+        <div class="template-drops-trash">Drop to delete</div>
       </div>
     </div>
   </template>

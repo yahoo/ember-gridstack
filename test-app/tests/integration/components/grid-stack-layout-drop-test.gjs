@@ -90,7 +90,7 @@ const dragOnto = async (itemEl, targetEl) => {
 const DEMO = {
   acceptWidgets: true,
   removable: '.data-mode-trash',
-  cellHeight: 60,
+  cellHeight: 80,
   margin: 6,
   column: 4,
   minRow: 3,

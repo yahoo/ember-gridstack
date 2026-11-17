@@ -89,7 +89,7 @@ const TOOLBOX = [
 const OPTIONS = {
   acceptWidgets: true,
   removable: '.data-mode-trash',
-  cellHeight: 60,
+  cellHeight: 80,
   margin: 6,
   column: 4,
   minRow: 3,
@@ -140,20 +140,26 @@ export default class DataMode extends Component {
         </button>
       </div>
       <div class="data-mode-grids">
-        <GridStack
-          class="data-mode-grid"
-          aria-label="Left grid"
-          @options={{OPTIONS}}
-          @layout={{LEFT}}
-          @components={{this.components}}
-        />
-        <GridStack
-          class="data-mode-grid"
-          aria-label="Right grid"
-          @options={{OPTIONS}}
-          @layout={{RIGHT}}
-          @components={{this.components}}
-        />
+        <figure class="data-mode-pane">
+          <figcaption>Left grid</figcaption>
+          <GridStack
+            class="data-mode-grid"
+            aria-label="Left grid"
+            @options={{OPTIONS}}
+            @layout={{LEFT}}
+            @components={{this.components}}
+          />
+        </figure>
+        <figure class="data-mode-pane">
+          <figcaption>Right grid</figcaption>
+          <GridStack
+            class="data-mode-grid"
+            aria-label="Right grid"
+            @options={{OPTIONS}}
+            @layout={{RIGHT}}
+            @components={{this.components}}
+          />
+        </figure>
       </div>
       <div class="data-mode-tools">
         <div
