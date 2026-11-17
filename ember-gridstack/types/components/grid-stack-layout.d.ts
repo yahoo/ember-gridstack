@@ -61,6 +61,7 @@ export type WidgetComponent =
 export interface GridStackLayoutSignature {
   Args: GridStackSignature['Args'] & {
     layout?: LayoutWidget[];
+    name?: string;
     options?: GridStackOptions;
     components?: Record<string, WidgetComponent>;
   };

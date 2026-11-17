@@ -63,7 +63,7 @@ const events: string[] = GRID_STACK_EVENTS;
     @components={{components}}
     @onDropped={{onDropped}}
   />
-  <GridStackLayout @layout={{layout}} as |widget grid|>
+  <GridStackLayout @name="direct" @layout={{layout}} as |widget grid|>
     {{keepOrCount widget}}
     {{widget.droppedFrom.grid.instance.el.id}}
     {{grid.instance.el.id}}
