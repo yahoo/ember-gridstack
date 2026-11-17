@@ -246,6 +246,9 @@ function teardownProblems(created) {
   if (document.querySelector('#ember-testing .grid-stack')) {
     problems.push('a .grid-stack is still rendered');
   }
+  if (document.querySelector('#ember-testing .toolbox')) {
+    problems.push('a .toolbox is still rendered');
+  }
   const alive = created.filter((gs) => gs.engine || gs.el).length;
   if (alive) {
     problems.push(
