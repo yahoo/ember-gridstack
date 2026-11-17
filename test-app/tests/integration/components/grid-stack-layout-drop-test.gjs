@@ -54,6 +54,48 @@ const emptyCell = (gridEl) => {
 
 const live = () => document.querySelectorAll('#ember-testing .inc').length;
 
+const fire = (target, type, x, y) =>
+  target.dispatchEvent(
+    new MouseEvent(type, {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+      button: 0,
+      buttons: type === 'mouseup' ? 0 : 1,
+      clientX: x,
+      clientY: y,
+    }),
+  );
+
+/** Drags `itemEl` by its handle so its centre lands on `targetEl`'s centre; returns whether `targetEl` had `ui-droppable-over` before mouseup. */
+const dragOnto = async (itemEl, targetEl) => {
+  const handle = itemEl.querySelector('.grid-stack-item-content');
+  const r = handle.getBoundingClientRect();
+  const t = targetEl.getBoundingClientRect();
+  const x0 = r.left + 10;
+  const y0 = r.top + 10;
+  const dx = t.left + t.width / 2 - (r.left + r.width / 2);
+  const dy = t.top + t.height / 2 - (r.top + r.height / 2);
+  fire(handle, 'mousedown', x0, y0);
+  fire(document, 'mousemove', x0 + Math.sign(dx) * 4, y0 + Math.sign(dy) * 4);
+  for (let i = 1; i <= 16; i++) {
+    fire(document, 'mousemove', x0 + (dx * i) / 16, y0 + (dy * i) / 16);
+  }
+  const over = targetEl.classList.contains('ui-droppable-over');
+  fire(document, 'mouseup', x0 + dx, y0 + dy);
+  await settled();
+  return over;
+};
+
+const DEMO = {
+  acceptWidgets: true,
+  removable: '.data-mode-trash',
+  cellHeight: 60,
+  margin: 6,
+  column: 4,
+  minRow: 3,
+};
+
 module('Integration | Component | grid stack layout drop', function (hooks) {
   setupGridTest(hooks);
 
@@ -259,6 +301,126 @@ module('Integration | Component | grid stack layout drop', function (hooks) {
     assert.dom('[gs-id="a"]').doesNotExist();
     assert.dom('.inc').doesNotExist('nothing left in the DOM');
     assert.false(itemEl.isConnected);
+    await this.grid.destroy();
+  });
+
+  for (const side of ['left', 'right']) {
+    test(`demo geometry: a ${side} data item is trashed on the shared trash`, async function (assert) {
+      const left = [
+        { id: 'a', x: 0, y: 0, w: 2, h: 2, component: 'counter' },
+        { id: 'c', x: 2, y: 0, w: 2, h: 2, component: 'counter' },
+      ];
+      const right = [{ id: 'b', x: 0, y: 0, w: 2, h: 2, component: 'counter' }];
+      const onDropped = () => {};
+      await this.grid.render({
+        template: (d) => <template>
+          {{! template-lint-disable no-inline-styles }}
+          {{#if d.visible}}
+            <div style="width: 1000px">
+              <div class="data-mode-grids">
+                <GridStack
+                  class="data-mode-grid"
+                  id="left"
+                  @options={{DEMO}}
+                  @layout={{left}}
+                  @components={{components}}
+                  @onDropped={{onDropped}}
+                />
+                <GridStack
+                  class="data-mode-grid"
+                  id="right"
+                  @options={{DEMO}}
+                  @layout={{right}}
+                  @components={{components}}
+                  @onDropped={{onDropped}}
+                />
+              </div>
+              <div class="data-mode-tools">
+                <div class="data-mode-trash">Drop to delete</div>
+              </div>
+            </div>
+          {{/if}}
+        </template>,
+      });
+      const id = side === 'left' ? 'a' : 'b';
+      const itemEl = find(`[gs-id="${id}"]`);
+      const over = await dragOnto(itemEl, find('.data-mode-trash'));
+      assert.true(over, 'trash is highlighted during the drag');
+      assert.dom(`[gs-id="${id}"]`).doesNotExist();
+      assert.false(itemEl.isConnected);
+      assert.strictEqual(lifecycle.destroyed, 1, 'willDestroy ran');
+      assert.strictEqual(live(), 2);
+      await this.grid.destroy();
+    });
+  }
+
+  test('demo geometry: data and template grids each with a trash', async function (assert) {
+    const left = [
+      { id: 'a', x: 0, y: 0, w: 2, h: 2, component: 'counter' },
+      { id: 'c', x: 2, y: 0, w: 2, h: 2, component: 'counter' },
+    ];
+    const right = [{ id: 'b', x: 0, y: 0, w: 2, h: 2, component: 'counter' }];
+    const tmplOpts = { ...DEMO, removable: '.template-drops-trash' };
+    const tmplItem = { id: 't', x: 0, y: 0, w: 2, h: 2 };
+    const onDropped = () => {};
+    const removed = [];
+    const onRemoved = (e, nodes) => removed.push(...nodes.map((n) => n.id));
+    await this.grid.render({
+      template: (d) => <template>
+        {{! template-lint-disable no-inline-styles }}
+        {{#if d.visible}}
+          <div style="width: 1000px">
+            <div class="data-mode-grids">
+              <GridStack
+                class="data-mode-grid"
+                @options={{DEMO}}
+                @layout={{left}}
+                @components={{components}}
+                @onDropped={{onDropped}}
+              />
+              <GridStack
+                class="data-mode-grid"
+                @options={{DEMO}}
+                @layout={{right}}
+                @components={{components}}
+                @onDropped={{onDropped}}
+              />
+            </div>
+            <div class="data-mode-tools">
+              <div class="data-mode-trash">Drop to delete</div>
+            </div>
+            <GridStack
+              class="data-mode-grid"
+              id="tmpl"
+              @options={{tmplOpts}}
+              @onRemoved={{onRemoved}}
+              as |grid|
+            >
+              <grid.Item data-id="t" @options={{tmplItem}}>t</grid.Item>
+            </GridStack>
+            <div class="data-mode-tools">
+              <div class="template-drops-trash">Drop to delete</div>
+            </div>
+          </div>
+        {{/if}}
+      </template>,
+    });
+    assert.true(
+      await dragOnto(find('[gs-id="a"]'), find('.data-mode-trash')),
+      'data trash over',
+    );
+    assert.dom('[gs-id="a"]').doesNotExist();
+    assert.true(
+      await dragOnto(find('[gs-id="b"]'), find('.template-drops-trash')),
+      'template trash over for a data item',
+    );
+    assert.dom('[gs-id="b"]').doesNotExist();
+    assert.true(
+      await dragOnto(find('[data-id="t"]'), find('.template-drops-trash')),
+      'template trash over for a template item',
+    );
+    assert.deepEqual(removed, ['t'], 'template grid reports the removal');
+    assert.strictEqual(lifecycle.destroyed, 2);
     await this.grid.destroy();
   });
 
