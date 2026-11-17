@@ -62,9 +62,7 @@ export default class GridStackItem extends Component {
   // plain Map read: only meaningful while the drop renders this item
   get droppedFrom() {
     const id = this.args.options?.id;
-    return id === undefined
-      ? undefined
-      : this.gridStackComponent?._incoming?.get(id);
+    return id === undefined ? undefined : this.grid?._incoming?.get(id);
   }
 
   @action
