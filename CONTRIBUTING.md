@@ -28,7 +28,7 @@ test-app lists the addon as an injected dependency. It stays a symlink unless a 
 
 - `pnpm test` – Lints and runs the test suite on the current Ember version
 - `pnpm test:ember` – Runs the test suite on the current Ember version (test-app builds with Vite and Embroider)
-- `pnpm test:try` – Runs the test suite against every `ember-lts-*`, release and beta scenario in `test-app/.try.mjs` (via [`@embroider/try`](https://github.com/embroider-build/embroider/tree/main/packages/try)). Pass scenario names to run a subset, e.g. `pnpm test:try ember-lts-4.12`. It resets `test-app/` and `pnpm-lock.yaml` after each scenario, so commit your work first.
+- `pnpm test:try` – Runs the test suite against every `ember-lts-*`, release and beta scenario in `test-app/.try.mjs` (via [`@embroider/try`](https://github.com/embroider-build/embroider/tree/main/packages/try)). Pass scenario names to run a subset, e.g. `pnpm test:try ember-lts-4.12`. It resets `test-app/` and `pnpm-lock.yaml` after each scenario, so commit your work first. After `pnpm test:try`, restart the dev server with `vite --force`: Vite's dependency cache can keep the try scenario's bundles.
 - [`test-app/tests/README.md`](test-app/tests/README.md) – How to filter tests and write grid tests with the test harness
 
 ## Continuous integration and releases
