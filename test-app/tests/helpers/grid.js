@@ -15,7 +15,7 @@ function fire(target, type, x, y) {
 }
 
 /** gridstack's DD layer: mousedown on the element, mousemove/mouseup on document, 3px threshold */
-export async function pointerDrag(itemEl, dx, dy, steps = 8) {
+export async function pointerDrag(itemEl, dx, dy, steps = 8, rest = false) {
   // the default drag handle is the content div
   const target = itemEl.querySelector('.grid-stack-item-content') ?? itemEl;
   const rect = target.getBoundingClientRect();
@@ -26,6 +26,11 @@ export async function pointerDrag(itemEl, dx, dy, steps = 8) {
   fire(document, 'mousemove', x0 + Math.sign(dx) * 4, y0 + Math.sign(dy) * 4);
   for (let i = 1; i <= steps; i++) {
     fire(document, 'mousemove', x0 + (dx * i) / steps, y0 + (dy * i) / steps);
+  }
+  if (rest) {
+    // gridstack checks drop targets against the item's position before the
+    // current move, so a pointer resting on the target sends one more
+    fire(document, 'mousemove', x0 + dx, y0 + dy);
   }
   fire(document, 'mouseup', x0 + dx, y0 + dy);
   await settled();

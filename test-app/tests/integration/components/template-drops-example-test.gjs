@@ -6,7 +6,7 @@ import { pointerDrag } from '../../helpers/grid';
 import TemplateDrops from 'test-app/components/examples/template-drops';
 
 // gridstack looks for drop targets under the dragged item's center
-const dragTo = (itemEl, target, fx = 0.5, fy = 0.5) => {
+const dragTo = (itemEl, target, fx = 0.5, fy = 0.5, rest = false) => {
   const r = itemEl.getBoundingClientRect();
   const t = target.getBoundingClientRect();
   return pointerDrag(
@@ -14,6 +14,7 @@ const dragTo = (itemEl, target, fx = 0.5, fy = 0.5) => {
     t.left + t.width * fx - (r.left + r.width / 2),
     t.top + t.height * fy - (r.top + r.height / 2),
     16,
+    rest,
   );
 };
 
@@ -47,7 +48,13 @@ module('Integration | Example | template drops', function (hooks) {
       assert.strictEqual(g.gridstack.getColumn(), 1);
     }
     find('[gs-id="apples"]').scrollIntoView({ block: 'start' });
-    await dragTo(find('[gs-id="apples"]'), find('.template-drops-trash'));
+    await dragTo(
+      find('[gs-id="apples"]'),
+      find('.template-drops-trash'),
+      0.5,
+      0.5,
+      true,
+    );
     assert.dom('[gs-id="apples"]').doesNotExist('trashed');
   });
 
