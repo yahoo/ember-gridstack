@@ -57,6 +57,18 @@ module('Integration | Example | data mode', function (hooks) {
     assert.deepEqual(logged, [], 'no console warnings or errors');
   });
 
+  test('wide: four columns', async function (assert) {
+    await render(
+      <template>
+        {{! template-lint-disable no-inline-styles }}
+        <div style="width: 1000px"><DataMode /></div>
+      </template>,
+    );
+    for (const g of findAll('.data-mode-grid')) {
+      assert.strictEqual(g.gridstack.getColumn(), 4);
+    }
+  });
+
   test('narrow: one column, cross-grid drag and trash work', async function (assert) {
     await render(
       <template>

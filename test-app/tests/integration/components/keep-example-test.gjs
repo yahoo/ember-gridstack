@@ -46,6 +46,25 @@ module('Integration | Example | keep instead of rebuild', function (hooks) {
     );
   };
 
+  test('wide: four columns', async function (assert) {
+    await setup();
+    for (const g of findAll('.data-mode-grid')) {
+      assert.strictEqual(g.gridstack.getColumn(), 4);
+    }
+  });
+
+  test('narrow: one column', async function (assert) {
+    await render(
+      <template>
+        {{! template-lint-disable no-inline-styles }}
+        <div style="width: 390px"><Keep /></div>
+      </template>,
+    );
+    for (const g of findAll('.data-mode-grid')) {
+      assert.strictEqual(g.gridstack.getColumn(), 1);
+    }
+  });
+
   test('keep off: a move rebuilds and reloads the report', async function (assert) {
     await setup();
     const n = created();

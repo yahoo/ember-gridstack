@@ -24,6 +24,33 @@ class Visible {
 module('Integration | Example | template drops', function (hooks) {
   setupRenderingTest(hooks);
 
+  test('wide: four columns', async function (assert) {
+    await render(
+      <template>
+        {{! template-lint-disable no-inline-styles }}
+        <div style="width: 1000px"><TemplateDrops /></div>
+      </template>,
+    );
+    for (const g of findAll('.data-mode-grid')) {
+      assert.strictEqual(g.gridstack.getColumn(), 4);
+    }
+  });
+
+  test('narrow: one column and trash works', async function (assert) {
+    await render(
+      <template>
+        {{! template-lint-disable no-inline-styles }}
+        <div style="width: 390px"><TemplateDrops /></div>
+      </template>,
+    );
+    for (const g of findAll('.data-mode-grid')) {
+      assert.strictEqual(g.gridstack.getColumn(), 1);
+    }
+    find('[gs-id="apples"]').scrollIntoView({ block: 'start' });
+    await dragTo(find('[gs-id="apples"]'), find('.template-drops-trash'));
+    assert.dom('[gs-id="apples"]').doesNotExist('trashed');
+  });
+
   test('moves, drags in and trashes with a clean console', async function (assert) {
     const logged = [];
     const { warn, error } = console;
