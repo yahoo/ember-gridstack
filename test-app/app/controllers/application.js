@@ -86,7 +86,7 @@ export default class ApplicationController extends Controller {
     },
     {
       id: 'data-mode',
-      title: 'Data mode (@layout, spike)',
+      title: 'Data mode (@layout, two grids)',
       component: DataMode,
       source: dataModeSrc,
     },

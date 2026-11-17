@@ -545,6 +545,60 @@ h3 code {
   flex: 1;
 }
 
+/* Data mode example */
+
+.data-mode-grids {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.data-mode-grid {
+  background: var(--surface-2);
+  border-radius: var(--radius);
+}
+
+.data-mode-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.toolbox {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.toolbox .toolbox-chip {
+  position: relative;
+  width: auto;
+  height: auto;
+  cursor: grab;
+}
+
+.toolbox .toolbox-chip > .grid-stack-item-content {
+  position: static;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.data-mode-trash {
+  flex: 1;
+  min-width: 10rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px dashed var(--muted);
+  border-radius: var(--radius);
+  color: var(--muted);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.data-mode-trash.ui-droppable-over {
+  border-color: var(--down);
+  color: var(--down);
+}
+
 .saved-json {
   margin: 0.75rem 0 0;
   max-height: 12rem;
