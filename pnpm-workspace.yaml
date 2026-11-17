@@ -6,3 +6,10 @@ packages:
 dedupeInjectedDeps: false
 syncInjectedDepsAfterScripts:
   - build
+
+# @glimmer/component 2 imports ember-source types without declaring the peer, so it
+# would pick up the hoisted (scenario) ember-source when the addon builds declarations
+packageExtensions:
+  '@glimmer/component@2':
+    peerDependencies:
+      ember-source: '*'
