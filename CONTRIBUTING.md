@@ -35,7 +35,19 @@ test-app lists the addon as an injected dependency. It stays a symlink unless a 
 
 GitHub Actions runs CI (`.github/workflows/ci.yml`) on pull requests and on pushes to `main` and `alpha`: a lint job, a test job, and one job per try scenario in `test-app/.try.mjs`. Every job must pass.
 
-Releases come from the `release` job in `.github/workflows/ci.yml`, which runs after the lint, test and try jobs pass on a push to `main` (published to npm as `latest`) or `alpha` (prerelease under the `alpha` dist-tag). It uses semantic-release to derive the version from conventional commits and publishes with npm trusted publishing and provenance, so no npm token is needed. The job lives in ci.yml (not a separate `workflow_run` workflow) so it also runs for `alpha` while that branch is not the default.
+Releases are done with [release-plan](https://github.com/embroider-build/release-plan); see [`RELEASE.md`](RELEASE.md). On pull requests, the `release-dry-run` job builds the addon, checks the package contents, runs `npm publish --dry-run` and previews the release plan in the job summary.
+
+## Pull request labels
+
+Every pull request must carry exactly one of these labels; release-plan uses it to pick the version bump:
+
+- `breaking` – a breaking change
+- `enhancement` – a new feature or improvement
+- `bug` – fixes a bug in a released version
+- `documentation` – documentation only
+- `internal` – anything else (tooling, CI, dependencies, refactors)
+
+Pull request titles become the changelog lines, so write them for users.
 
 The demo is built and deployed to GitHub Pages from `main` by the Pages workflow (`.github/workflows/pages.yml`).
 

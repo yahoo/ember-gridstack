@@ -7,8 +7,7 @@ updates:
     groups:
       actions:
         patterns: ['*']
-    commit-message:
-      prefix: 'ci(deps)'
+    labels: ['internal']
   - package-ecosystem: npm
     directories: ['/', '/ember-gridstack', '/test-app']
     schedule:
@@ -16,5 +15,4 @@ updates:
     groups:
       npm:
         patterns: ['*']
-    commit-message:
-      prefix: 'build(deps)'
+    labels: ['internal']
