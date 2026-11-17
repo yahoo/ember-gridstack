@@ -48,7 +48,8 @@ module('Integration | Service | grid-stack-registry', function (hooks) {
     const registry = this.owner.lookup('service:grid-stack-registry');
     const T = s.grids.template;
     const D = s.grids.data;
-    assert.ok(T && D);
+    assert.ok(T, 'template grid yielded');
+    assert.ok(D, 'data grid yielded');
     assert.dom('#x').hasClass('grid-stack', 'the id lands on the grid');
 
     for (const [label, target] of [

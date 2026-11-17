@@ -287,7 +287,7 @@ module('Integration | Component | grid stack template drop', function (hooks) {
                     data-id={{i.id}}
                     @options={{i.options}}
                     as |gi|
-                  >{{(lists.capture "item" gi)}}</GridStackItem>
+                  >{{lists.capture "item" gi}}</GridStackItem>
                 {{/each}}
               </GridStack>
             </div>
@@ -302,7 +302,7 @@ module('Integration | Component | grid stack template drop', function (hooks) {
                     data-id={{i.id}}
                     @options={{i.options}}
                     as |gi|
-                  >{{(lists.capture i.id gi)}}</GridStackItem>
+                  >{{lists.capture i.id gi}}</GridStackItem>
                 {{/each}}
               </GridStack>
             </div>

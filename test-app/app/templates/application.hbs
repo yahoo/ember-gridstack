@@ -280,13 +280,11 @@
         {{highlight}}
       >{{this.snippets.modifier}}</code></pre>
 
-    <h3><code>grid-stack-registry</code> service (deprecated)</h3>
-    <p>Finds the
+    <h3><code>grid-stack-registry</code> service</h3>
+    <p>Finds the API a
       <code>&lt;GridStack&gt;</code>
-      component for an element. Deprecated: use the yielded
-      <code>grid.Item</code>
-      or
-      <code>item.grid</code>.</p>
+      yields, in template and data mode, by element, GridStack instance or
+      <code>@name</code>.</p>
     <pre class="code"><code
         class="language-javascript"
         {{highlight}}
@@ -387,13 +385,25 @@
       element. Content is wrapped in
       <code>.grid-stack-item-content</code>.</p>
 
-    <h3><code>grid-stack-registry</code> (deprecated)</h3>
+    <h3><code>grid-stack-registry</code></h3>
     <div class="table-wrap">
       <table>
         <thead>
           <tr><th>Method</th><th>Description</th></tr>
         </thead>
         <tbody>
+          <tr>
+            <td><code>find(elementOrInstance)</code></td>
+            <td>The yielded grid API for an element inside a grid or a GridStack
+              instance, or
+              <code>undefined</code>.</td>
+          </tr>
+          <tr>
+            <td><code>get(name)</code></td>
+            <td>The grid rendered with
+              <code>@name</code>, or
+              <code>undefined</code>.</td>
+          </tr>
           <tr>
             <td><code>registerGrid(id, grid)</code></td>
             <td>Register a grid component under its element id.</td>

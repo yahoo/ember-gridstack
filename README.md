@@ -34,7 +34,8 @@ or add it with your package manager, e.g. `pnpm add -D ember-gridstack` or `npm 
 - No generated element ids: grids are found through their element, so you can set your own `id` on `<GridStack>` and `<GridStackItem>`.
 - `item.element` is `undefined` until the item is inserted.
 - Event delivery is no longer coalesced: every gridstack event reaches its `@on*` action, in order, with its own arguments, even several in one run loop.
-- The `grid-stack-registry` service is deprecated (no runtime warning). Its methods still work; use `grid.Item` instead.
+- The `grid-stack-registry` service finds grids by element, GridStack instance or `@name` (`find`, `get`); its old methods still work.
+- An item dropped on another grid (`acceptWidgets`) is now removed from the source and created fresh in the target by your `@onDropped`; a grid with `acceptWidgets` and no `@onDropped` refuses drops. See [Cross-grid drops](#cross-grid-drops-template-mode).
 - `@ember/render-modifiers` is no longer a dependency. Add it to your app yourself if you used it through this addon.
 - `package.json` `exports` is explicit: only the package root, `components/grid-stack`, `components/grid-stack-item`, `modifiers/gs-item-attributes` and `services/grid-stack-registry` (with or without `.js`) can be imported. Deep imports of any other path break.
 - New root named exports: `import { GridStack, GridStackItem, gsItemAttributes, GridStackRegistry, GRID_STACK_EVENTS } from 'ember-gridstack'`.
@@ -88,6 +89,7 @@ Used to construct a grid-stack layout
 | Arg        | Type               | Description                                                     |
 | ---------- | ------------------ | --------------------------------------------------------------- |
 | `@options` | `GridStackOptions` | gridstack grid options, see [Options](#options)                 |
+| `@name`    | `string`           | registers the grid with `gridStackRegistry.get(name)`           |
 | `@on*`     | function per event | one action per gridstack event, see [Events](#events)           |
 | attributes | `HTMLDivElement`   | `...attributes` go on the `.grid-stack` element (`id` is yours) |
 
@@ -216,6 +218,8 @@ Changing `@options` calls `GridStack.update()` once; an option set to a blank va
 | `item.element`           | the `.grid-stack-item` element; `undefined` until the item is inserted (tracked)   |
 | `item.grid`              | the owning `<GridStack>` component                                                 |
 | `item.resizeToContent()` | `GridStack.resizeToContent()` for this item (needs a child element in the content) |
+| `item.beforeRemove(fn)`  | runs when a cross-grid drop claims the item; returns an unregister function        |
+| `item.droppedFrom`       | `{ grid, state }` while the target renders a dropped item, else `undefined`        |
 
 **Example:**
 
@@ -226,6 +230,25 @@ Changing `@options` calls `GridStack.update()` once; an option set to a blank va
   </div>
 </grid.Item>
 ```
+
+### Cross-grid drops (template mode)
+
+Template mode follows data mode's rule: an item dropped into another grid is removed from the source and created fresh in the target. Ember owns the items, so your `@onDropped(event, previousNode, newNode)` on the target moves the record from one list to the other; the new `<GridStackItem>` is placed at the drop spot. Items need `@options.id`. To carry state over, return it from `item.beforeRemove(fn)`; the new item reads `item.droppedFrom.state` (and `droppedFrom.grid`, the source grid's yielded API) while it renders.
+
+```gjs
+moveItem = (event, previousNode, newNode) => {
+  const from = this.registry.find(previousNode.grid); // source grid API
+  const to = this.registry.find(newNode.grid);
+  const record = this.lists.get(from).find((r) => r.id === newNode.id);
+  this.lists.set(from, without(this.lists.get(from), record));
+  this.lists.set(to, [...this.lists.get(to), record]);
+};
+```
+
+- A grid with `acceptWidgets` and no `@onDropped`, or a dragged item without `@options.id`, refuses the drop (development warning).
+- If `@onDropped` does not render the item in the target, it goes back to its source grid (development warning).
+- Drag-in (`GridStack.setupDragIn`): `previousNode` is `undefined`; add a record built from `newNode` (`x`, `y`, `w`, `h`). gridstack's helper element is removed.
+- Trash (`removable`): `@onRemoved` fires; remove the record and Ember removes the element.
 
 ### Data mode (`@layout`)
 
@@ -307,9 +330,14 @@ Sets `gs-*` attributes from an options hash on any element (blank values remove 
 {{! renders <div gs-w="4" gs-min-w="2"> }}
 ```
 
-### `grid-stack-registry` service (deprecated)
+### `grid-stack-registry` service
 
-`registerGrid(id, grid)`, `findGridComponent(element)` and `unregisterGridComponent(id)` keep working, and `findGridComponent` finds every `<GridStack>` by its element. Use `grid.Item` or `item.grid` instead; the service will be removed in a future major.
+Finds the API a grid yields (`as |grid|`), in template and data mode:
+
+- `find(target)`: `target` is any element inside a grid (or the `.grid-stack` itself) or a GridStack instance, e.g. `previousNode.grid` in `@onDropped`. Returns `undefined` when there is no rendered grid.
+- `get(name)`: the grid rendered with `<GridStack @name="…">`; names are unique while rendered.
+
+`registerGrid(id, grid)`, `findGridComponent(element)` and `unregisterGridComponent(id)` keep working.
 
 ## Exports
 
@@ -320,7 +348,7 @@ Sets `gs-*` attributes from an options hash on any element (blank values remove 
 | `ember-gridstack/components/grid-stack-item`   | default `GridStackItem`                                                                                                                                                                                                                                                                                                                                                         |
 | `ember-gridstack/components/grid-stack-layout` | default `GridStackLayout` (data mode; `<GridStack @layout>` renders it)                                                                                                                                                                                                                                                                                                         |
 | `ember-gridstack/modifiers/gs-item-attributes` | default modifier, `applyItemAttributes(element, options)`                                                                                                                                                                                                                                                                                                                       |
-| `ember-gridstack/services/grid-stack-registry` | default service class (deprecated)                                                                                                                                                                                                                                                                                                                                              |
+| `ember-gridstack/services/grid-stack-registry` | default service class (`find`, `get`)                                                                                                                                                                                                                                                                                                                                           |
 
 Each deep path also resolves with a `.js` suffix. Types ship in `declarations/` and are picked up through `exports`.
 

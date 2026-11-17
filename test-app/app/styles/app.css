@@ -594,6 +594,11 @@ h3 code {
   text-align: center;
 }
 
+/* gridstack trashes once half of the dragged item covers the trash */
+.template-drops-trash {
+  min-height: 8rem;
+}
+
 .data-mode-trash.ui-droppable-over {
   border-color: var(--down);
   color: var(--down);

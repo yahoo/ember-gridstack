@@ -120,16 +120,19 @@ export const modifier = `{{! Sets gs-* attributes from options }}
 </div>
 {{! renders <div gs-w="4" gs-min-w="2"> }}`;
 
-export const service = `// Deprecated: use the yielded grid.Item / item.grid
-import Component from '@glimmer/component';
+export const service = `import Component from '@glimmer/component';
 import { service } from '@ember/service';
 
 export default class Toolbar extends Component {
   @service gridStackRegistry;
 
   get grid() {
-    // closest GridStack for an element in a grid
-    return this.gridStackRegistry
-      .findGridComponent(this.args.element);
+    // the grid's yielded API for an element in it
+    return this.gridStackRegistry.find(this.args.element);
+  }
+
+  get sidebar() {
+    // <GridStack @name="sidebar">
+    return this.gridStackRegistry.get('sidebar');
   }
 }`;

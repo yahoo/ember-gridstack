@@ -16,6 +16,8 @@ import saveLoadSrc from 'test-app/components/examples/save-load.gjs?raw';
 import addRemoveSrc from 'test-app/components/examples/add-remove.gjs?raw';
 import lockedSrc from 'test-app/components/examples/locked.gjs?raw';
 import dataModeSrc from 'test-app/components/examples/data-mode.gjs?raw';
+import TemplateDrops from 'test-app/components/examples/template-drops';
+import templateDropsSrc from 'test-app/components/examples/template-drops.gjs?raw';
 
 const MODE_DESCRIPTIONS = {
   top: 'pulls widgets up',
@@ -89,6 +91,12 @@ export default class ApplicationController extends Controller {
       title: 'Data mode (@layout, two grids)',
       component: DataMode,
       source: dataModeSrc,
+    },
+    {
+      id: 'template-drops',
+      title: 'Cross-grid drops (template mode)',
+      component: TemplateDrops,
+      source: templateDropsSrc,
     },
   ];
 
