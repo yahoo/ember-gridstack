@@ -26,7 +26,6 @@ import { action } from '@ember/object';
 import { next, schedule } from '@ember/runloop';
 import { GridStack } from 'gridstack';
 import lifecycle from '../utils/lifecycle.js';
-import { patchTrashOverlap } from '../utils/trash-overlap.js';
 import GridStackItem from './grid-stack-item.gjs';
 import GridStackLayout from './grid-stack-layout.gjs';
 import {
@@ -172,7 +171,6 @@ export default class GridStackComponent extends Component {
     this._appliedOptions = this.options;
     const init = { ...this._appliedOptions };
     if (init.acceptWidgets) init.acceptWidgets = this._accept;
-    if (init.removable) patchTrashOverlap();
     this.gridStack = GridStack.init(init, this.elm);
 
     // Glimmer owns the DOM order; gridstack's re-sorting would desync {{#each}}
