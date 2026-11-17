@@ -80,25 +80,8 @@ const dragOnto = async (itemEl, targetEl) => {
   fire(document, 'mousemove', x0 + Math.sign(dx) * 4, y0 + Math.sign(dy) * 4);
   for (let i = 1; i <= 16; i++) {
     fire(document, 'mousemove', x0 + (dx * i) / 16, y0 + (dy * i) / 16);
-    {
-      const h = document.querySelector('.ui-draggable-dragging');
-      console.warn(
-        'STEP',
-        i,
-        targetEl.classList.contains('ui-droppable-over'),
-        h && JSON.stringify(h.getBoundingClientRect()),
-        h?.className,
-      );
-    }
   }
   const over = targetEl.classList.contains('ui-droppable-over');
-  console.warn(
-    'DBG2',
-    JSON.stringify(
-      document.querySelector('.ui-draggable-dragging')?.getBoundingClientRect(),
-    ),
-    JSON.stringify(targetEl.getBoundingClientRect()),
-  );
   fire(document, 'mouseup', x0 + dx, y0 + dy);
   await settled();
   return over;
