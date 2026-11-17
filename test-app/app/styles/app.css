@@ -565,6 +565,14 @@ h3 code {
   }
 }
 
+/* one column: room for all three starting widgets (6 rows of 80px) so the
+   trash below does not move while a widget changes grids */
+@container (width < 400px) {
+  .data-mode-grid {
+    min-height: 480px;
+  }
+}
+
 .data-mode-pane {
   margin: 0;
   min-width: 0;

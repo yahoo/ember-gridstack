@@ -5,6 +5,16 @@ import { babel } from '@rollup/plugin-babel';
 export default defineConfig(({ mode }) => ({
   // must match rootURL in config/environment.js (GitHub Pages serves the demo there)
   base: mode === 'production' ? '/ember-gridstack/' : '/',
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/gridstack')) return 'gridstack';
+          if (id.includes('node_modules/ember-source')) return 'ember';
+        },
+      },
+    },
+  },
   plugins: [
     classicEmberSupport(),
     ember(),
