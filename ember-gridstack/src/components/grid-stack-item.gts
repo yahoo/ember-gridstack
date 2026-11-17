@@ -15,6 +15,7 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import type { GridItemHTMLElement, GridStackWidget } from 'gridstack';
 import lifecycle from '../utils/lifecycle.ts';
+import BeforeRemove from '../utils/before-remove.ts';
 import { applyItemAttributes } from '../modifiers/gs-item-attributes.ts';
 import {
   gridForElement,
@@ -62,25 +63,17 @@ export default class GridStackItem extends Component<GridStackItemSignature> {
       GridStackComponent | undefined;
   }
 
-  private beforeRemoveFns = new Set<() => unknown>();
+  private _beforeRemove = new BeforeRemove();
 
   /**
    * Runs when a cross-grid drop claims this item; the first non-undefined
    * return value becomes `droppedFrom.state` of the item rendered in the target.
    */
-  beforeRemove = (fn: () => unknown): (() => void) => {
-    this.beforeRemoveFns.add(fn);
-    return () => this.beforeRemoveFns.delete(fn);
-  };
+  beforeRemove: (fn: () => unknown) => () => void = this._beforeRemove.add;
 
   /** @internal */
   _runBeforeRemove(): unknown {
-    let state: unknown;
-    this.beforeRemoveFns.forEach((fn) => {
-      const result = fn();
-      if (state === undefined) state = result;
-    });
-    return state;
+    return this._beforeRemove.run().state;
   }
 
   /** Set while the target grid renders a dropped item (matched by `@options.id`). */
