@@ -68,4 +68,21 @@ module('Integration | Example | template drops', function (hooks) {
     }
     assert.deepEqual(logged, [], 'no console warnings or errors');
   });
+
+  test('lead and hook legend', async function (assert) {
+    await render(<template><TemplateDrops /></template>);
+    assert.dom('.example-lead').exists();
+    assert.deepEqual(
+      findAll('.hook-legend dt code').map((e) => e.textContent),
+      [
+        '@name',
+        'registry.find',
+        'get',
+        '@onDropped',
+        '@onRemoved',
+        'beforeRemove',
+        'droppedFrom',
+      ],
+    );
+  });
 });
