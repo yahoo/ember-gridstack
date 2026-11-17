@@ -4,8 +4,17 @@ import { tracked } from '@glimmer/tracking';
 import { on } from '@ember/modifier';
 import { hash } from '@ember/helper';
 import { registerDestructor } from '@ember/destroyable';
-import { click, find, findAll, settled } from '@ember/test-helpers';
+import {
+  click,
+  find,
+  findAll,
+  resetOnerror,
+  settled,
+  setupOnerror,
+} from '@ember/test-helpers';
 import GridStack from 'ember-gridstack/components/grid-stack';
+import GridStackLayout from 'ember-gridstack/components/grid-stack-layout';
+import GridStackItem from 'ember-gridstack/components/grid-stack-item';
 import { setupGridTest } from '../../helpers/setup-grid-test';
 import { pointerDrag } from '../../helpers/grid';
 
@@ -336,6 +345,157 @@ module('Integration | Component | grid stack layout', function (hooks) {
       find('[gs-id="a"]').gridstackNode.h > before,
       `h grew from ${before} to ${find('[gs-id="a"]').gridstackNode.h}`,
     );
+    await this.grid.destroy();
+  });
+
+  test('@layout change reloads by id', async function (assert) {
+    const state = new (class {
+      @tracked layout = [
+        { id: 'a', x: 0, y: 0, w: 2, h: 1, component: 'counter' },
+        { id: 'b', x: 2, y: 0, w: 2, h: 1, component: 'text', props: {} },
+      ];
+    })();
+    const components = { text: Text, counter: Counter };
+    await this.grid.render({
+      template: (d) => <template>
+        {{! template-lint-disable no-inline-styles }}
+        {{#if d.visible}}
+          <div style="width: 1000px">
+            <GridStack
+              @options={{hash float=true}}
+              @layout={{state.layout}}
+              @components={{components}}
+            />
+          </div>
+        {{/if}}
+      </template>,
+    });
+    const api = find('.grid-stack')._gridComp;
+    await click('[gs-id="a"] .inc');
+    const button = find('[gs-id="a"] .inc');
+
+    state.layout = [
+      { id: 'a', x: 4, y: 1, w: 3, h: 1, component: 'counter' },
+      {
+        id: 'c',
+        x: 0,
+        y: 0,
+        w: 2,
+        h: 1,
+        component: 'text',
+        props: { text: 'C' },
+      },
+    ];
+    await settled();
+
+    assert.deepEqual(domIds().sort(), ['a', 'c'], 'b removed, c added');
+    assert.dom('[gs-id="c"] .text').hasText('C');
+    assert.strictEqual(
+      find('[gs-id="a"] .inc'),
+      button,
+      'same id keeps its component instance',
+    );
+    assert.dom('[gs-id="a"] .inc').hasText('1', 'and its state');
+    assert.deepEqual(
+      strip(api.save()).sort((p, q) => p.id.localeCompare(q.id)),
+      [
+        {
+          id: 'a',
+          x: 4,
+          y: 1,
+          w: 3,
+          h: 1,
+          component: 'counter',
+          props: { count: 1 },
+        },
+        {
+          id: 'c',
+          x: 0,
+          y: 0,
+          w: 2,
+          h: 1,
+          component: 'text',
+          props: { text: 'C' },
+        },
+      ],
+    );
+    await this.grid.destroy();
+  });
+
+  test('save() on a template-mode grid keeps content next to a data-mode grid', async function (assert) {
+    const layout = [{ id: 'a', w: 2, h: 1, component: 'text', props: {} }];
+    const components = { text: Text };
+    await this.grid.render({
+      template: (d) => <template>
+        {{#if d.visible}}
+          <GridStack id="tpl">
+            <GridStackItem @options={{hash id="t"}}><b>hello</b></GridStackItem>
+          </GridStack>
+          <GridStack @layout={{layout}} @components={{components}} />
+        {{/if}}
+      </template>,
+    });
+    const saved = find('#tpl').gridstack.save();
+    assert.strictEqual(saved[0]?.content, '<b>hello</b>', 'content saved');
+    const data = find('[gs-id="a"]').closest('.grid-stack')._gridComp.save();
+    assert.strictEqual(data[0].component, 'text', 'data grid still saves');
+    assert.notOk('content' in data[0]);
+    await this.grid.destroy();
+  });
+
+  test('nested grids (subGridOpts) assert in data mode', async function (assert) {
+    const layout = [
+      { id: 'p', w: 4, h: 4, subGridOpts: { children: [{ id: 'c' }] } },
+    ];
+    const errors = [];
+    setupOnerror((e) => errors.push(e));
+    try {
+      await this.grid.render({
+        template: (d) => <template>
+          {{#if d.visible}}
+            <GridStack @layout={{layout}} />
+          {{/if}}
+        </template>,
+      });
+    } catch (e) {
+      errors.push(e);
+    }
+    resetOnerror();
+    assert.ok(
+      errors.some((e) =>
+        /nested grids \(subGridOpts\) are not supported in data mode yet/.test(
+          e?.message,
+        ),
+      ),
+      errors.map((e) => e?.message).join(' | '),
+    );
+    await this.grid.destroy();
+  });
+
+  test('SSR: without the modifier the grid renders empty', async function (assert) {
+    let comp;
+    // modifiers never run on a server render
+    class ServerLayout extends GridStackLayout {
+      constructor() {
+        super(...arguments);
+        comp = this;
+      }
+      setup() {}
+      willDestroyNode() {}
+    }
+    const layout = [{ id: 'a', component: 'text' }];
+    await this.grid.render({
+      template: (d) => <template>
+        {{#if d.visible}}
+          <ServerLayout @layout={{layout}} />
+        {{/if}}
+      </template>,
+    });
+    assert.dom('.grid-stack').exists();
+    assert.dom('.grid-stack').hasNoText();
+    assert.strictEqual(find('.grid-stack').childElementCount, 0);
+    assert.deepEqual(comp.widgets, []);
+    assert.strictEqual(comp.instance, null);
     await this.grid.destroy();
   });
 });

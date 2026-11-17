@@ -227,6 +227,8 @@ export default class GridStackLayoutComponent extends Component {
     registerGridElement(elm, this);
     this._uninstall = installLayoutCallbacks();
     elm._gridComp = this;
+    this._lastLayout = this.args.layout;
+    this._lastOptions = this.args.options;
     this.gridStack = GridStack.init(
       {
         ...this.args.options,
@@ -254,9 +256,18 @@ export default class GridStackLayoutComponent extends Component {
 
   @action
   update() {
-    // eslint-disable-next-line no-unused-vars
-    const { children, ...opts } = this.args.options ?? {};
-    this.gridStack?.updateOptions(opts);
+    const { layout, options } = this.args;
+    if (options !== this._lastOptions) {
+      this._lastOptions = options;
+      // eslint-disable-next-line no-unused-vars
+      const { children, ...opts } = options ?? {};
+      this.gridStack?.updateOptions(opts);
+    }
+    if (layout !== this._lastLayout) {
+      this._lastLayout = layout;
+      // diffs by id: same id updated in place, new added, missing removed
+      if (layout) this.gridStack?.load(layout);
+    }
   }
 
   @action
@@ -341,6 +352,7 @@ export default class GridStackLayoutComponent extends Component {
         update=this.update
         teardown=this.willDestroyNode
         options=@options
+        layout=@layout
       }}
       ...attributes
     >
