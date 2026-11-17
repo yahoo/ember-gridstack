@@ -16,7 +16,12 @@ import { service } from '@ember/service';
 import { action } from '@ember/object';
 import lifecycle from '../utils/lifecycle.js';
 import { applyItemAttributes } from '../modifiers/gs-item-attributes.js';
-import { gridForElement } from '../utils/grid-elements.js';
+import {
+  gridForElement,
+  registerItemElement,
+  unregisterItemElement,
+} from '../utils/grid-elements.js';
+import { incoming } from '../utils/cross-grid.js';
 
 export default class GridStackItem extends Component {
   @service gridStackRegistry;
@@ -46,11 +51,41 @@ export default class GridStackItem extends Component {
     );
   }
 
+  beforeRemoveFns = new Set();
+
+  beforeRemove = (fn) => {
+    this.beforeRemoveFns.add(fn);
+    return () => this.beforeRemoveFns.delete(fn);
+  };
+
+  _runBeforeRemove() {
+    let state;
+    this.beforeRemoveFns.forEach((fn) => {
+      const result = fn();
+      if (state === undefined) state = result;
+    });
+    return state;
+  }
+
+  // plain Map read: only meaningful while the drop renders this item
+  get droppedFrom() {
+    const id = this.args.options?.id;
+    return id === undefined ? undefined : incoming.get(id);
+  }
+
   @action
   setup(elm) {
     this.elm = elm;
+    registerItemElement(elm, this);
     applyItemAttributes(elm, this.args.options);
-    this.gridStackComponent?.addWidget(this.elm);
+    const grid = this.gridStackComponent;
+    const id = this.args.options?.id;
+    const placement = id !== undefined && grid?._placements?.get(id);
+    if (placement) {
+      grid._placements.delete(id);
+      applyItemAttributes(elm, placement);
+    }
+    grid?.addWidget(this.elm);
   }
 
   @action
@@ -72,6 +107,7 @@ export default class GridStackItem extends Component {
   @action
   willDestroyNode() {
     this.gridStackComponent?.removeWidget(this.elm);
+    unregisterItemElement(this.elm);
   }
 
   <template>
