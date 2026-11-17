@@ -34,6 +34,11 @@ import {
 } from '../utils/grid-elements.js';
 
 import { GRID_STACK_EVENTS, capitalize } from '../utils/events.js';
+import {
+  WARN_NEEDS_ID,
+  WARN_NO_HANDLER,
+  dropWarn,
+} from '../utils/cross-grid.js';
 
 export { GRID_STACK_EVENTS, capitalize };
 
@@ -123,9 +128,43 @@ export default class GridStackComponent extends Component {
     }
   }
 
+  // one stable function: a new one per update would make `sameOption` re-init
+  _accept = (el) => {
+    const option = this.args.options?.acceptWidgets;
+    let ok;
+    if (typeof option === 'function') ok = option(el);
+    else if (option === true) ok = el.matches('.grid-stack-item');
+    else ok = Boolean(option) && el.matches(option);
+    if (!ok) return false;
+    if (!this.args.onDropped) {
+      if (!this._warnedNoHandler) {
+        this._warnedNoHandler = true;
+        dropWarn(
+          'A <GridStack> with `acceptWidgets` needs `@onDropped` to accept drops; the drop was refused.',
+          WARN_NO_HANDLER,
+        );
+      }
+      return false;
+    }
+    const node = el.gridstackNode;
+    if (node?.grid && node.id === undefined) {
+      if (!this._warnedNoId) {
+        this._warnedNoId = true;
+        dropWarn(
+          'A <GridStackItem> needs `@options.id` to move to another grid; the drop was refused.',
+          WARN_NEEDS_ID,
+        );
+      }
+      return false;
+    }
+    return true;
+  };
+
   _createGridStack() {
     this._appliedOptions = this.options;
-    this.gridStack = GridStack.init({ ...this._appliedOptions }, this.elm);
+    const init = { ...this._appliedOptions };
+    if (init.acceptWidgets) init.acceptWidgets = this._accept;
+    this.gridStack = GridStack.init(init, this.elm);
 
     // Glimmer owns the DOM order; gridstack's re-sorting would desync {{#each}}
     if (typeof this.gridStack._sortDom === 'function') {
@@ -179,6 +218,7 @@ export default class GridStackComponent extends Component {
       this._createGridStack();
     } else if (Object.keys(changed).length) {
       this._appliedOptions = next;
+      if ('acceptWidgets' in changed) changed.acceptWidgets = this._accept;
       this.gridStack.updateOptions(changed);
     }
   }

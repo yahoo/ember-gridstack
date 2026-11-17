@@ -3,6 +3,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { on } from '@ember/modifier';
 import { hash } from '@ember/helper';
+import { registerWarnHandler } from '@ember/debug';
 import {
   click,
   find,
@@ -17,6 +18,12 @@ import { setupGridTest } from '../../helpers/setup-grid-test';
 import { pointerDrag } from '../../helpers/grid';
 
 const lifecycle = { created: 0, destroyed: 0 };
+
+const warnings = [];
+registerWarnHandler((message, options, next) => {
+  warnings.push(options?.id);
+  next(message, options);
+});
 
 class Counter extends Component {
   @tracked count = 0;
@@ -59,43 +66,45 @@ class Lists {
   @tracked right = [{ id: 'b', options: { id: 'b', x: 0, y: 0, w: 2, h: 2 } }];
 }
 
-const twoGrids = (lists, h) => (d) => <template>
-  {{! template-lint-disable no-inline-styles }}
-  {{#if d.visible}}
-    <div style="display: flex; width: 1000px">
-      <div style="width: 500px">
-        <GridStack
-          id="left"
-          @options={{hash acceptWidgets=true column=6 minRow=4}}
-          @onDropped={{h.onDropped}}
-          @onRemoved={{h.onRemoved}}
-        >
-          {{#each lists.left key="id" as |item|}}
-            <GridStackItem
-              data-id={{item.id}}
-              @options={{item.options}}
-            ><Counter /></GridStackItem>
-          {{/each}}
-        </GridStack>
+const twoGrids =
+  (lists, h, hr = h) =>
+  (d) => <template>
+    {{! template-lint-disable no-inline-styles }}
+    {{#if d.visible}}
+      <div style="display: flex; width: 1000px">
+        <div style="width: 500px">
+          <GridStack
+            id="left"
+            @options={{hash acceptWidgets=true column=6 minRow=4}}
+            @onDropped={{h.onDropped}}
+            @onRemoved={{h.onRemoved}}
+          >
+            {{#each lists.left key="id" as |item|}}
+              <GridStackItem
+                data-id={{item.id}}
+                @options={{item.options}}
+              ><Counter /></GridStackItem>
+            {{/each}}
+          </GridStack>
+        </div>
+        <div style="width: 500px">
+          <GridStack
+            id="right"
+            @options={{hash acceptWidgets=true column=6 minRow=4}}
+            @onDropped={{hr.onDropped}}
+            @onRemoved={{hr.onRemoved}}
+          >
+            {{#each lists.right key="id" as |item|}}
+              <GridStackItem
+                data-id={{item.id}}
+                @options={{item.options}}
+              ><Counter /></GridStackItem>
+            {{/each}}
+          </GridStack>
+        </div>
       </div>
-      <div style="width: 500px">
-        <GridStack
-          id="right"
-          @options={{hash acceptWidgets=true column=6 minRow=4}}
-          @onDropped={{h.onDropped}}
-          @onRemoved={{h.onRemoved}}
-        >
-          {{#each lists.right key="id" as |item|}}
-            <GridStackItem
-              data-id={{item.id}}
-              @options={{item.options}}
-            ><Counter /></GridStackItem>
-          {{/each}}
-        </GridStack>
-      </div>
-    </div>
-  {{/if}}
-</template>;
+    {{/if}}
+  </template>;
 
 const ids = (sel) =>
   findAll(`${sel} .grid-stack-item`).map((el) => el.dataset.id);
@@ -155,10 +164,76 @@ module('Integration | Component | grid stack template drop', function (hooks) {
 
   hooks.beforeEach(function () {
     lifecycle.created = lifecycle.destroyed = 0;
+    warnings.length = 0;
     this.errors = [];
     setupOnerror((e) => this.errors.push(String(e?.message ?? e)));
   });
   hooks.afterEach(() => resetOnerror());
+
+  for (const [name, setup, warning] of [
+    [
+      'no @onDropped',
+      (lists) => [{}, { onDropped: () => lists.right }],
+      'ember-gridstack.no-drop-handler',
+    ],
+    [
+      'item without id',
+      (lists) => {
+        lists.left = [{ id: 'a', options: { x: 0, y: 0, w: 2, h: 2 } }];
+        return [{ onDropped() {} }, { onDropped() {} }];
+      },
+      'ember-gridstack.drop-needs-id',
+    ],
+  ]) {
+    test(`refuses a drop: ${name}`, async function (assert) {
+      const lists = new Lists();
+      const [hl, hr] = setup(lists);
+      // A is the handler-less grid for "no @onDropped": drag B's item into A
+      const reverse = name === 'no @onDropped';
+      await this.grid.render({ template: twoGrids(lists, hl, hr) });
+      const before = [
+        find('#left').gridstack.save(false),
+        find('#right').gridstack.save(false),
+      ];
+      if (reverse) {
+        const lr = find('#left').getBoundingClientRect();
+        await dragTo(
+          find('[data-id="b"]'),
+          lr.left + lr.width * 0.6,
+          lr.top + lr.height * 0.6,
+        );
+        await dragTo(
+          find('[data-id="b"]'),
+          lr.left + lr.width * 0.7,
+          lr.top + lr.height * 0.7,
+        );
+      } else {
+        await dragIntoRight(find('[data-id="a"]'));
+        await dragIntoRight(find('[data-id="a"]'));
+      }
+      await settled();
+      assert.deepEqual(ids('#left'), ['a']);
+      assert.deepEqual(ids('#right'), ['b']);
+      // the refused item may still have moved inside its own grid
+      const sizes = (layouts) =>
+        layouts.map((l) => l.map(({ id, w, h }) => ({ id, w, h })));
+      assert.deepEqual(
+        sizes([
+          find('#left').gridstack.save(false),
+          find('#right').gridstack.save(false),
+        ]),
+        sizes(before),
+        'engines unchanged',
+      );
+      assert.deepEqual(
+        warnings.filter((id) => id.startsWith('ember-gridstack.')),
+        [warning],
+        'warned once',
+      );
+      assert.deepEqual(this.errors, []);
+      await this.grid.destroy();
+    });
+  }
 
   const observe = (ctx, calls, lists) => ({
     domLeft: ids('#left'),
