@@ -84,7 +84,7 @@ module('Integration | Example | data mode', function (hooks) {
     await dragOnto(find('[gs-id="visits"]'), right, 20);
     assert.dom(right.querySelector('[gs-id="visits"]')).exists('moved right');
     // the trash sits below the visible part of the test container
-    find('[gs-id="signups"]').scrollIntoView({ block: 'start' });
+    find('.data-mode-trash').scrollIntoView({ block: 'end' });
     await dragOnto(find('[gs-id="signups"]'), find('.data-mode-trash'));
     assert.dom('[gs-id="signups"]').doesNotExist('trashed');
   });

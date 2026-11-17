@@ -47,7 +47,7 @@ module('Integration | Example | template drops', function (hooks) {
     for (const g of findAll('.data-mode-grid')) {
       assert.strictEqual(g.gridstack.getColumn(), 1);
     }
-    find('[gs-id="apples"]').scrollIntoView({ block: 'start' });
+    find('.template-drops-trash').scrollIntoView({ block: 'end' });
     await dragTo(
       find('[gs-id="apples"]'),
       find('.template-drops-trash'),
