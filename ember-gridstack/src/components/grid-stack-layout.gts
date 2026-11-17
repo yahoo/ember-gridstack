@@ -23,6 +23,7 @@ import type {
   SaveFcn,
 } from 'gridstack';
 import lifecycle from '../utils/lifecycle.ts';
+import BeforeRemove, { KEEP } from '../utils/before-remove.ts';
 import {
   installLayoutCallbacks,
   layoutSave,
@@ -108,8 +109,6 @@ export interface GridStackLayoutSignature {
   Element: HTMLDivElement;
 }
 
-const KEEP = Symbol('unstable_keep');
-
 type Pending = { keep: true } | (DroppedFrom & { keep?: undefined });
 
 /** what `_rebuild` needs from the record it replaces */
@@ -125,7 +124,7 @@ class Widget implements LayoutWidgetContext {
   element: LayoutItemElement;
   contentElement: HTMLElement;
   serializers = new Set<() => Record<string, unknown>>();
-  beforeRemoveFns = new Set<(ctx: BeforeRemoveContext) => unknown>();
+  _beforeRemove = new BeforeRemove<BeforeRemoveContext>();
   droppedFrom: DroppedFrom | undefined = undefined;
   /** source grid that still renders this record after `unstable_keep` */
   lentBy: GridStackLayoutComponent | null = null;
@@ -152,23 +151,12 @@ class Widget implements LayoutWidgetContext {
     return () => this.serializers.delete(fn);
   };
 
-  beforeRemove = (fn: (ctx: BeforeRemoveContext) => unknown) => {
-    this.beforeRemoveFns.add(fn);
-    return () => this.beforeRemoveFns.delete(fn);
-  };
+  beforeRemove = this._beforeRemove.add;
 
   runBeforeRemove(allowKeep: boolean): { keep: boolean; state: unknown } {
-    const ctx: BeforeRemoveContext = {
+    return this._beforeRemove.run({
       unstable_keep: allowKeep ? () => KEEP : undefined,
-    };
-    let state: unknown;
-    let keep = false;
-    this.beforeRemoveFns.forEach((fn) => {
-      const result = fn(ctx);
-      if (result === KEEP) keep = true;
-      else if (state === undefined) state = result;
     });
-    return { keep, state };
   }
 
   resizeToContent = () => {
