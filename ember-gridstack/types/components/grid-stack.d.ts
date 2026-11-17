@@ -26,6 +26,8 @@ type DroppedHandler = (
 export interface GridStackSignature {
   Args: {
     options?: GridStackOptions;
+    /** registers the grid under this name: `gridStackRegistry.get(name)` */
+    name?: string;
     /** data mode: see `grid-stack-layout` */
     layout?: LayoutWidget[];
     components?: Record<string, WidgetComponent>;
