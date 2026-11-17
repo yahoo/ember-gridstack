@@ -2079,7 +2079,7 @@ packages:
     resolution: {integrity: sha512-MzQj+8Kx3XI40OmUAE6Qoh58ZMNstNNMwn2nfd3qWsfe7nDNSqJNzes4njhz6AHwrSHOffSLwXU6yb474Q4aog==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/node/-/node-26.6.6.tgz}
 
   '@types/semver@7.8.0':
-    resolution: {integrity: sha512-1mAINjtQCXXeLkJ9ehXkwOcBpqtLxiVtKhpUf83DdRNdQKV0iXZpaHYqRr7nj+wvxuJzoAmAwXI+sCNMv1CzLQ==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/semver/-/semver-7.8.0.tgz}
+    resolution: {integrity: sha512-1mAINjtQCXXeLkJ9ehXkwOcBpqtLxiVtKhpUf83DdRNdQKV0iXZpaHYqRr7nj+wvxuJzoAmAwXI+sCNMv1CzLQ==}
 
   '@types/symlink-or-copy@1.2.2':
     resolution: {integrity: sha512-MQ1AnmTLOncwEf9IVU+B2e4Hchrku5N67NkgcAHW0p3sdzPe0FNMANxEm6OJUzPniEQGkeT3OROLlCwZJLWFZA==, tarball: https://registry.npm.ouryahoo.com:4443/npm/api/npm/npm/@types/symlink-or-copy/-/symlink-or-copy-1.2.2.tgz}
