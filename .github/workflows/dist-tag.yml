@@ -1,0 +1,84 @@
+name: npm dist-tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (ignored for rm)'
+        type: string
+        required: true
+      tag:
+        description: 'dist-tag'
+        type: string
+        required: true
+      action:
+        description: 'add or rm'
+        type: choice
+        options: [add, rm]
+        required: true
+      dry_run:
+        description: 'Only print what would happen'
+        type: boolean
+        default: true
+
+permissions: {}
+
+jobs:
+  dist-tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    environment: npm-admin
+    concurrency:
+      group: npm-admin
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - run: pnpm install --frozen-lockfile
+      - run: npm install -g npm@^11.5.1
+      - name: Validate inputs
+        env:
+          VERSION: ${{ inputs.version }}
+          TAG: ${{ inputs.tag }}
+          ACTION: ${{ inputs.action }}
+        run: |
+          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]] || { echo "invalid version: $VERSION"; exit 1; }
+          [[ "$TAG" =~ ^[a-z][a-z0-9-]{0,31}$ ]] || { echo "invalid tag: $TAG"; exit 1; }
+          TAG="$TAG" pnpm exec node -e 'if (require("semver").valid(process.env.TAG) || /^v?\d+$/.test(process.env.TAG)) process.exit(1)' || { echo "tag must not look like a version: $TAG"; exit 1; }
+          [[ "$ACTION" = add || "$ACTION" = rm ]] || { echo "invalid action: $ACTION"; exit 1; }
+          if [[ "$ACTION" = rm && "$TAG" = latest ]]; then echo "refusing to remove latest"; exit 1; fi
+          if [[ "$ACTION" = add ]]; then
+            npm view "ember-gridstack@$VERSION" version --registry https://registry.npmjs.org/ | grep -qxF "$VERSION" || { echo "ember-gridstack@$VERSION not published"; exit 1; }
+          fi
+      - name: Dry run
+        if: inputs.dry_run
+        env:
+          VERSION: ${{ inputs.version }}
+          TAG: ${{ inputs.tag }}
+          ACTION: ${{ inputs.action }}
+        run: |
+          npm view ember-gridstack dist-tags --registry https://registry.npmjs.org/
+          if [[ "$ACTION" = add ]]; then cmd="npm dist-tag add ember-gridstack@$VERSION $TAG"; else cmd="npm dist-tag rm ember-gridstack $TAG"; fi
+          echo "$cmd"
+          { echo "### Dry run"; echo; echo '```'; echo "$cmd"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Apply
+        if: ${{ !inputs.dry_run }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          VERSION: ${{ inputs.version }}
+          TAG: ${{ inputs.tag }}
+          ACTION: ${{ inputs.action }}
+        run: |
+          if [[ "$ACTION" = add ]]; then
+            npm dist-tag add "ember-gridstack@$VERSION" "$TAG"
+          else
+            npm dist-tag rm ember-gridstack "$TAG"
+          fi
+          npm view ember-gridstack dist-tags --registry https://registry.npmjs.org/
