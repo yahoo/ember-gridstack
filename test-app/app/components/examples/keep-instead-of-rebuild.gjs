@@ -117,7 +117,7 @@ const RIGHT = [
     id: 'keep-note',
     x: 0,
     y: 0,
-    w: 1,
+    w: 2,
     h: 1,
     component: 'note',
     props: { text: 'Drop here' },
@@ -130,6 +130,7 @@ const OPTIONS = {
   margin: 6,
   column: 4,
   minRow: 2,
+  columnOpts: { breakpoints: [{ w: 640, c: 1 }] },
 };
 
 export default class KeepInsteadOfRebuild extends Component {
@@ -141,6 +142,10 @@ export default class KeepInsteadOfRebuild extends Component {
     super(...arguments);
     shared.keep = false;
     shared.created = 0;
+  }
+
+  get unit() {
+    return this.shared.created === 1 ? 'time' : 'times';
   }
 
   @action toggleKeep(event) {
@@ -196,7 +201,7 @@ export default class KeepInsteadOfRebuild extends Component {
           }}</button>
         <output class="keep-created">created
           {{this.shared.created}}
-          times</output>
+          {{this.unit}}</output>
       </div>
       <div class="data-mode-grids">
         <figure class="data-mode-pane">

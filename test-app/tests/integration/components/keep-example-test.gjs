@@ -49,11 +49,13 @@ module('Integration | Example | keep instead of rebuild', function (hooks) {
   test('keep off: a move rebuilds and reloads the report', async function (assert) {
     await setup();
     const n = created();
+    assert.dom('.keep-created').hasText('created 1 time');
     const svg = find('.keep-left .keep-chart');
     assert.ok(svg, 'chart loaded in the left grid');
     await dragTo(find('[gs-id="report"]'), find('.keep-right'));
     await settled();
     assert.strictEqual(created(), n + 1, 'rebuilt');
+    assert.dom('.keep-created').hasText('created 2 times');
     assert.false(svg.isConnected, 'old chart gone');
     assert.dom('.keep-right [gs-id="report"] .keep-chart').exists();
     assert.deepEqual(this.logged, []);

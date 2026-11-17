@@ -40,6 +40,7 @@ const OPTIONS = {
   margin: 6,
   column: 4,
   minRow: 3,
+  columnOpts: { breakpoints: [{ w: 640, c: 1 }] },
 };
 
 const record = (id, label, x, y) => ({
