@@ -105,35 +105,11 @@ module('Integration | Component | template api limits', function (hooks) {
       count: find('[data-id="a"] .inc')?.textContent.trim(),
       errors: this.errors,
     };
-    assert.true(obs.inRight, 'gridstack moves the element into the right grid');
-    assert.deepEqual(obs.rightNodes, ['a', 'b']);
-    assert.deepEqual(obs.leftNodes, []);
-    assert.strictEqual(
-      obs.count,
-      '1',
-      'Glimmer keeps the component alive (DOM moved behind its back)',
-    );
-    // FAILURE: Ember's data still says a belongs to the left grid
-    assert.deepEqual(
-      items.left.map((i) => i.id),
-      ['a'],
-      'Ember state out of sync: a still in left {{#each}}',
-    );
-
-    // removing a from the left list makes Glimmer tear down nodes now in the right grid
-    items.left = [];
-    await settled();
-    // FAILURE: syncing the data removes a from gridstack's right grid, but
-    // its element stays there as an orphan Glimmer no longer tracks
-    assert.true(
-      find('#right').contains(find('[data-id="a"]')),
-      'orphan element left in the right grid',
-    );
-    assert.deepEqual(
-      rightGs.engine.nodes.map((n) => n.el?.dataset.id),
-      ['b'],
-      'gridstack forgot a',
-    );
+    // without @onDropped the target refuses the drop (see grid-stack-template-drop-test)
+    assert.false(obs.inRight, 'the element stays in the left grid');
+    assert.deepEqual(obs.rightNodes, ['b']);
+    assert.deepEqual(obs.leftNodes, ['a']);
+    assert.strictEqual(obs.count, '1', 'same component');
     assert.deepEqual(this.errors, [], 'no error is raised');
 
     await this.grid.destroy();
@@ -176,12 +152,12 @@ module('Integration | Component | template api limits', function (hooks) {
       errors: [...this.errors],
     };
     assert.strictEqual(obs.nodes, 0, 'gridstack dropped the node');
-    assert.false(obs.aInDom, 'gridstack removed the Glimmer-owned element');
-    // FAILURE: Ember data still lists the trashed item
-    assert.deepEqual(obs.emberItems, ['a'], 'Ember state out of sync');
+    assert.true(obs.aInDom, 'Ember removes the element, not gridstack');
+    assert.deepEqual(obs.emberItems, ['a'], 'until the app drops the record');
 
     items.left = [];
     await settled();
+    assert.false(Boolean(find('[data-id="a"]')));
     assert.deepEqual(
       this.errors,
       [],

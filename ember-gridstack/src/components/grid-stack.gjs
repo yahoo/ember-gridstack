@@ -23,12 +23,14 @@ import 'gridstack/dist/gridstack.css';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { schedule } from '@ember/runloop';
+import { next, schedule } from '@ember/runloop';
 import { GridStack } from 'gridstack';
 import lifecycle from '../utils/lifecycle.js';
 import GridStackItem from './grid-stack-item.gjs';
 import GridStackLayout from './grid-stack-layout.gjs';
 import {
+  gridForElement,
+  itemForElement,
   registerGridElement,
   unregisterGridElement,
 } from '../utils/grid-elements.js';
@@ -37,8 +39,12 @@ import { GRID_STACK_EVENTS, capitalize } from '../utils/events.js';
 import {
   WARN_NEEDS_ID,
   WARN_NO_HANDLER,
+  WARN_NOT_RENDERED,
+  departing,
   dropWarn,
+  incoming,
 } from '../utils/cross-grid.js';
+import { applyItemAttributes } from '../modifiers/gs-item-attributes.js';
 
 export { GRID_STACK_EVENTS, capitalize };
 
@@ -173,20 +179,129 @@ export default class GridStackComponent extends Component {
       };
     }
 
+    // Glimmer owns the DOM: trash drops must not remove the element
+    const removeWidget = this.gridStack.removeWidget;
+    this.gridStack.removeWidget = function (els, removeDOM, triggerEvent) {
+      return removeWidget.call(this, els, false, triggerEvent);
+    };
+
     // resolve @on* at fire time so changed handlers need no re-init
     GRID_STACK_EVENTS.forEach((eventName) => {
       const argName = `on${capitalize(eventName)}`;
       const gridStack = this.gridStack;
 
       gridStack.on(eventName, (...args) => {
+        if (eventName === 'removed') this._markDeparting(args[1]);
+        const claim =
+          eventName === 'dropped' ? this._claimDrop(args[1], args[2]) : null;
         const action = this.args[argName];
-        if (action) {
+        if (claim) {
+          schedule('afterRender', () => {
+            try {
+              action?.apply(gridStack, args);
+            } finally {
+              this._finishDrop(claim);
+            }
+          });
+        } else if (action) {
           schedule('afterRender', gridStack, action, ...args);
         }
       });
 
       this.subscribedEvents.push(eventName);
     });
+  }
+
+  /** drop position per item id, applied when the target renders that item */
+  _placements = new Map();
+
+  // Sync, before the target grid moves `el` out: mark its spot so the element
+  // can go back there before Glimmer clears this grid's row.
+  _markDeparting(nodes) {
+    nodes?.forEach(({ el }) => {
+      if (!el || el.parentElement !== this.elm || departing.has(el)) return;
+      const placeholder = document.createComment('gs-moved');
+      el.before(placeholder);
+      const entry = { grid: this, placeholder };
+      departing.set(el, entry);
+      schedule('afterRender', () => {
+        if (entry.claimed || departing.get(el) !== entry) return;
+        departing.delete(el);
+        placeholder.remove();
+      });
+    });
+  }
+
+  // Sync in the target's `dropped`: the source item is still alive here.
+  _claimDrop(previousNode, newNode) {
+    const el = newNode?.el;
+    if (!el) return null;
+    const { id, x, y, w, h } = newNode;
+    if (id !== undefined) this._placements.set(id, { x, y, w, h });
+    const claim = { el, id, previousNode, count: this._itemCount(el) };
+    if (previousNode) {
+      claim.entry = departing.get(el);
+      if (claim.entry) claim.entry.claimed = true;
+      claim.incoming = {
+        grid: claim.entry?.grid ?? gridForElement(previousNode.grid?.el),
+        state: itemForElement(el)?._runBeforeRemove(),
+      };
+      incoming.set(id, claim.incoming);
+    }
+    this.gridStack.removeWidget(el, false, false);
+    return claim;
+  }
+
+  _itemCount(except) {
+    return [...(this.elm?.children ?? [])].filter(
+      (c) => c !== except && c.classList.contains('grid-stack-item'),
+    ).length;
+  }
+
+  // After the app's @onDropped: put the DOM back the way Glimmer left it.
+  _finishDrop(claim) {
+    const { el, entry } = claim;
+    if (entry) {
+      if (departing.get(el) === entry) departing.delete(el);
+      if (entry.placeholder.isConnected) entry.placeholder.replaceWith(el);
+      else {
+        entry.placeholder.remove();
+        el.remove();
+      }
+    } else {
+      el.remove();
+    }
+    // the re-render the handler caused runs after every queued job, so wait a loop
+    next(this, this._checkDrop, claim);
+  }
+
+  _checkDrop({ el, id, previousNode, entry, count, incoming: entering }) {
+    if (incoming.get(id) === entering) incoming.delete(id);
+    this._placements.delete(id);
+    if (this.isDestroying || this.isDestroyed) return;
+    if (!previousNode) {
+      if (this._itemCount() <= count) {
+        dropWarn(
+          '@onDropped did not render a new <GridStackItem> for the dragged-in element.',
+          WARN_NOT_RENDERED,
+        );
+      }
+      return;
+    }
+    const rendered = [...this.elm.children].some(
+      (c) => c !== el && c.gridstackNode?.id === id,
+    );
+    if (rendered) return;
+    const source = entry?.grid;
+    if (source?.gridStack && el.parentElement === source.elm) {
+      const { x, y, w, h } = previousNode;
+      applyItemAttributes(el, { x, y, w, h, id });
+      source.addWidget(el);
+    }
+    dropWarn(
+      `@onDropped did not render <GridStackItem> "${id}" in the target grid; it stays in its source grid.`,
+      WARN_NOT_RENDERED,
+    );
   }
 
   @action
@@ -225,6 +340,11 @@ export default class GridStackComponent extends Component {
 
   @action
   willDestroyNode() {
+    departing.forEach((entry, el) => {
+      if (entry.grid !== this) return;
+      departing.delete(el);
+      if (entry.placeholder.parentNode) entry.placeholder.replaceWith(el);
+    });
     this._destroyGridStack();
     unregisterGridElement(this.elm);
   }
