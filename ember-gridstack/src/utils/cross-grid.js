@@ -3,6 +3,9 @@ import { warn } from '@ember/debug';
 /** item element leaving a template grid -> `{ grid, placeholder, node }` */
 export const departing = new Map();
 
+/** target grid of the drop being rendered: a new item has no element to find its grid by yet */
+export const activeDrop = { grid: null };
+
 export const WARN_NO_HANDLER = 'ember-gridstack.no-drop-handler';
 export const WARN_NEEDS_ID = 'ember-gridstack.drop-needs-id';
 export const WARN_NOT_RENDERED = 'ember-gridstack.drop-not-rendered';

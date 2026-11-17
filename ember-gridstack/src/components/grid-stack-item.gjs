@@ -20,6 +20,7 @@ import {
   registerItemElement,
   unregisterItemElement,
 } from '../utils/grid-elements.js';
+import { activeDrop } from '../utils/cross-grid.js';
 
 export default class GridStackItem extends Component {
   @tracked elm;
@@ -62,7 +63,8 @@ export default class GridStackItem extends Component {
   // plain Map read: only meaningful while the drop renders this item
   get droppedFrom() {
     const id = this.args.options?.id;
-    return id === undefined ? undefined : this.grid?._incoming?.get(id);
+    if (id === undefined) return undefined;
+    return (this.grid ?? activeDrop.grid)?._incoming?.get(id);
   }
 
   @action

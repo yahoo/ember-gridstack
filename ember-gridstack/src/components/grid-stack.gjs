@@ -43,6 +43,7 @@ import {
   WARN_NOT_RENDERED,
   WARN_ID_COLLISION,
   ID_COLLISION_MESSAGE,
+  activeDrop,
   departing,
   dropWarn,
   hasIdCollision,
@@ -261,6 +262,7 @@ export default class GridStackComponent extends Component {
         state: itemForElement(el)?._runBeforeRemove(),
       };
       this._incoming.set(id, claim.incoming);
+      activeDrop.grid = this;
     }
     this.gridStack.removeWidget(el, false, false);
     return claim;
@@ -291,6 +293,8 @@ export default class GridStackComponent extends Component {
 
   _checkDrop({ el, id, previousNode, entry, count, incoming: entering }) {
     if (this._incoming.get(id) === entering) this._incoming.delete(id);
+    if (!this._incoming.size && activeDrop.grid === this)
+      activeDrop.grid = null;
     this._placements.delete(id);
     if (this.isDestroying || this.isDestroyed) return;
     if (!previousNode) {
@@ -359,6 +363,7 @@ export default class GridStackComponent extends Component {
 
   @action
   willDestroyNode() {
+    if (activeDrop.grid === this) activeDrop.grid = null;
     departing.forEach((entry, el) => {
       if (entry.grid !== this) return;
       departing.delete(el);
