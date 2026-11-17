@@ -1,14 +1,11 @@
 export const KEEP = Symbol('unstable_keep');
 
-/** `Ctx = void` for callbacks that take no argument */
 export default class BeforeRemove<Ctx = void> {
   private fns = new Set<(ctx: Ctx) => unknown>();
 
   add = (fn: (ctx: Ctx) => unknown): (() => void) => {
     this.fns.add(fn);
-    return () => {
-      this.fns.delete(fn);
-    };
+    return () => this.fns.delete(fn);
   };
 
   run(ctx: Ctx): { keep: boolean; state: unknown } {
