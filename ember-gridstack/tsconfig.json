@@ -1,6 +1,6 @@
 {
   "extends": "@ember/library-tsconfig",
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*", "./unpublished-development-types/**/*"],
   "compilerOptions": {
     "allowJs": true,
     "declarationDir": "declarations",

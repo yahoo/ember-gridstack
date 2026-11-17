@@ -10,60 +10,158 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { run, next, schedule } from '@ember/runloop';
+import type { TemplateOnlyComponent } from '@ember/component/template-only';
 import { GridStack } from 'gridstack';
-import lifecycle from '../utils/lifecycle.js';
+import type {
+  AddRemoveFcn,
+  CompactOptions,
+  GridItemHTMLElement,
+  GridStackMode,
+  GridStackNode,
+  GridStackOptions,
+  GridStackWidget,
+  SaveFcn,
+} from 'gridstack';
+import lifecycle from '../utils/lifecycle.ts';
 import {
   installLayoutCallbacks,
   layoutSave,
-} from '../utils/layout-callbacks.js';
+} from '../utils/layout-callbacks.ts';
+import type {
+  LayoutGridElement,
+  LayoutItemElement,
+} from '../utils/layout-callbacks.ts';
 import {
   registry,
   registerGridElement,
   unregisterGridElement,
-} from '../utils/grid-elements.js';
-import { GRID_STACK_EVENTS, capitalize } from '../utils/events.js';
+} from '../utils/grid-elements.ts';
+import type GridStackRegistry from '../services/grid-stack-registry.ts';
+import { GRID_STACK_EVENTS, capitalize } from '../utils/events.ts';
 import {
   ID_COLLISION_MESSAGE,
   WARN_ID_COLLISION,
   dropWarn,
   hasIdCollision,
-} from '../utils/cross-grid.js';
+} from '../utils/cross-grid.ts';
+import type { AnyHandler, GridStackSignature } from './grid-stack.gts';
+
+/** Layout JSON entry, as used by gridstack's React/Vue wrappers. */
+export interface LayoutWidget extends GridStackWidget {
+  component?: string;
+  props?: Record<string, unknown>;
+}
+
+export interface LayoutWidgetContext {
+  readonly id: string;
+  readonly component?: string;
+  readonly props?: Record<string, unknown>;
+  readonly node: GridStackNode;
+  readonly element: GridItemHTMLElement;
+  readonly contentElement: HTMLElement;
+  /** the grid that owns the widget (tracked; changes on an `unstable_keep` drop) */
+  readonly grid: GridStackLayoutComponent;
+  /** set while a widget rebuilt by a cross-grid drop is first rendered */
+  readonly droppedFrom?: DroppedFrom;
+  registerSerializer(fn: () => Record<string, unknown>): () => void;
+  /**
+   * Runs before a cross-grid drop rebuilds the widget elsewhere; the first
+   * non-undefined return value becomes `droppedFrom.state` in the new grid.
+   */
+  beforeRemove(fn: (ctx: BeforeRemoveContext) => unknown): () => void;
+  resizeToContent(): void;
+}
+
+export interface DroppedFrom {
+  grid: GridStackLayoutComponent;
+  state: unknown;
+}
+
+export interface BeforeRemoveContext {
+  /** Data mode only, source grid alive: return its result to keep the component instance. Unstable. */
+  unstable_keep?: () => unknown;
+}
+
+export interface WidgetComponentSignature {
+  Args: {
+    props?: Record<string, unknown>;
+    grid: GridStackLayoutComponent;
+    widget: LayoutWidgetContext;
+  };
+}
+
+/** A component class or template-only component rendered for a widget. */
+export type WidgetComponent =
+  | (abstract new (owner: never, args: never) => object)
+  | TemplateOnlyComponent<never>;
+
+export interface GridStackLayoutSignature {
+  Args: GridStackSignature['Args'] & {
+    layout?: LayoutWidget[];
+    name?: string;
+    options?: GridStackOptions;
+    components?: Record<string, WidgetComponent>;
+  };
+  Blocks: {
+    default: [widget: LayoutWidgetContext, grid: GridStackLayoutComponent];
+  };
+  Element: HTMLDivElement;
+}
 
 const KEEP = Symbol('unstable_keep');
 
-class Widget {
-  @tracked node;
-  @tracked props;
-  @tracked grid;
-  serializers = new Set();
-  beforeRemoveFns = new Set();
-  droppedFrom = undefined;
-  /** source grid that still renders this record after `unstable_keep` */
-  lentBy = null;
+type Pending = { keep: true } | (DroppedFrom & { keep?: undefined });
 
-  constructor(id, w, el, grid) {
+/** what `_rebuild` needs from the record it replaces */
+type RecordLike = Pick<Widget, 'id' | 'element'> &
+  Partial<Pick<Widget, 'props' | 'component' | 'node'>>;
+
+class Widget implements LayoutWidgetContext {
+  @tracked node: LayoutWidget & GridStackNode;
+  @tracked props: Record<string, unknown> | undefined;
+  @tracked grid: GridStackLayoutComponent;
+  id: string;
+  component: string | undefined;
+  element: LayoutItemElement;
+  contentElement: HTMLElement;
+  serializers = new Set<() => Record<string, unknown>>();
+  beforeRemoveFns = new Set<(ctx: BeforeRemoveContext) => unknown>();
+  droppedFrom: DroppedFrom | undefined = undefined;
+  /** source grid that still renders this record after `unstable_keep` */
+  lentBy: GridStackLayoutComponent | null = null;
+
+  constructor(
+    id: string,
+    w: LayoutWidget & GridStackNode,
+    el: LayoutItemElement,
+    grid: GridStackLayoutComponent,
+  ) {
     this.id = id;
     this.node = w;
     this.props = w.props;
     this.component = w.component;
     this.element = el;
-    this.contentElement = el.querySelector('.grid-stack-item-content');
+    this.contentElement = el.querySelector(
+      '.grid-stack-item-content',
+    ) as HTMLElement;
     this.grid = grid;
   }
 
-  registerSerializer = (fn) => {
+  registerSerializer = (fn: () => Record<string, unknown>) => {
     this.serializers.add(fn);
     return () => this.serializers.delete(fn);
   };
 
-  beforeRemove = (fn) => {
+  beforeRemove = (fn: (ctx: BeforeRemoveContext) => unknown) => {
     this.beforeRemoveFns.add(fn);
     return () => this.beforeRemoveFns.delete(fn);
   };
 
-  runBeforeRemove(allowKeep) {
-    const ctx = { unstable_keep: allowKeep ? () => KEEP : undefined };
-    let state;
+  runBeforeRemove(allowKeep: boolean): { keep: boolean; state: unknown } {
+    const ctx: BeforeRemoveContext = {
+      unstable_keep: allowKeep ? () => KEEP : undefined,
+    };
+    let state: unknown;
     let keep = false;
     this.beforeRemoveFns.forEach((fn) => {
       const result = fn(ctx);
@@ -78,29 +176,40 @@ class Widget {
   };
 }
 
-const and = (a, b) => a && b;
+const and = (a: unknown, b: unknown) => a && b;
 
-export default class GridStackLayoutComponent extends Component {
+export default class GridStackLayoutComponent extends Component<GridStackLayoutSignature> {
+  /** @internal */
   isEmberLayoutGrid = true;
-  @tracked widgets = [];
-  gridStack = null;
-  subscribedEvents = [];
-  _records = new Map();
-  /** records owned by another grid that this grid keeps rendering */
-  _lent = new Map();
-  /** id leaving this grid -> drop info; `removed` fires before the target's `added` */
-  _pending = new Map();
-  _flushScheduled = false;
+  @tracked private widgets: Widget[] = [];
+  gridStack: GridStack | null = null;
+  private elm?: LayoutGridElement;
+  private subscribedEvents: string[] = [];
+  /** @internal */
+  _records = new Map<string, Widget>();
+  /** @internal records owned by another grid that this grid keeps rendering */
+  _lent = new Map<string, Widget>();
+  /** @internal id leaving this grid -> drop info; `removed` fires before the target's `added` */
+  _pending = new Map<string, Pending>();
+  private _flushScheduled = false;
+  private _warnedCollision = false;
+  private _name?: string;
+  private _registry?: GridStackRegistry;
+  private _uninstall?: () => void;
+  private _lastLayout?: LayoutWidget[];
+  private _lastOptions?: GridStackOptions;
 
   // one stable function: a new one per update would make gridstack re-init
-  _accept = (el) => {
+  private _accept = (el: Element): boolean => {
     const option = this.args.options?.acceptWidgets;
     let ok;
     if (typeof option === 'function') ok = option(el);
     else if (option === true) ok = el.matches('.grid-stack-item');
-    else ok = Boolean(option) && el.matches(option);
+    else ok = typeof option === 'string' && el.matches(option);
     if (!ok) return false;
-    if (hasIdCollision(this.gridStack, el.gridstackNode)) {
+    if (
+      hasIdCollision(this.gridStack, (el as GridItemHTMLElement).gridstackNode)
+    ) {
       if (!this._warnedCollision) {
         this._warnedCollision = true;
         dropWarn(ID_COLLISION_MESSAGE, WARN_ID_COLLISION);
@@ -110,30 +219,33 @@ export default class GridStackLayoutComponent extends Component {
     return true;
   };
 
-  _withAccept(opts) {
+  private _withAccept(opts: GridStackOptions | undefined) {
     return opts?.acceptWidgets
       ? { ...opts, acceptWidgets: this._accept }
       : opts;
   }
 
-  get api() {
+  private get api(): this {
     return this;
   }
 
-  get instance() {
+  get instance(): GridStack | null {
     return this.gridStack;
   }
 
-  componentFor = (name) => this.args.components?.[name];
+  private componentFor = (name: string | undefined) =>
+    name === undefined ? undefined : this.args.components?.[name];
 
   // gridstack calls back synchronously (also during render), so the tracked
   // array is only replaced after render
+  /** @internal */
   _scheduleFlush() {
     if (this._flushScheduled) return;
     this._flushScheduled = true;
-    schedule('afterRender', this, this._flush);
+    schedule('afterRender', () => this._flush());
   }
 
+  /** @internal */
   _flush() {
     this._flushScheduled = false;
     if (this.isDestroying || this.isDestroyed) return;
@@ -141,20 +253,25 @@ export default class GridStackLayoutComponent extends Component {
     this.widgets = [...own, ...this._lent.values()];
     // plain property read by the rebuilt component's constructor; the rerender
     // this triggers runs after any afterRender job queued here, so wait a loop
-    next(this, this._clearDroppedFrom);
+    next(() => this._clearDroppedFrom());
   }
 
-  _clearDroppedFrom() {
+  private _clearDroppedFrom() {
     this._records.forEach((r) => (r.droppedFrom = undefined));
   }
 
   /** Cross-grid drop out of this grid: collect state before the target rebuilds. */
-  _collectDrops(nodes) {
+  private _collectDrops(nodes: GridStackNode[] | undefined) {
     nodes?.forEach((n) => {
-      const el = n.el;
+      const el: LayoutItemElement | undefined = n.el;
       const ref = el?._gridItemRef;
       const target = el?.gridstackNode?.grid;
-      if (ref?.gridComp !== this || !target || target === this.gridStack) {
+      if (
+        !ref ||
+        ref.gridComp !== this ||
+        !target ||
+        target === this.gridStack
+      ) {
         return;
       }
       const record = this._records.get(ref.id);
@@ -172,7 +289,7 @@ export default class GridStackLayoutComponent extends Component {
   }
 
   /** The lender stops rendering `record`; returns its final state. */
-  _release(record) {
+  private _release(record: Widget): unknown {
     const lender = record.lentBy;
     record.lentBy = null;
     if (!lender || lender._lent.get(record.id) !== record) return undefined;
@@ -181,8 +298,12 @@ export default class GridStackLayoutComponent extends Component {
     return record.runBeforeRemove(false).state;
   }
 
-  /** Replaces `record` with a fresh one so this grid renders it itself. */
-  _rebuild(record, droppedFrom, node = record.node) {
+  /** @internal Replaces `record` with a fresh one so this grid renders it itself. */
+  _rebuild(
+    record: RecordLike,
+    droppedFrom: DroppedFrom | undefined,
+    node = record.node!,
+  ) {
     const widget = new Widget(record.id, node, record.element, this);
     widget.props = record.props ?? node.props;
     widget.component = record.component ?? node.component;
@@ -191,12 +312,14 @@ export default class GridStackLayoutComponent extends Component {
     this._scheduleFlush();
   }
 
-  registerWidget(id, w, el) {
+  /** @internal */
+  registerWidget(id: string, w: LayoutWidget, el: LayoutItemElement) {
     this._records.set(id, new Widget(id, w, el, this));
     this._scheduleFlush();
   }
 
-  unregisterWidget(id) {
+  /** @internal */
+  unregisterWidget(id: string) {
     const record = this._records.get(id);
     if (!record) return;
     this._records.delete(id);
@@ -205,14 +328,14 @@ export default class GridStackLayoutComponent extends Component {
   }
 
   /** Cross-grid drop into this grid: rebuild the widget here. */
-  adoptWidget(el) {
+  private adoptWidget(el: LayoutItemElement) {
     const ref = el._gridItemRef;
     if (!ref || ref.gridComp === this) return;
-    const old = ref.gridComp;
+    const old = ref.gridComp as GridStackLayoutComponent | undefined;
     if (!old?.isEmberLayoutGrid) return;
     const { id } = ref;
     const prev = old._records.get(id);
-    const node = el.gridstackNode;
+    const node = el.gridstackNode as LayoutWidget & GridStackNode;
     const pending = old._pending.get(id);
     old._pending.delete(id);
     old._records.delete(id);
@@ -240,15 +363,17 @@ export default class GridStackLayoutComponent extends Component {
     );
   }
 
-  mergeWidgetPropsForSave(id, w) {
+  /** @internal */
+  mergeWidgetPropsForSave(id: string, w: LayoutWidget) {
     const record = this._records.get(id);
     if (!record) return;
-    let extra = {};
+    let extra: Record<string, unknown> = {};
     record.serializers.forEach((fn) => (extra = { ...extra, ...fn() }));
     if (Object.keys(extra).length) w.props = { ...w.props, ...extra };
   }
 
-  requestUpdate(id, node) {
+  /** @internal */
+  requestUpdate(id: string, node: LayoutWidget & GridStackNode) {
     const record = this._records.get(id);
     if (!record) return;
     record.node = node;
@@ -256,7 +381,7 @@ export default class GridStackLayoutComponent extends Component {
   }
 
   @action
-  setup(elm) {
+  private setup(elm: LayoutGridElement) {
     this.elm = elm;
     registerGridElement(elm, this);
     this._name = this.args.name;
@@ -278,26 +403,30 @@ export default class GridStackLayoutComponent extends Component {
       );
     } catch (e) {
       // e.g. the nested-grid assert, thrown while gridstack loads children
-      elm.gridstack?.destroy(false);
+      (elm as LayoutGridElement & { gridstack?: GridStack }).gridstack?.destroy(
+        false,
+      );
       throw e;
     }
     // scoped to this instance so template-API grids still save `content`
     const gs = this.gridStack;
+    if (!gs) return;
+    // eslint-disable-next-line @typescript-eslint/unbound-method -- invoked with .call
     const save = GridStack.prototype.save;
     gs.save = (content, gridOpt, cb = layoutSave, column) =>
       save.call(gs, content, gridOpt, cb, column);
 
     GRID_STACK_EVENTS.forEach((eventName) => {
-      const argName = `on${capitalize(eventName)}`;
-      const gridStack = this.gridStack;
-      gridStack.on(eventName, (event, ...rest) => {
-        if (eventName === 'removed') this._collectDrops(rest[0]);
+      const argName = `on${capitalize(eventName)}` as const;
+      gs.on(eventName, (event: Event, ...rest: unknown[]) => {
+        const nodes = rest[0] as GridStackNode[] | undefined;
+        if (eventName === 'removed') this._collectDrops(nodes);
         if (eventName === 'added') {
-          rest[0]?.forEach((n) => n.el && this.adoptWidget(n.el));
+          nodes?.forEach((n) => n.el && this.adoptWidget(n.el));
         }
-        const handler = this.args[argName];
+        const handler = this.args[argName] as AnyHandler | undefined;
         if (handler) {
-          schedule('afterRender', gridStack, handler, event, ...rest);
+          schedule('afterRender', gs, handler, event, ...rest);
         }
       });
       this.subscribedEvents.push(eventName);
@@ -305,13 +434,13 @@ export default class GridStackLayoutComponent extends Component {
   }
 
   @action
-  update() {
+  private update() {
     const { layout, options } = this.args;
     if (options !== this._lastOptions) {
       this._lastOptions = options;
-      // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { children, ...opts } = options ?? {};
-      this.gridStack?.updateOptions(this._withAccept(opts));
+      this.gridStack?.updateOptions(this._withAccept(opts) ?? {});
     }
     if (layout !== this._lastLayout) {
       this._lastLayout = layout;
@@ -321,7 +450,7 @@ export default class GridStackLayoutComponent extends Component {
   }
 
   @action
-  willDestroyNode() {
+  private willDestroyNode() {
     const { gridStack } = this;
     if (gridStack) {
       this.subscribedEvents.forEach((e) => gridStack.off(e));
@@ -329,7 +458,7 @@ export default class GridStackLayoutComponent extends Component {
       gridStack.destroy(false);
       this.gridStack = null;
     }
-    const owners = new Set();
+    const owners = new Set<GridStackLayoutComponent>();
     this._lent.forEach((record) => {
       this._lent.delete(record.id);
       record.lentBy = null;
@@ -342,56 +471,73 @@ export default class GridStackLayoutComponent extends Component {
     if (owners.size) run(() => owners.forEach((o) => o._flush()));
     this._records.forEach((record) => this._release(record));
     this._records.clear();
-    delete this.elm._gridComp;
+    if (this.elm) {
+      delete this.elm._gridComp;
+      unregisterGridElement(this.elm);
+    }
     this._uninstall?.();
-    unregisterGridElement(this.elm);
-    this._registry?.unregisterName(this._name, this.api);
+    if (this._name) this._registry?.unregisterName(this._name, this.api);
   }
 
   @action
-  addWidget(w) {
+  addWidget(w: LayoutWidget): GridItemHTMLElement | undefined {
     return this.gridStack?.addWidget(w);
   }
 
   @action
-  removeWidget(idOrEl, removeDOM = true, triggerEvent = true) {
+  removeWidget(
+    idOrEl: string | HTMLElement,
+    removeDOM = true,
+    triggerEvent = true,
+  ): void {
     const el =
       typeof idOrEl === 'string' ? this._records.get(idOrEl)?.element : idOrEl;
     if (el) this.gridStack?.removeWidget(el, removeDOM, triggerEvent);
   }
 
   @action
-  compact(layout, doSort) {
+  compact(layout?: CompactOptions, doSort?: boolean): GridStack | undefined {
     return this.gridStack?.compact(layout, doSort);
   }
 
+  // the data-mode save callback adds `component`/`props`
   @action
-  save(...args) {
-    return this.gridStack?.save(...args);
+  save(
+    ...args: [
+      saveContent?: boolean,
+      saveGridOpt?: boolean,
+      saveCB?: SaveFcn,
+      column?: number,
+    ]
+  ): LayoutWidget[] | undefined {
+    return this.gridStack?.save(...args) as LayoutWidget[] | undefined;
   }
 
   @action
-  load(layout, addRemove) {
+  load(
+    layout: LayoutWidget[],
+    addRemove?: boolean | AddRemoveFcn,
+  ): GridStack | undefined {
     return this.gridStack?.load(layout, addRemove);
   }
 
   @action
-  enableMove(doEnable, recurse) {
+  enableMove(doEnable: boolean, recurse?: boolean): GridStack | undefined {
     return this.gridStack?.enableMove(doEnable, recurse);
   }
 
   @action
-  enableResize(doEnable, recurse) {
+  enableResize(doEnable: boolean, recurse?: boolean): GridStack | undefined {
     return this.gridStack?.enableResize(doEnable, recurse);
   }
 
   @action
-  setMode(mode) {
+  setMode(mode: GridStackMode): GridStack | undefined {
     return this.gridStack?.mode(mode);
   }
 
   @action
-  removeAll(removeDOM = true, triggerEvent = true) {
+  removeAll(removeDOM = true, triggerEvent = true): GridStack | undefined {
     return this.gridStack?.removeAll(removeDOM, triggerEvent);
   }
 
@@ -411,6 +557,8 @@ export default class GridStackLayoutComponent extends Component {
         {{#in-element widget.contentElement insertBefore=null}}
           {{#let (this.componentFor widget.component) as |WidgetComponent|}}
             {{#if (and @components WidgetComponent)}}
+              {{! WidgetComponent is an untyped class; its args are WidgetComponentSignature }}
+              {{! @glint-expect-error }}
               <WidgetComponent
                 @props={{widget.props}}
                 @grid={{this.api}}

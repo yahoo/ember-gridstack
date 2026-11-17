@@ -1,32 +1,28 @@
 import Service from '@ember/service';
 import { assert } from '@ember/debug';
-import { gridForElement } from '../utils/grid-elements.js';
+import type { GridStack } from 'gridstack';
+import { gridForElement } from '../utils/grid-elements.ts';
+import type { GridApi } from '../utils/grid-elements.ts';
 
 /**
  * Finds the yielded grid API of a rendered `<GridStack>` (template or data mode)
  * by element, GridStack instance or `@name`.
  */
 export default class GridstackService extends Service {
-  _names = new Map();
+  private _names = new Map<string, GridApi>();
 
-  /**
-   * @param {Element|GridStack|undefined} target - any element inside a grid, or a GridStack instance
-   * @returns the grid's yielded API, or `undefined`
-   */
-  find(target) {
+  /** The yielded grid API for an element inside a grid, or a GridStack instance. */
+  find(target: Element | GridStack | null | undefined): GridApi | undefined {
     const el = target instanceof Element ? target : target?.el;
     return el instanceof Element ? gridForElement(el) : undefined;
   }
 
-  /**
-   * @param {string} name - the grid's `@name`
-   * @returns the grid's yielded API, or `undefined`
-   */
-  get(name) {
+  /** The yielded grid API of the `<GridStack @name>` with this name. */
+  get(name: string): GridApi | undefined {
     return this._names.get(name);
   }
 
-  registerName(name, grid) {
+  registerName(name: string, grid: GridApi): void {
     assert(
       `a grid named "${name}" is already registered`,
       !this._names.has(name),
@@ -34,7 +30,7 @@ export default class GridstackService extends Service {
     this._names.set(name, grid);
   }
 
-  unregisterName(name, grid) {
+  unregisterName(name: string, grid: GridApi): void {
     if (this._names.get(name) === grid) this._names.delete(name);
   }
 }

@@ -1,4 +1,6 @@
-export const GRID_STACK_EVENTS = [
+import type { GridStackEvent } from 'gridstack';
+
+export const GRID_STACK_EVENTS: GridStackEvent[] = [
   'added',
   'change',
   'disable',
@@ -14,5 +16,5 @@ export const GRID_STACK_EVENTS = [
   'resizecontent',
 ];
 
-export const capitalize = (string) =>
-  string.charAt(0).toUpperCase() + string.slice(1);
+export const capitalize = <S extends string>(string: S): Capitalize<S> =>
+  (string.charAt(0).toUpperCase() + string.slice(1)) as Capitalize<S>;

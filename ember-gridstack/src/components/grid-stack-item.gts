@@ -13,46 +13,69 @@
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import lifecycle from '../utils/lifecycle.js';
-import { applyItemAttributes } from '../modifiers/gs-item-attributes.js';
+import type { GridItemHTMLElement, GridStackWidget } from 'gridstack';
+import lifecycle from '../utils/lifecycle.ts';
+import { applyItemAttributes } from '../modifiers/gs-item-attributes.ts';
 import {
   gridForElement,
   registerItemElement,
   unregisterItemElement,
-} from '../utils/grid-elements.js';
-import { activeDrop } from '../utils/cross-grid.js';
+} from '../utils/grid-elements.ts';
+import type { GridApi } from '../utils/grid-elements.ts';
+import { activeDrop } from '../utils/cross-grid.ts';
+import type GridStackComponent from './grid-stack.gts';
+import type { DroppedFrom } from './grid-stack-layout.gts';
 
-export default class GridStackItem extends Component {
-  @tracked elm;
+export interface GridStackItemSignature {
+  Args: {
+    options?: GridStackWidget;
+    /** set by `grid.Item`; otherwise the closest `<GridStack>` */
+    grid?: GridStackComponent;
+  };
+  Blocks: { default: [item: GridStackItem] };
+  Element: HTMLDivElement;
+}
 
-  get element() {
-    return this.elm;
+/** `droppedFrom` of a template-mode item: the source may be either kind of grid. */
+export type ItemDroppedFrom = Omit<DroppedFrom, 'grid'> & { grid: GridApi };
+
+export default class GridStackItem extends Component<GridStackItemSignature> {
+  @tracked private elm: GridItemHTMLElement | undefined;
+
+  /** `undefined` until the item is inserted. */
+  get element(): HTMLDivElement | undefined {
+    return this.elm as HTMLDivElement | undefined;
   }
 
   // Resolved lazily: an initial item is inserted before its grid exists.
-  get grid() {
+  get grid(): GridStackComponent | undefined {
     return this.args.grid ?? this.gridStackComponent;
   }
 
-  get gridStackComponent() {
+  // only a template-mode grid renders items, so a found grid is a GridStackComponent
+  private get gridStackComponent(): GridStackComponent | undefined {
     if (this.args.grid) return this.args.grid;
     if (!this.elm) return undefined;
-    return (
-      gridForElement(this.elm) ??
+    return (gridForElement(this.elm) ??
       // detached on removal: gridstack still knows its grid
-      gridForElement(this.elm.gridstackNode?.grid?.el)
-    );
+      gridForElement(this.elm.gridstackNode?.grid?.el)) as
+      GridStackComponent | undefined;
   }
 
-  beforeRemoveFns = new Set();
+  private beforeRemoveFns = new Set<() => unknown>();
 
-  beforeRemove = (fn) => {
+  /**
+   * Runs when a cross-grid drop claims this item; the first non-undefined
+   * return value becomes `droppedFrom.state` of the item rendered in the target.
+   */
+  beforeRemove = (fn: () => unknown): (() => void) => {
     this.beforeRemoveFns.add(fn);
     return () => this.beforeRemoveFns.delete(fn);
   };
 
-  _runBeforeRemove() {
-    let state;
+  /** @internal */
+  _runBeforeRemove(): unknown {
+    let state: unknown;
     this.beforeRemoveFns.forEach((fn) => {
       const result = fn();
       if (state === undefined) state = result;
@@ -60,22 +83,23 @@ export default class GridStackItem extends Component {
     return state;
   }
 
+  /** Set while the target grid renders a dropped item (matched by `@options.id`). */
   // plain Map read: only meaningful while the drop renders this item
-  get droppedFrom() {
+  get droppedFrom(): ItemDroppedFrom | undefined {
     const id = this.args.options?.id;
     if (id === undefined) return undefined;
     return (this.grid ?? activeDrop.grid)?._incoming?.get(id);
   }
 
   @action
-  setup(elm) {
+  private setup(elm: HTMLElement) {
     this.elm = elm;
     registerItemElement(elm, this);
     applyItemAttributes(elm, this.args.options);
     const grid = this.gridStackComponent;
     const id = this.args.options?.id;
     const placement = id !== undefined && grid?._placements?.get(id);
-    if (placement) {
+    if (grid && placement) {
       grid._placements.delete(id);
       applyItemAttributes(elm, placement);
     }
@@ -83,7 +107,8 @@ export default class GridStackItem extends Component {
   }
 
   @action
-  updateGridStack() {
+  private updateGridStack() {
+    if (!this.elm) return;
     const gridStack = this.gridStackComponent?.gridStack;
     if (!gridStack) {
       applyItemAttributes(this.elm, this.args.options);
@@ -94,12 +119,13 @@ export default class GridStackItem extends Component {
   }
 
   @action
-  resizeToContent() {
-    this.grid?.gridStack?.resizeToContent(this.elm);
+  resizeToContent(): void {
+    if (this.elm) this.grid?.gridStack?.resizeToContent(this.elm);
   }
 
   @action
-  willDestroyNode() {
+  private willDestroyNode() {
+    if (!this.elm) return;
     this.gridStackComponent?.removeWidget(this.elm);
     unregisterItemElement(this.elm);
   }

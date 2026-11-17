@@ -1,23 +1,34 @@
 import { getOwner } from '@ember/owner';
+import type GridStackComponent from '../components/grid-stack.gts';
+import type GridStackItem from '../components/grid-stack-item.gts';
+import type GridStackLayoutComponent from '../components/grid-stack-layout.gts';
+import type GridStackRegistry from '../services/grid-stack-registry.ts';
 
-const grids = new WeakMap();
+export type GridApi = GridStackComponent | GridStackLayoutComponent;
 
-export const registry = (component) =>
-  getOwner(component).lookup('service:grid-stack-registry');
+const grids = new WeakMap<Element, GridApi>();
 
-export const registerGridElement = (el, component) => grids.set(el, component);
+export const registry = (component: object): GridStackRegistry =>
+  getOwner(component)!.lookup(
+    'service:grid-stack-registry',
+  ) as GridStackRegistry;
 
-export const unregisterGridElement = (el) => grids.delete(el);
+export const registerGridElement = (el: Element, component: GridApi) =>
+  grids.set(el, component);
 
-const items = new WeakMap();
+export const unregisterGridElement = (el: Element) => grids.delete(el);
 
-export const registerItemElement = (el, item) => items.set(el, item);
+const items = new WeakMap<Element, GridStackItem>();
 
-export const unregisterItemElement = (el) => items.delete(el);
+export const registerItemElement = (el: Element, item: GridStackItem) =>
+  items.set(el, item);
 
-export const itemForElement = (el) => (el ? items.get(el) : undefined);
+export const unregisterItemElement = (el: Element) => items.delete(el);
 
-export const gridForElement = (el) => {
+export const itemForElement = (el: Element | undefined) =>
+  el ? items.get(el) : undefined;
+
+export const gridForElement = (el: Element | null | undefined) => {
   const gridEl = el?.closest?.('.grid-stack');
   return gridEl ? grids.get(gridEl) : undefined;
 };
