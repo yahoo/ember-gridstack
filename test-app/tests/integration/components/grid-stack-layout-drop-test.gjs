@@ -11,6 +11,12 @@ import { pointerDrag } from '../../helpers/grid';
 
 const lifecycle = { created: 0, destroyed: 0, seen: [] };
 
+const warnings = [];
+registerWarnHandler((message, options, next) => {
+  warnings.push(options?.id);
+  next(message, options);
+});
+
 class Counter extends Component {
   @tracked count = 0;
 
@@ -231,11 +237,7 @@ module('Integration | Component | grid stack layout drop', function (hooks) {
     const right = [{ id: 'a', x: 0, y: 0, w: 2, h: 2, component: 'counter' }];
     const dropped = [];
     const onDropped = (event, prev, next) => dropped.push({ prev, next });
-    const warnings = [];
-    registerWarnHandler((message, options, next) => {
-      warnings.push(options?.id);
-      next(message, options);
-    });
+    warnings.length = 0;
     await this.grid.render({
       template: (d) => <template>
         {{! template-lint-disable no-inline-styles }}
