@@ -619,7 +619,7 @@ h3 code {
   align-items: center;
   justify-content: center;
   min-width: 10rem;
-  height: 2.5rem;
+  height: 6rem;
   padding: 0 0.75rem;
   border: 1px dashed var(--muted);
   border-radius: var(--radius);
