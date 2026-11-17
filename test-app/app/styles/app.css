@@ -671,6 +671,37 @@ h3 code {
   }
 }
 
+.keep-example .toolbar {
+  gap: 0.75rem;
+}
+
+.keep-created {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.keep-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: auto;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: keep-spin 0.8s linear infinite;
+}
+
+@keyframes keep-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .keep-spinner {
+    animation: none;
+  }
+}
+
 .badge {
   border: 1px solid var(--border);
   border-radius: var(--radius);

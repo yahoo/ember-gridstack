@@ -18,6 +18,8 @@ import lockedSrc from 'test-app/components/examples/locked.gjs?raw';
 import dataModeSrc from 'test-app/components/examples/data-mode.gjs?raw';
 import TemplateDrops from 'test-app/components/examples/template-drops';
 import templateDropsSrc from 'test-app/components/examples/template-drops.gjs?raw';
+import Keep from 'test-app/components/examples/keep-instead-of-rebuild';
+import keepSrc from 'test-app/components/examples/keep-instead-of-rebuild.gjs?raw';
 
 const MODE_DESCRIPTIONS = {
   top: 'pulls widgets up',
@@ -97,6 +99,12 @@ export default class ApplicationController extends Controller {
       title: 'Cross-grid drops (template mode)',
       component: TemplateDrops,
       source: templateDropsSrc,
+    },
+    {
+      id: 'keep',
+      title: 'Keep instead of rebuild (unstable)',
+      component: Keep,
+      source: keepSrc,
     },
   ];
 
