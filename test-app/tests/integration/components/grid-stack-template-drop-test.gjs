@@ -271,6 +271,44 @@ module('Integration | Component | grid stack template drop', function (hooks) {
     await this.grid.destroy();
   });
 
+  test('a drop whose id already exists in the target is refused', async function (assert) {
+    const lists = new Lists();
+    lists.right = [{ id: 'a2', options: { id: 'a', x: 0, y: 0, w: 2, h: 2 } }];
+    const calls = [];
+    const h = moveHandler(lists, calls);
+    await this.grid.render({ template: twoGrids(lists, h) });
+    await click('[data-id="a"] .inc');
+    const created = lifecycle.created;
+    const before = { left: saved('#left'), right: saved('#right') };
+
+    await dragIntoRight(find('[data-id="a"]'));
+    await settled();
+    await dragIntoRight(find('[data-id="a"]'));
+    await settled();
+
+    assert.deepEqual(ids('#left'), ['a'], 'source keeps the widget');
+    assert.deepEqual(ids('#right'), ['a2']);
+    assert.deepEqual(nodeIds('#left'), ['a']);
+    assert.deepEqual(nodeIds('#right'), ['a']);
+    assert.deepEqual(saved('#left'), before.left);
+    assert.deepEqual(saved('#right'), before.right);
+    assert.dom('[data-id="a"] .inc').hasText('1');
+    assert.deepEqual(
+      calls.filter(([c]) => c === 'dropped'),
+      [],
+    );
+    assert.strictEqual(lifecycle.created, created, 'nothing rebuilt');
+    assert.strictEqual(lifecycle.created, lifecycle.destroyed + live());
+    assert.deepEqual(
+      warnings.filter((w) => w === 'ember-gridstack.drop-id-collision'),
+      ['ember-gridstack.drop-id-collision'],
+      'warned once',
+    );
+    assert.deepEqual(this.errors, []);
+    await this.grid.destroy();
+    assert.strictEqual(lifecycle.created, lifecycle.destroyed, 'no leaks');
+  });
+
   test('droppedFrom is cleared once the drop settled', async function (assert) {
     const lists = new Lists();
     let item;

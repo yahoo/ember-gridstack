@@ -3,6 +3,7 @@ import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 import { on } from '@ember/modifier';
 import { array, hash } from '@ember/helper';
+import { registerWarnHandler } from '@ember/debug';
 import { click, find, settled } from '@ember/test-helpers';
 import GridStack from 'ember-gridstack/components/grid-stack';
 import { setupGridTest } from '../../helpers/setup-grid-test';
@@ -221,6 +222,72 @@ module('Integration | Component | grid stack layout drop', function (hooks) {
       'created === destroyed + live',
     );
 
+    await this.grid.destroy();
+    assert.strictEqual(lifecycle.created, lifecycle.destroyed, 'no leaks');
+  });
+
+  test('a drop whose id already exists in the target is refused', async function (assert) {
+    const left = [{ id: 'a', x: 0, y: 0, w: 2, h: 2, component: 'counter' }];
+    const right = [{ id: 'a', x: 0, y: 0, w: 2, h: 2, component: 'counter' }];
+    const dropped = [];
+    const onDropped = (event, prev, next) => dropped.push({ prev, next });
+    const warnings = [];
+    registerWarnHandler((message, options, next) => {
+      warnings.push(options?.id);
+      next(message, options);
+    });
+    await this.grid.render({
+      template: (d) => <template>
+        {{! template-lint-disable no-inline-styles }}
+        {{#if d.visible}}
+          <div style="display: flex; width: 1000px">
+            <div style="width: 500px">
+              <GridStack
+                id="left"
+                @options={{hash acceptWidgets=true column=6 minRow=4}}
+                @layout={{left}}
+                @components={{components}}
+                @onDropped={{onDropped}}
+              />
+            </div>
+            <div style="width: 500px">
+              <GridStack
+                id="right"
+                @options={{hash acceptWidgets=true column=6 minRow=4}}
+                @layout={{right}}
+                @components={{components}}
+                @onDropped={{onDropped}}
+              />
+            </div>
+          </div>
+        {{/if}}
+      </template>,
+    });
+    const A = find('#left')._gridComp;
+    const B = find('#right')._gridComp;
+    await click('#left .inc');
+    const itemEl = find('#left [gs-id="a"]');
+    const created = lifecycle.created;
+    const before = { a: A.save(), b: B.save() };
+
+    await dragTo(itemEl, emptyCell(find('#right')));
+    await settled();
+    await dragTo(itemEl, emptyCell(find('#right')));
+    await settled();
+
+    assert.true(find('#left').contains(itemEl), 'source keeps the widget');
+    assert.dom('#left .inc').hasText('1');
+    assert.dom('#right .inc').hasText('0');
+    assert.deepEqual(A.save(), before.a);
+    assert.deepEqual(B.save(), before.b);
+    assert.deepEqual(dropped, []);
+    assert.strictEqual(lifecycle.created, created, 'nothing rebuilt');
+    assert.strictEqual(lifecycle.created, lifecycle.destroyed + live());
+    assert.deepEqual(
+      warnings.filter((w) => w === 'ember-gridstack.drop-id-collision'),
+      ['ember-gridstack.drop-id-collision'],
+      'warned once',
+    );
     await this.grid.destroy();
     assert.strictEqual(lifecycle.created, lifecycle.destroyed, 'no leaks');
   });
