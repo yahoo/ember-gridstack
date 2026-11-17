@@ -101,6 +101,15 @@
   "publishConfig": {
     "access": "public"
   },
+  "release-plan": {
+    "semverIncrementAs": {
+      "major": "premajor",
+      "minor": "prerelease",
+      "patch": "prerelease"
+    },
+    "semverIncrementTag": "alpha",
+    "publishTag": "alpha"
+  },
   "ember": {
     "edition": "octane"
   },
