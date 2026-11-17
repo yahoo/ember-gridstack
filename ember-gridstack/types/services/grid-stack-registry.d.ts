@@ -12,7 +12,4 @@ export default class GridStackRegistry extends Service {
   get(name: string): GridApi | undefined;
   registerName(name: string, grid: GridApi): void;
   unregisterName(name: string, grid: GridApi): void;
-  registerGrid(id: string, grid: GridStackComponent): void;
-  findGridComponent(element: Element): GridStackComponent | undefined;
-  unregisterGridComponent(id: string): void;
 }

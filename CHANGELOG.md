@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.0.0 (unreleased)
+
+- BREAKING: removed `registerGrid`, `findGridComponent` and `unregisterGridComponent` from the `grid-stack-registry` service; use `find(element)` or `get(name)`.
+- Cross-grid drops whose `id` already exists in the target grid are refused with a dev warning (`ember-gridstack.drop-id-collision`).
+
 ## [5.0.0](https://github.com/yahoo/ember-gridstack/compare/v4.0.1...v5.0.0) (2025-05-22)
 
 ### Features

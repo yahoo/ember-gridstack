@@ -348,7 +348,11 @@ Finds the API a grid yields (`as |grid|`), in template and data mode:
 - `find(target)`: `target` is any element inside a grid (or the `.grid-stack` itself) or a GridStack instance, e.g. `previousNode.grid` in `@onDropped`. Returns `undefined` when there is no rendered grid.
 - `get(name)`: the grid rendered with `<GridStack @name="…">`; names are unique while rendered.
 
-`registerGrid(id, grid)`, `findGridComponent(element)` and `unregisterGridComponent(id)` keep working.
+### 6.0 migration
+
+- `registerGrid`/`findGridComponent`/`unregisterGridComponent` are removed; use `registry.find(element)` or `registry.get(name)`.
+- A grid no longer finds its `<GridStackItem>`s through the registry by element id; items resolve their grid from the DOM.
+- A cross-grid drop whose `id` already exists in the target grid is refused, with a dev warning (`ember-gridstack.drop-id-collision`).
 
 ## Exports
 

@@ -404,23 +404,14 @@
               <code>@name</code>, or
               <code>undefined</code>.</td>
           </tr>
-          <tr>
-            <td><code>registerGrid(id, grid)</code></td>
-            <td>Register a grid component under its element id.</td>
-          </tr>
-          <tr>
-            <td><code>findGridComponent(element)</code></td>
-            <td>Return the component for the closest
-              <code>.grid-stack</code>
-              ancestor, or
-              <code>undefined</code>.</td>
-          </tr>
-          <tr>
-            <td><code>unregisterGridComponent(id)</code></td>
-            <td>Remove a grid from the registry.</td>
-          </tr>
         </tbody>
       </table>
+      <p><code>registerGrid</code>/<code>findGridComponent</code>/<code
+        >unregisterGridComponent</code>
+        are removed in 6.0; use
+        <code>registry.find(element)</code>
+        or
+        <code>registry.get(name)</code>.</p>
     </div>
   </section>
 </main>

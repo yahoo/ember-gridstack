@@ -81,11 +81,11 @@ module('Integration | Component | grid stack lifecycle', function (hooks) {
       </template>,
     });
     const registry = this.owner.lookup('service:grid-stack-registry');
-    const outer = registry.findGridComponent(find('.outer'));
-    const inner = registry.findGridComponent(find('.inner'));
+    const outer = registry.find(find('.outer'));
+    const inner = registry.find(find('.inner'));
     const innerItem = find('.inner-item');
     assert.notStrictEqual(outer, inner);
-    assert.strictEqual(registry.findGridComponent(innerItem), inner);
+    assert.strictEqual(registry.find(innerItem), inner);
     assert.strictEqual(innerItem.gridstackNode?.grid, inner.gridStack);
     assert.deepEqual(
       outer.gridStack.engine.nodes.map((n) => n.el),
