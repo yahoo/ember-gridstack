@@ -1,4 +1,9 @@
+import { getOwner } from '@ember/owner';
+
 const grids = new WeakMap();
+
+export const registry = (component) =>
+  getOwner(component).lookup('service:grid-stack-registry');
 
 export const registerGridElement = (el, component) => grids.set(el, component);
 

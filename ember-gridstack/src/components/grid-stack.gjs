@@ -31,6 +31,7 @@ import GridStackLayout from './grid-stack-layout.gjs';
 import {
   gridForElement,
   itemForElement,
+  registry,
   registerGridElement,
   unregisterGridElement,
 } from '../utils/grid-elements.js';
@@ -308,6 +309,11 @@ export default class GridStackComponent extends Component {
   setup(elm) {
     this.elm = elm;
     registerGridElement(elm, this);
+    this._name = this.args.name;
+    if (this._name) {
+      this._registry = registry(this);
+      this._registry.registerName(this._name, this);
+    }
     this._createGridStack();
   }
 
@@ -347,6 +353,7 @@ export default class GridStackComponent extends Component {
     });
     this._destroyGridStack();
     unregisterGridElement(this.elm);
+    this._registry?.unregisterName(this._name, this);
   }
 
   /** The GridStack instance, or `null` before insert / after destroy. */
@@ -408,6 +415,7 @@ export default class GridStackComponent extends Component {
     {{#if this.isLayoutMode}}
       <GridStackLayout
         @layout={{@layout}}
+        @name={{@name}}
         @options={{@options}}
         @components={{@components}}
         @onAdded={{@onAdded}}

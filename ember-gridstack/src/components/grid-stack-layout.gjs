@@ -17,6 +17,7 @@ import {
   layoutSave,
 } from '../utils/layout-callbacks.js';
 import {
+  registry,
   registerGridElement,
   unregisterGridElement,
 } from '../utils/grid-elements.js';
@@ -228,6 +229,11 @@ export default class GridStackLayoutComponent extends Component {
   setup(elm) {
     this.elm = elm;
     registerGridElement(elm, this);
+    this._name = this.args.name;
+    if (this._name) {
+      this._registry = registry(this);
+      this._registry.registerName(this._name, this.api);
+    }
     this._uninstall = installLayoutCallbacks();
     elm._gridComp = this;
     this._lastLayout = this.args.layout;
@@ -309,6 +315,7 @@ export default class GridStackLayoutComponent extends Component {
     delete this.elm._gridComp;
     this._uninstall?.();
     unregisterGridElement(this.elm);
+    this._registry?.unregisterName(this._name, this.api);
   }
 
   @action
