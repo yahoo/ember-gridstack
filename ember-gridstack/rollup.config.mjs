@@ -54,6 +54,9 @@ export default {
     // Ensure that .gjs files are properly integrated as Javascript
     addon.gjs(),
 
+    // Emit .d.ts declaration files
+    addon.declarations('declarations', 'pnpm ember-tsc --declaration'),
+
     // addons are allowed to contain imports of .css files, which we want rollup
     // to leave alone and keep in the published output.
     addon.keepAssets(['**/*.css']),
@@ -66,8 +69,6 @@ export default {
       targets: [
         { src: '../README.md', dest: '.' },
         { src: '../LICENSE.md', dest: '.' },
-        // hand-written; kept out of src/ so publicEntrypoints skips them
-        { src: 'types/*', dest: 'declarations' },
       ],
     }),
   ],
