@@ -12,7 +12,6 @@
  */
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
-import { service } from '@ember/service';
 import { action } from '@ember/object';
 import lifecycle from '../utils/lifecycle.js';
 import { applyItemAttributes } from '../modifiers/gs-item-attributes.js';
@@ -21,11 +20,8 @@ import {
   registerItemElement,
   unregisterItemElement,
 } from '../utils/grid-elements.js';
-import { incoming } from '../utils/cross-grid.js';
 
 export default class GridStackItem extends Component {
-  @service gridStackRegistry;
-
   @tracked elm;
 
   get element() {
@@ -40,14 +36,10 @@ export default class GridStackItem extends Component {
   get gridStackComponent() {
     if (this.args.grid) return this.args.grid;
     if (!this.elm) return undefined;
-    const legacyId = this.elm.closest('.grid-stack')?.id;
     return (
       gridForElement(this.elm) ??
       // detached on removal: gridstack still knows its grid
-      gridForElement(this.elm.gridstackNode?.grid?.el) ??
-      (legacyId && legacyId in this.gridStackRegistry._grids
-        ? this.gridStackRegistry.findGridComponent(this.elm)
-        : undefined)
+      gridForElement(this.elm.gridstackNode?.grid?.el)
     );
   }
 
@@ -70,7 +62,7 @@ export default class GridStackItem extends Component {
   // plain Map read: only meaningful while the drop renders this item
   get droppedFrom() {
     const id = this.args.options?.id;
-    return id === undefined ? undefined : incoming.get(id);
+    return id === undefined ? undefined : this.grid?._incoming?.get(id);
   }
 
   @action

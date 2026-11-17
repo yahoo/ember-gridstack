@@ -41,9 +41,11 @@ import {
   WARN_NEEDS_ID,
   WARN_NO_HANDLER,
   WARN_NOT_RENDERED,
+  WARN_ID_COLLISION,
+  ID_COLLISION_MESSAGE,
   departing,
   dropWarn,
-  incoming,
+  hasIdCollision,
 } from '../utils/cross-grid.js';
 import { applyItemAttributes } from '../modifiers/gs-item-attributes.js';
 
@@ -164,6 +166,13 @@ export default class GridStackComponent extends Component {
       }
       return false;
     }
+    if (hasIdCollision(this.gridStack, node)) {
+      if (!this._warnedCollision) {
+        this._warnedCollision = true;
+        dropWarn(ID_COLLISION_MESSAGE, WARN_ID_COLLISION);
+      }
+      return false;
+    }
     return true;
   };
 
@@ -217,6 +226,9 @@ export default class GridStackComponent extends Component {
   /** drop position per item id, applied when the target renders that item */
   _placements = new Map();
 
+  /** item id arriving here -> `{ grid, state }` (read as `item.droppedFrom`) */
+  _incoming = new Map();
+
   // Sync, before the target grid moves `el` out: mark its spot so the element
   // can go back there before Glimmer clears this grid's row.
   _markDeparting(nodes) {
@@ -248,7 +260,7 @@ export default class GridStackComponent extends Component {
         grid: claim.entry?.grid ?? gridForElement(previousNode.grid?.el),
         state: itemForElement(el)?._runBeforeRemove(),
       };
-      incoming.set(id, claim.incoming);
+      this._incoming.set(id, claim.incoming);
     }
     this.gridStack.removeWidget(el, false, false);
     return claim;
@@ -278,7 +290,7 @@ export default class GridStackComponent extends Component {
   }
 
   _checkDrop({ el, id, previousNode, entry, count, incoming: entering }) {
-    if (incoming.get(id) === entering) incoming.delete(id);
+    if (this._incoming.get(id) === entering) this._incoming.delete(id);
     this._placements.delete(id);
     if (this.isDestroying || this.isDestroyed) return;
     if (!previousNode) {

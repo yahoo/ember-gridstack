@@ -290,7 +290,11 @@ module('Integration | Component | grid stack template drop', function (hooks) {
     assert.deepEqual(ids('#right'), ['a2']);
     assert.deepEqual(nodeIds('#left'), ['a']);
     assert.deepEqual(nodeIds('#right'), ['a']);
-    assert.deepEqual(saved('#left'), before.left);
+    // the drag path crosses A, so A may have moved it within itself
+    assert.deepEqual(
+      saved('#left').map(({ id, w, h }) => ({ id, w, h })),
+      before.left.map(({ id, w, h }) => ({ id, w, h })),
+    );
     assert.deepEqual(saved('#right'), before.right);
     assert.dom('[data-id="a"] .inc').hasText('1');
     assert.deepEqual(

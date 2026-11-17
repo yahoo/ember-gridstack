@@ -22,9 +22,13 @@ import {
   unregisterGridElement,
 } from '../utils/grid-elements.js';
 import { GRID_STACK_EVENTS, capitalize } from '../utils/events.js';
+import {
+  ID_COLLISION_MESSAGE,
+  WARN_ID_COLLISION,
+  dropWarn,
+  hasIdCollision,
+} from '../utils/cross-grid.js';
 
-// source grid's `removed` fires before the target's `added`, both inside one drop
-const pendingDrops = new Map();
 const KEEP = Symbol('unstable_keep');
 
 class Widget {
@@ -84,7 +88,33 @@ export default class GridStackLayoutComponent extends Component {
   _records = new Map();
   /** records owned by another grid that this grid keeps rendering */
   _lent = new Map();
+  /** id leaving this grid -> drop info; `removed` fires before the target's `added` */
+  _pending = new Map();
   _flushScheduled = false;
+
+  // one stable function: a new one per update would make gridstack re-init
+  _accept = (el) => {
+    const option = this.args.options?.acceptWidgets;
+    let ok;
+    if (typeof option === 'function') ok = option(el);
+    else if (option === true) ok = el.matches('.grid-stack-item');
+    else ok = Boolean(option) && el.matches(option);
+    if (!ok) return false;
+    if (hasIdCollision(this.gridStack, el.gridstackNode)) {
+      if (!this._warnedCollision) {
+        this._warnedCollision = true;
+        dropWarn(ID_COLLISION_MESSAGE, WARN_ID_COLLISION);
+      }
+      return false;
+    }
+    return true;
+  };
+
+  _withAccept(opts) {
+    return opts?.acceptWidgets
+      ? { ...opts, acceptWidgets: this._accept }
+      : opts;
+  }
 
   get api() {
     return this;
@@ -134,9 +164,9 @@ export default class GridStackLayoutComponent extends Component {
         const lender = record.lentBy ?? this;
         lender._lent.set(ref.id, record);
         record.lentBy = lender;
-        pendingDrops.set(ref.id, { keep: true });
+        this._pending.set(ref.id, { keep: true });
       } else {
-        pendingDrops.set(ref.id, { grid: this.api, state });
+        this._pending.set(ref.id, { grid: this.api, state });
       }
     });
   }
@@ -183,8 +213,8 @@ export default class GridStackLayoutComponent extends Component {
     const { id } = ref;
     const prev = old._records.get(id);
     const node = el.gridstackNode;
-    const pending = pendingDrops.get(id);
-    pendingDrops.delete(id);
+    const pending = old._pending.get(id);
+    old._pending.delete(id);
     old._records.delete(id);
     old._scheduleFlush();
     ref.gridComp = this;
@@ -241,7 +271,7 @@ export default class GridStackLayoutComponent extends Component {
     try {
       this.gridStack = GridStack.init(
         {
-          ...this.args.options,
+          ...this._withAccept(this.args.options),
           children: this.args.layout ?? this.args.options?.children ?? [],
         },
         elm,
@@ -281,7 +311,7 @@ export default class GridStackLayoutComponent extends Component {
       this._lastOptions = options;
       // eslint-disable-next-line no-unused-vars
       const { children, ...opts } = options ?? {};
-      this.gridStack?.updateOptions(opts);
+      this.gridStack?.updateOptions(this._withAccept(opts));
     }
     if (layout !== this._lastLayout) {
       this._lastLayout = layout;
