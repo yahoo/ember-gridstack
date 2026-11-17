@@ -82,6 +82,7 @@
     "lint:hbs:fix": "ember-template-lint . --fix --no-error-on-unmatched-pattern",
     "lint:js": "eslint . --cache",
     "lint:js:fix": "eslint . --fix",
+    "lint:types": "ember-tsc --noEmit",
     "prepack": "rollup --config",
     "start": "rollup --config --watch",
     "test": "echo 'A v2 addon does not have tests, run tests in test-app'"
@@ -95,11 +96,16 @@
   "devDependencies": {
     "@babel/core": "^8.1.2",
     "@babel/eslint-parser": "^8.1.2",
+    "@babel/plugin-transform-typescript": "^8.0.6",
     "@babel/runtime": "^8.1.2",
+    "@ember/library-tsconfig": "^3.0.0",
     "@embroider/addon-dev": "^8.5.0",
     "@eslint/js": "^10.0.1",
     "@glimmer/component": "^2.2.1",
     "@glimmer/tracking": "^1.1.2",
+    "@glint/ember-tsc": "^1.14.4",
+    "@glint/template": "^1.11.1",
+    "@glint/tsserver-plugin": "^2.7.17",
     "@rollup/plugin-babel": "^7.1.0",
     "babel-plugin-ember-template-compilation": "^4.0.1",
     "concurrently": "^10.0.7",
@@ -115,7 +121,9 @@
     "prettier": "^3.10.1",
     "prettier-plugin-ember-template-tag": "^2.1.8",
     "rollup": "^4.68.5",
-    "rollup-plugin-copy": "^3.5.0"
+    "rollup-plugin-copy": "^3.5.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.73.0"
   },
   "peerDependencies": {
     "@glimmer/component": "^1.1.2 || ^2.0.0",
