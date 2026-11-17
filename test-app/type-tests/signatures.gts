@@ -1,12 +1,22 @@
 // Type-checked by `pnpm lint:types`; never built or run.
+import Component from '@glimmer/component';
+import type Owner from '@ember/owner';
+import type { TemplateOnlyComponent } from '@ember/component/template-only';
 import { fn, hash } from '@ember/helper';
 import { on } from '@ember/modifier';
 import {
   GridStack,
   GridStackItem,
+  GridStackLayout,
   gsItemAttributes,
   GRID_STACK_EVENTS,
+  type BeforeRemoveContext,
+  type DroppedFrom,
   type GridStackSignature,
+  type LayoutWidget,
+  type LayoutWidgetContext,
+  type WidgetComponent,
+  type WidgetComponentSignature,
 } from 'ember-gridstack';
 
 type Args = GridStackSignature['Args'];
@@ -37,4 +47,40 @@ const events: string[] = GRID_STACK_EVENTS;
     {{grid.instance.el.id}}
   </GridStack>
   <div {{gsItemAttributes (hash x=1 y=2)}}></div>
+  <GridStack
+    @layout={{layout}}
+    @components={{components}}
+    @onDropped={{onDropped}}
+  />
+  <GridStackLayout @layout={{layout}} as |widget grid|>
+    {{keepOrCount widget}}
+    {{widget.droppedFrom.grid.instance.el.id}}
+    {{grid.instance.el.id}}
+  </GridStackLayout>
 </template>
+
+class Note extends Component<WidgetComponentSignature> {
+  count: number;
+
+  constructor(owner: Owner, args: WidgetComponentSignature['Args']) {
+    super(owner, args);
+    const from: DroppedFrom | undefined = args.widget.droppedFrom;
+    this.count = typeof from?.state === 'number' ? from.state : 0;
+    const off: () => void = args.widget.beforeRemove(
+      ({ unstable_keep }) => unstable_keep?.() ?? this.count,
+    );
+    off();
+  }
+}
+
+const Label: TemplateOnlyComponent<WidgetComponentSignature> = <template>
+  {{@widget.id}}
+</template>;
+const components: Record<string, WidgetComponent> = {
+  note: Note,
+  label: Label,
+};
+const layout: LayoutWidget[] = [{ id: 'a', component: 'note', props: {} }];
+const keepOrCount = (widget: LayoutWidgetContext): void => {
+  widget.beforeRemove((ctx: BeforeRemoveContext) => ctx.unstable_keep?.());
+};

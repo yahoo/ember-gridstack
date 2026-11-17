@@ -1,4 +1,5 @@
 import Component from '@glimmer/component';
+import type { LayoutWidget, WidgetComponent } from './grid-stack-layout';
 import type {
   AddRemoveFcn,
   CompactOptions,
@@ -26,9 +27,8 @@ export interface GridStackSignature {
   Args: {
     options?: GridStackOptions;
     /** data mode: see `grid-stack-layout` */
-    layout?: GridStackWidget[];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    components?: Record<string, any>;
+    layout?: LayoutWidget[];
+    components?: Record<string, WidgetComponent>;
     onAdded?: NodesHandler;
     onChange?: NodesHandler;
     onRemoved?: NodesHandler;

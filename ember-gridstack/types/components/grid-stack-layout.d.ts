@@ -1,4 +1,5 @@
 import Component from '@glimmer/component';
+import type { TemplateOnlyComponent } from '@ember/component/template-only';
 import type {
   GridItemHTMLElement,
   GridStack,
@@ -21,18 +22,47 @@ export interface LayoutWidgetContext {
   readonly node: GridStackNode;
   readonly element: GridItemHTMLElement;
   readonly contentElement: HTMLElement;
-  /** survives a cross-grid move */
-  state: Record<string, unknown>;
+  /** the grid that owns the widget (tracked; changes on an `unstable_keep` drop) */
+  readonly grid: GridStackLayoutComponent;
+  /** set while a widget rebuilt by a cross-grid drop is first rendered */
+  readonly droppedFrom?: DroppedFrom;
   registerSerializer(fn: () => Record<string, unknown>): () => void;
+  /**
+   * Runs before a cross-grid drop rebuilds the widget elsewhere; the first
+   * non-undefined return value becomes `droppedFrom.state` in the new grid.
+   */
+  beforeRemove(fn: (ctx: BeforeRemoveContext) => unknown): () => void;
   resizeToContent(): void;
 }
+
+export interface DroppedFrom {
+  grid: GridStackLayoutComponent;
+  state: unknown;
+}
+
+export interface BeforeRemoveContext {
+  /** Data mode only, source grid alive: return its result to keep the component instance. Unstable. */
+  unstable_keep?: () => unknown;
+}
+
+export interface WidgetComponentSignature {
+  Args: {
+    props?: Record<string, unknown>;
+    grid: GridStackLayoutComponent;
+    widget: LayoutWidgetContext;
+  };
+}
+
+/** A component class or template-only component rendered for a widget. */
+export type WidgetComponent =
+  | (abstract new (owner: never, args: never) => object)
+  | TemplateOnlyComponent<never>;
 
 export interface GridStackLayoutSignature {
   Args: GridStackSignature['Args'] & {
     layout?: LayoutWidget[];
     options?: GridStackOptions;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    components?: Record<string, any>;
+    components?: Record<string, WidgetComponent>;
   };
   Blocks: {
     default: [widget: LayoutWidgetContext, grid: GridStackLayoutComponent];
