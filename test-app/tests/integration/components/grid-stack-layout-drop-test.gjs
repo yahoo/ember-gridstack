@@ -425,7 +425,8 @@ module('Integration | Component | grid stack layout drop', function (hooks) {
     });
   }
 
-  test('demo geometry: a full-width thin trash bar is not hit (overlap measured against the smaller area)', async function (assert) {
+  // gridstack 14.1.1 measures the grabbed handle box, not the whole widget, so the thin bar now counts as a hit
+  test('demo geometry: a full-width thin trash bar is hit (gridstack 14.1.1 measures the grabbed handle)', async function (assert) {
     const left = [{ id: 'a', x: 0, y: 0, w: 2, h: 2, component: 'counter' }];
     const right = [];
     const onDropped = () => {};
@@ -460,9 +461,9 @@ module('Integration | Component | grid stack layout drop', function (hooks) {
       </template>,
     });
     const over = await dragOnto(find('[gs-id="a"]'), find('.data-mode-trash'));
-    assert.false(over, 'trash is not highlighted');
-    assert.dom('[gs-id="a"]').exists();
-    assert.strictEqual(lifecycle.destroyed, 0);
+    assert.true(over, 'trash is highlighted');
+    assert.dom('[gs-id="a"]').doesNotExist();
+    assert.strictEqual(lifecycle.destroyed, 1);
     await this.grid.destroy();
   });
 
