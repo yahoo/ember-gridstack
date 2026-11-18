@@ -1,0 +1,23 @@
+name: Release Label
+
+on:
+  pull_request:
+    types: [opened, edited, labeled, unlabeled, synchronize, reopened]
+
+permissions: {}
+
+jobs:
+  check:
+    if: github.head_ref != 'release-preview'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Exactly one release label
+        env:
+          LABELS: ${{ toJson(github.event.pull_request.labels.*.name) }}
+        run: |
+          count=$(jq -r '[.[] | select(IN("breaking","enhancement","bug","documentation","internal"))] | length' <<<"$LABELS")
+          if [ "$count" -ne 1 ]; then
+            echo "::error::Add exactly one release label: breaking, enhancement, bug, documentation or internal. See https://github.com/yahoo/ember-gridstack/blob/main/CONTRIBUTING.md#pull-request-labels"
+            exit 1
+          fi
