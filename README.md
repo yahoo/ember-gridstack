@@ -363,6 +363,10 @@ Finds the API a grid yields (`as |grid|`), in template and data mode:
 
 Each deep path also resolves with a `.js` suffix. Types ship in `declarations/` and are picked up through `exports`.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Releasing: see [RELEASE.md](RELEASE.md).
+
 ## Touch Support
 
 For touch support do the following
