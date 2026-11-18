@@ -34,10 +34,10 @@ or add it with your package manager, e.g. `pnpm add -D ember-gridstack` or `npm 
 - No generated element ids: grids are found through their element, so you can set your own `id` on `<GridStack>` and `<GridStackItem>`.
 - `item.element` is `undefined` until the item is inserted.
 - Event delivery is no longer coalesced: every gridstack event reaches its `@on*` action, in order, with its own arguments, even several in one run loop.
-- The `grid-stack-registry` service finds grids by element, GridStack instance or `@name` (`find`, `get`); its old methods still work.
+- The `grid-stack-registry` service finds grids by element, GridStack instance or `@name` (`find`, `get`). `registerGrid`, `findGridComponent` and `unregisterGridComponent` are removed.
 - An item dropped on another grid (`acceptWidgets`) is now removed from the source and created fresh in the target by your `@onDropped`; a grid with `acceptWidgets` and no `@onDropped` refuses drops. See [Cross-grid drops](#cross-grid-drops-template-mode).
 - `@ember/render-modifiers` is no longer a dependency. Add it to your app yourself if you used it through this addon.
-- `package.json` `exports` is explicit: only the package root, `components/grid-stack`, `components/grid-stack-item`, `modifiers/gs-item-attributes` and `services/grid-stack-registry` (with or without `.js`) can be imported. Deep imports of any other path break.
+- `package.json` has an `exports` map. The public import paths are the package root and `components/*`, `modifiers/*` and `services/*` (with or without `.js`). Other paths such as `utils/*` still resolve, but they are private and can change in any release.
 - New root named exports: `import { GridStack, GridStackItem, gsItemAttributes, GridStackRegistry, GRID_STACK_EVENTS } from 'ember-gridstack'`.
 - TypeScript / Glint types ship in `declarations/`: `GridStackSignature`, `GridStackItemSignature`, `GsItemAttributesSignature`. They change nothing for JavaScript users.
 - The yielded grid and item have new members, see [Yields](#yields).
