@@ -5,11 +5,11 @@ Ember components to build drag-and-drop multi-column grids powered by [gridstack
 ## Compatibility
 
 - Ember.js (`ember-source`) v4.12 or above
-- Ember CLI v4.12 or above, with ember-auto-import v2 or Embroider
+- Build setups: Vite + Embroider, or classic ember-cli with ember-auto-import v2 or above (no Embroider required)
 - gridstack.js v14
 - Node.js v20.19 or above
 - Published as a v2 (Embroider) addon
-- Tested against Ember 4.12, 5.12, 6.12 (LTS), release and beta, in a Vite + Embroider app
+- Tested against Ember 4.12, 5.12, 6.12 (LTS), release and beta, in a Vite + Embroider app; classic ember-cli + ember-auto-import v2 build checked in CI
 
 ## Installation
 
@@ -34,7 +34,9 @@ or add it with your package manager, e.g. `pnpm add -D ember-gridstack` or `npm 
 - No generated element ids: grids are found through their element, so you can set your own `id` on `<GridStack>` and `<GridStackItem>`.
 - `item.element` is `undefined` until the item is inserted.
 - Event delivery is no longer coalesced: every gridstack event reaches its `@on*` action, in order, with its own arguments, even several in one run loop.
-- The `grid-stack-registry` service finds grids by element, GridStack instance or `@name` (`find`, `get`). `registerGrid`, `findGridComponent` and `unregisterGridComponent` are removed.
+- The `grid-stack-registry` service finds grids by element, GridStack instance or `@name` (`find`, `get`). `registerGrid`, `findGridComponent` and `unregisterGridComponent` are removed; use `registry.find(element)` or `registry.get(name)`.
+- A grid no longer finds its `<GridStackItem>`s through the registry by element id; items resolve their grid from the DOM.
+- A cross-grid drop whose `id` already exists in the target grid is refused, with a dev warning (`ember-gridstack.drop-id-collision`).
 - An item dropped on another grid (`acceptWidgets`) is now removed from the source and created fresh in the target by your `@onDropped`; a grid with `acceptWidgets` and no `@onDropped` refuses drops. See [Cross-grid drops](#cross-grid-drops-template-mode).
 - `@ember/render-modifiers` is no longer a dependency. Add it to your app yourself if you used it through this addon.
 - `package.json` has an `exports` map. The public import paths are the package root and `components/*`, `modifiers/*` and `services/*` (with or without `.js`). Other paths such as `utils/*` still resolve, but they are private and can change in any release.
@@ -347,12 +349,6 @@ Finds the API a grid yields (`as |grid|`), in template and data mode:
 
 - `find(target)`: `target` is any element inside a grid (or the `.grid-stack` itself) or a GridStack instance, e.g. `previousNode.grid` in `@onDropped`. Returns `undefined` when there is no rendered grid.
 - `get(name)`: the grid rendered with `<GridStack @name="…">`; names are unique while rendered.
-
-### 6.0 migration
-
-- `registerGrid`/`findGridComponent`/`unregisterGridComponent` are removed; use `registry.find(element)` or `registry.get(name)`.
-- A grid no longer finds its `<GridStackItem>`s through the registry by element id; items resolve their grid from the DOM.
-- A cross-grid drop whose `id` already exists in the target grid is refused, with a dev warning (`ember-gridstack.drop-id-collision`).
 
 ## Exports
 
