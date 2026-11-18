@@ -15,6 +15,7 @@
     "start:addon": "pnpm --filter ember-gridstack start --no-watch.clearScreen",
     "start:test-app": "pnpm --filter test-app start",
     "test": "pnpm lint && pnpm test:ember",
+    "test:classic": "bash build-scripts/check-classic.sh",
     "test:ember": "pnpm --filter '*' test:ember",
     "test:try": "./build-scripts/try-scenarios.sh"
   },
