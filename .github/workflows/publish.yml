@@ -1,5 +1,5 @@
 # Push (.release-plan.json changed) or manual run: stages an unpublished version with `npm stage publish`,
-# waits up to 24 hours for owner approval on npm, then tags it and creates the GitHub release.
+# waits up to 1 hour for owner approval on npm, then tags it and creates the GitHub release.
 # A manual run for an approved but untagged version only tags and releases.
 
 name: Publish
@@ -53,9 +53,12 @@ jobs:
     needs: detect
     if: needs.detect.outputs.published == 'false'
     runs-on: ubuntu-latest
+    timeout-minutes: 75
     permissions:
       contents: read
       id-token: write
+    outputs:
+      approved: ${{ steps.wait.outputs.approved }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { persist-credentials: false }
@@ -84,96 +87,29 @@ jobs:
           {
             echo "**Approve: https://www.npmjs.com/package/ember-gridstack (Staged Packages tab, 2FA) or \`npm stage approve <id>\`.**"
             echo
-            echo "Staged ember-gridstack@$VERSION (tag \`$PUBLISH_TAG\`). This run waits up to 24 hours for approval, then creates the git tag and GitHub release."
+            echo "Staged ember-gridstack@$VERSION (tag \`$PUBLISH_TAG\`). This run waits up to 1 hour for approval, then creates the git tag and GitHub release."
           } >> "$GITHUB_STEP_SUMMARY"
-
-  # Hosted jobs are capped at 6 hours, so the 24-hour wait is split into four chained jobs.
-  wait-1:
-    needs: [detect, stage]
-    runs-on: ubuntu-latest
-    timeout-minutes: 355
-    permissions:
-      contents: read
-    outputs:
-      approved: ${{ steps.wait.outputs.approved }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { persist-credentials: false }
-      - id: wait
-        run: bash build-scripts/wait-for-npm.sh "$VERSION" 350
+      - name: Wait for approval
+        id: wait
         env:
           VERSION: ${{ needs.detect.outputs.version }}
-
-  wait-2:
-    needs: [detect, wait-1]
-    if: needs.wait-1.outputs.approved == 'false'
-    runs-on: ubuntu-latest
-    timeout-minutes: 355
-    permissions:
-      contents: read
-    outputs:
-      approved: ${{ steps.wait.outputs.approved }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { persist-credentials: false }
-      - id: wait
-        run: bash build-scripts/wait-for-npm.sh "$VERSION" 350
-        env:
-          VERSION: ${{ needs.detect.outputs.version }}
-
-  wait-3:
-    needs: [detect, wait-2]
-    if: needs.wait-2.outputs.approved == 'false'
-    runs-on: ubuntu-latest
-    timeout-minutes: 355
-    permissions:
-      contents: read
-    outputs:
-      approved: ${{ steps.wait.outputs.approved }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { persist-credentials: false }
-      - id: wait
-        run: bash build-scripts/wait-for-npm.sh "$VERSION" 350
-        env:
-          VERSION: ${{ needs.detect.outputs.version }}
-
-  wait-4:
-    needs: [detect, wait-3]
-    if: needs.wait-3.outputs.approved == 'false'
-    runs-on: ubuntu-latest
-    timeout-minutes: 355
-    permissions:
-      contents: read
-    outputs:
-      approved: ${{ steps.wait.outputs.approved }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with: { persist-credentials: false }
-      - id: wait
-        run: bash build-scripts/wait-for-npm.sh "$VERSION" 350
-        env:
-          VERSION: ${{ needs.detect.outputs.version }}
-      - if: steps.wait.outputs.approved == 'false'
         run: |
+          for _ in $(seq 60); do
+            if npm view "ember-gridstack@$VERSION" version --registry https://registry.npmjs.org/ >/dev/null 2>&1; then
+              echo "approved=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 60
+          done
+          echo "approved=false" >> "$GITHUB_OUTPUT"
           {
-            echo "Not approved within 24 hours. To finish the release:"
             echo
-            echo "1. Approve the staged version at https://www.npmjs.com/package/ember-gridstack (Staged Packages, 2FA), or \`npm stage approve <id>\`."
-            echo "2. Run Publish from the Actions tab; it sees the version on npm and tags and releases."
-            echo
-            echo "If the stage was rejected or expired, merge a new Prepare Release PR."
+            echo "Not approved within 1 hour. Approve on npm, then run Publish from the Actions tab (Run workflow) to create the tag and GitHub release. If the stage was rejected, merge a new Prepare Release PR."
           } >> "$GITHUB_STEP_SUMMARY"
 
   release:
-    needs: [detect, wait-1, wait-2, wait-3, wait-4]
-    if: >-
-      always() && needs.detect.result == 'success' &&
-      ((needs.detect.outputs.published == 'true' && needs.detect.outputs.tagged == 'false') ||
-      (needs.wait-1.result == 'success' && needs.wait-1.outputs.approved == 'true') ||
-      (needs.wait-2.result == 'success' && needs.wait-2.outputs.approved == 'true') ||
-      (needs.wait-3.result == 'success' && needs.wait-3.outputs.approved == 'true') ||
-      (needs.wait-4.result == 'success' && needs.wait-4.outputs.approved == 'true'))
+    needs: [detect, stage]
+    if: always() && needs.detect.result == 'success' && ((needs.detect.outputs.published == 'true' && needs.detect.outputs.tagged == 'false') || needs.stage.outputs.approved == 'true')
     runs-on: ubuntu-latest
     permissions:
       contents: write
