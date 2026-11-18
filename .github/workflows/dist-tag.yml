@@ -28,9 +28,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    environment: npm-admin
+      id-token: write
     concurrency:
-      group: npm-admin
+      group: dist-tag
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -42,7 +42,7 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
-      - run: npm install -g npm@^11.5.1
+      - run: npm install -g npm@11.21.0
       - name: Validate inputs
         env:
           VERSION: ${{ inputs.version }}
@@ -71,7 +71,6 @@ jobs:
       - name: Apply
         if: ${{ !inputs.dry_run }}
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           VERSION: ${{ inputs.version }}
           TAG: ${{ inputs.tag }}
           ACTION: ${{ inputs.action }}
