@@ -1,4 +1,4 @@
-name: npm deprecate
+name: npm deprecate (dry run)
 
 on:
   workflow_dispatch:
@@ -8,14 +8,10 @@ on:
         type: string
         required: true
       message:
-        description: 'Deprecation message (empty = undeprecate)'
+        description: 'Deprecation message for the printed command (empty = undeprecate)'
         type: string
         required: false
         default: ''
-      dry_run:
-        description: 'Only print what would happen'
-        type: boolean
-        default: true
 
 permissions: {}
 
@@ -24,10 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    environment: npm-admin
-    concurrency:
-      group: npm-admin
-      cancel-in-progress: false
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { persist-credentials: false }
@@ -38,8 +30,7 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
-      - run: npm install -g npm@^11.5.1
-      - name: Validate inputs and list matches
+      - name: List matches and print command
         env:
           RANGE: ${{ inputs.range }}
           MESSAGE: ${{ inputs.message }}
@@ -60,14 +51,8 @@ jobs:
           {
             echo "### Matching versions"
             echo; echo '```'; cat "$RUNNER_TEMP/matches.txt"; echo '```'; echo
-            echo "### Command"
+            echo "### Run locally (needs 2FA)"
             echo; echo '```'; echo "npm deprecate \"ember-gridstack@$RANGE\" \"$MESSAGE\""; echo '```'
             if [[ -z "$MESSAGE" ]]; then echo; echo "Empty message: undeprecates the matching versions."; fi
+            echo; echo "CI never deprecates; a maintainer runs this command locally."
           } >> "$GITHUB_STEP_SUMMARY"
-      - name: Apply
-        if: ${{ !inputs.dry_run }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          RANGE: ${{ inputs.range }}
-          MESSAGE: ${{ inputs.message }}
-        run: npm deprecate "ember-gridstack@$RANGE" "$MESSAGE"
