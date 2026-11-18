@@ -26,7 +26,15 @@ When reviewing merged PR's the labels to be used are:
 
 Once the prep work is completed, the actual release is straight forward: you just need to merge the open [Plan Release](https://github.com/yahoo/ember-gridstack/pulls?q=is%3Apr+is%3Aopen+%22Prepare+Release%22+in%3Atitle) PR.
 
-The `Plan Release` workflow (`.github/workflows/plan-release.yml`) keeps that PR up to date on every push to `main` and whenever a PR label changes. Merging it changes `.release-plan.json`, which triggers `.github/workflows/publish.yml`: it publishes to npm with trusted publishing and provenance (no npm token), and creates the git tag and GitHub release.
+The `Plan Release` workflow (`.github/workflows/plan-release.yml`) keeps that PR up to date on every push to `main` and whenever a PR label changes. Merging it changes `.release-plan.json`, which triggers `.github/workflows/publish.yml`. Publishing takes two runs:
+
+1. **Stage.** The version is not on npm yet, so the workflow runs `npm stage publish` with trusted publishing (OIDC) and provenance (no npm token). It stops after staging; the job summary has the version and dist-tag. No git tag or GitHub release is created yet.
+2. **Approve.** An npm maintainer approves the staged version with 2FA on the [package page](https://www.npmjs.com/package/ember-gridstack) (Staged Packages tab), or with `npm stage approve <id>`.
+3. **Tag and release.** Re-run the workflow (re-run the job, or start **Publish Stable** from the Actions tab on `main`). The version is now on npm, so `release-plan publish` skips the npm publish and only creates the git tag and GitHub release.
+
+Do not re-run the workflow before the staged version is approved or rejected: a second run stages another copy. If that happens, approve or reject the older staged copy first.
+
+All workflows pin npm `11.21.0` (`npm stage` needs >= 11.15.0, OIDC `npm dist-tag` needs >= 11.21.0).
 
 ## Channels
 
@@ -53,28 +61,30 @@ Commit the resulting `ember-gridstack/package.json` change in its own PR. The co
 - **Going stable:** `pnpm release:channel stable` deletes the block; the next release of `6.0.0-rc.N` is `6.0.0` on `latest`.
 - `publish.yml` and the CI dry run read the channel from `package.json` (`release-channel.mts status`), so no workflow edits are needed; release-plan itself has no `--tag` option and uses `publishTag`.
 
-Promoting an already published version (e.g. make `6.0.0-rc.2` `latest`, or fix a wrong tag): run the **npm dist-tag** workflow (`.github/workflows/dist-tag.yml`) with `action: add`, `tag: latest`. Remove a stale tag (e.g. `alpha` after 6.0.0 ships) with `action: rm`; `latest` cannot be removed. Both start as a dry run; uncheck `dry_run` to apply.
+Promoting an already published version (e.g. make `6.0.0-rc.2` `latest`, or fix a wrong tag): run the **npm dist-tag** workflow (`.github/workflows/dist-tag.yml`) with `action: add`, `tag: latest`. Remove a stale tag (e.g. `alpha` after 6.0.0 ships) with `action: rm`; `latest` cannot be removed. Both start as a dry run; uncheck `dry_run` to apply. The workflow authenticates with OIDC through a second trusted publisher for `dist-tag.yml` (see One-time setup) and needs npm >= 11.21.0.
 
 ## Deprecating versions
 
-Use the **npm deprecate** workflow (`.github/workflows/deprecate.yml`). It lists the published versions matching the range (prereleases included) and the exact command; uncheck `dry_run` to apply.
+Use the **npm deprecate (dry run)** workflow (`.github/workflows/deprecate.yml`). It lists the published versions matching the range (prereleases included) and prints the exact command. CI never deprecates (OIDC is not documented for `npm deprecate`); a maintainer runs the command locally with 2FA:
+
+```sh
+npm deprecate "ember-gridstack@<range>" "<message>"
+```
 
 - When a stable major ships, deprecate its prereleases, e.g. range `>=6.0.0-0 <6.0.0`, message `Use ember-gridstack@6 (6.0.0)`.
 - Deprecate an old major only once it is no longer supported, with an upgrade pointer, e.g. `<5` with `ember-gridstack <5 is unsupported; upgrade to ember-gridstack@6`.
 - An empty message undeprecates the matching versions.
 
-`dist-tag.yml` and `deprecate.yml` authenticate with `NPM_TOKEN`, not trusted publishing: npm's trusted publisher is bound to `publish.yml`, and `npm deprecate` does not attempt an OIDC token exchange.
-
 ## Dry run
 
-Every pull request runs the `release-dry-run` job in `.github/workflows/ci.yml` without secrets: it builds the addon, checks the tarball contents (`build-scripts/check-pack.sh`), runs `npm publish --dry-run --tag <dist-tag of the current channel>`, writes the channel, dist-tag and next versions plus `release-plan explain-plan` output to the job summary. The preview step is non-blocking, since it fails while any merged PR is unlabelled.
+Every pull request runs the `release-dry-run` job in `.github/workflows/ci.yml` without secrets: it builds the addon, checks the tarball contents (`build-scripts/check-pack.sh`), runs `npm stage publish --dry-run --tag <dist-tag of the current channel>`, writes the channel, dist-tag and next versions plus `release-plan explain-plan` output to the job summary. The preview step is non-blocking, since it fails while any merged PR is unlabelled.
 
 Locally:
 
 ```sh
 pnpm build
 bash build-scripts/check-pack.sh
-(cd ember-gridstack && npm publish --dry-run --tag "$(node ../build-scripts/release-channel.mts status --package package.json | sed -n 's/^publish-tag=//p')" --provenance=false)
+(cd ember-gridstack && npx -y npm@11.21.0 stage publish --dry-run --tag "$(node ../build-scripts/release-channel.mts status --package package.json | sed -n 's/^publish-tag=//p')" --provenance=false)
 GITHUB_AUTH=<read-only token> pnpm exec release-plan explain-plan
 ```
 
@@ -85,12 +95,14 @@ If the workflows cannot be used, from a clean checkout of `main`:
 1. `GITHUB_AUTH=<token> pnpm exec release-plan prepare`, then open a PR with the result and merge it.
 2. From a clean checkout of the merged `main`: `GITHUB_AUTH=<token> pnpm exec release-plan publish --otp=<code>`.
 
-Only do this as an npm maintainer with 2FA; never publish from a machine that skipped CI on that commit. Prefer fixing the workflow, since only CI publishes with provenance.
+Only do this as an npm maintainer with interactive 2FA; never publish from a machine that skipped CI on that commit. Direct publishing with bypass-2FA tokens ends around January 2027. Prefer fixing the workflow, since only CI publishes with provenance.
 
 ## One-time setup (repository owner)
 
-- npm: configure a trusted publisher for `ember-gridstack`: repository `yahoo/ember-gridstack`, workflow file `publish.yml`, no environment.
-- GitHub: create the environment `npm-admin` with required reviewers. Add `NPM_TOKEN` as an **environment** secret there (not a repository secret): a granular npm token, read-write, limited to `ember-gridstack`, short expiry. Only `dist-tag.yml` and `deprecate.yml` use it.
+- npm: configure a trusted publisher for `ember-gridstack`: repository `yahoo/ember-gridstack`, workflow file `publish.yml`, no environment. Direct `npm publish` is not allowed for it, only `npm stage publish`.
+- npm: add a second trusted publisher: repository `yahoo/ember-gridstack`, workflow file `dist-tag.yml`, no environment, with only "Allow npm dist-tag" checked. `dist-tag.yml` fails until it exists.
+- npm: under the package's Publishing access, choose "Require two-factor authentication and disallow bypass 2fa tokens".
+- No npm tokens or GitHub environments are used.
 - GitHub: create the labels `breaking`, `enhancement`, `bug`, `documentation`, `internal`. They must exist before Dependabot can apply `internal` to its PRs.
 - Rename the default branch to `main` (the workflows only run for `main`).
 - Pushing the `alpha` branch no longer releases anything; alphas are published from `main`.
