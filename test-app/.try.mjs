@@ -36,5 +36,11 @@ export default {
         devDependencies: { 'ember-source': await getChannelURL('beta') },
       },
     },
+    {
+      name: 'ember-canary',
+      npm: {
+        devDependencies: { 'ember-source': await getChannelURL('canary') },
+      },
+    },
   ],
 };

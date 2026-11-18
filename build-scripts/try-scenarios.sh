@@ -30,8 +30,12 @@ for name in "${scenarios[@]}"; do
   if pnpm exec try apply "$name" && SKIP_DECLARATIONS=1 pnpm install --no-frozen-lockfile && pnpm test:ember; then
     echo "=== $name: PASS"
   else
-    echo "=== $name: FAIL"
-    failed+=("$name")
+    if [ "$name" = ember-canary ]; then
+      echo "=== $name: FAIL (allowed)"
+    else
+      echo "=== $name: FAIL"
+      failed+=("$name")
+    fi
   fi
   restore
 done
