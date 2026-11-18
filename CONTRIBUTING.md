@@ -35,7 +35,7 @@ test-app lists the addon as an injected dependency. It stays a symlink unless a 
 
 GitHub Actions runs CI (`.github/workflows/ci.yml`) on pull requests and on pushes to `main` and `alpha`: a lint job, a test job, and one job per try scenario in `test-app/.try.mjs`. Every job must pass.
 
-Releases are done with [release-plan](https://github.com/embroider-build/release-plan); see [`RELEASE.md`](RELEASE.md). On pull requests, the `release-dry-run` job builds the addon, checks the package contents, runs `npm publish --dry-run` and previews the release plan in the job summary.
+Releases are done with [release-plan](https://github.com/embroider-build/release-plan); see [`RELEASE.md`](RELEASE.md). On pull requests, the `release-dry-run` job builds the addon, checks the package contents, runs `npm stage publish --dry-run` and previews the release plan in the job summary.
 
 ## Pull request labels
 
