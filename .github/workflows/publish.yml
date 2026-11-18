@@ -1,5 +1,6 @@
-# For every push to the primary branch with .release-plan.json modified,
-# runs release-plan.
+# For every push to the primary branch with .release-plan.json modified (or a manual run):
+# if the version is not on npm yet, stages it with `npm stage publish` for owner approval;
+# once approved and on npm, a re-run tags it and creates the GitHub release.
 
 name: Publish Stable
 
@@ -17,12 +18,78 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  publish:
-    name: 'NPM Publish'
+  detect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+      published: ${{ steps.check.outputs.published }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+      - id: check
+        run: |
+          VERSION=$(node -p "require('./ember-gridstack/package.json').version")
+          if out=$(npm view "ember-gridstack@$VERSION" version --registry https://registry.npmjs.org/ 2>&1); then
+            published=true
+          elif grep -q E404 <<<"$out"; then
+            published=false
+          else
+            echo "$out"; exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "published=$published" >> "$GITHUB_OUTPUT"
+
+  stage:
+    needs: detect
+    if: needs.detect.outputs.published == 'false'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      # npm stage publish needs >= 11.15.0 and OIDC dist-tag >= 11.21.0; Node 22 ships npm 10.
+      - run: npm install -g npm@11.21.0
+      - run: pnpm install --frozen-lockfile
+      - id: channel
+        run: node build-scripts/release-channel.mts status --github-output >> "$GITHUB_OUTPUT"
+      - run: pnpm build
+      - name: Stage on npm
+        working-directory: ember-gridstack
+        env:
+          PUBLISH_TAG: ${{ steps.channel.outputs.publish-tag }}
+        run: npm stage publish --tag "$PUBLISH_TAG" --provenance
+      - name: Summary
+        env:
+          VERSION: ${{ needs.detect.outputs.version }}
+          PUBLISH_TAG: ${{ steps.channel.outputs.publish-tag }}
+        run: |
+          {
+            echo "Staged ember-gridstack@$VERSION (tag \`$PUBLISH_TAG\`)."
+            echo
+            echo "Approve on https://www.npmjs.com/package/ember-gridstack (Staged Packages tab) or \`npm stage approve <id>\`, then re-run this workflow."
+            echo
+            echo "If this was run twice before approving, approve or reject the older staged copy first."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  release:
+    needs: detect
+    if: needs.detect.outputs.published == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      id-token: write
     steps:
       # release-plan creates the tag and GitHub release through the API, so no git credentials are needed.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -34,20 +101,17 @@ jobs:
         with:
           node-version-file: package.json
           cache: pnpm
-          registry-url: https://registry.npmjs.org
-      # Trusted publishing needs npm >= 11.5.1; Node 22 ships npm 10.
-      - run: npm install -g npm@^11.5.1
       - run: pnpm install --frozen-lockfile
       - id: channel
         run: node build-scripts/release-channel.mts status --github-output >> "$GITHUB_OUTPUT"
-      - name: Publish to npm
+      # release-plan skips npm publish for versions already on npm.
+      - name: Tag and GitHub release
         env:
           GITHUB_AUTH: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_PROVENANCE: 'true'
           PRERELEASE: ${{ steps.channel.outputs.prerelease }}
         run: |
           if [ "$PRERELEASE" = true ]; then
-            pnpm exec release-plan publish --provenance --github-prerelease
+            pnpm exec release-plan publish --github-prerelease
           else
-            pnpm exec release-plan publish --provenance
+            pnpm exec release-plan publish
           fi
