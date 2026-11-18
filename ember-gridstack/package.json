@@ -1,16 +1,24 @@
 {
   "name": "ember-gridstack",
   "version": "5.0.1",
-  "description": "Ember Gridstack",
+  "description": "Ember components for gridstack.js: draggable, resizable dashboard grids, from templates or JSON layouts.",
   "keywords": [
     "ember-addon",
-    "gridstack"
+    "gridstack",
+    "drag-and-drop",
+    "grid",
+    "dashboard",
+    "layout",
+    "resizable",
+    "widgets"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yahoo/ember-gridstack.git",
     "directory": "ember-gridstack"
   },
+  "homepage": "https://yahoo.github.io/ember-gridstack/",
+  "bugs": "https://github.com/yahoo/ember-gridstack/issues",
   "license": "BSD-3-Clause",
   "authors": [
     "Balaji Manoharan<balajim1@verizonmedia.com>",
