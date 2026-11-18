@@ -56,7 +56,13 @@ jobs:
           branch: release-preview
           title: Prepare Release ${{ steps.explanation.outputs.new-version }}
           body: |
-            This PR is a preview of the release that [release-plan](https://github.com/embroider-build/release-plan) has prepared. To release you should just merge this PR 👍
+            What merging this does:
+
+            1. Stages the new version on npm (not public yet).
+            2. Needs a maintainer to approve it on npmjs.com (Staged Packages, 2FA) or with `npm stage approve <id>`.
+            3. Approve on npm within 24 hours and the running Publish workflow tags and releases automatically; after that, approve and run Publish from the Actions tab. A rejected stage needs a new release PR.
+
+            Full flow: [RELEASE.md](https://github.com/yahoo/ember-gridstack/blob/main/RELEASE.md)
 
             To change the release channel (alpha, beta, rc, stable), run `pnpm release:channel <channel>` in a separate PR (see [RELEASE.md](https://github.com/yahoo/ember-gridstack/blob/main/RELEASE.md#channels)).
 

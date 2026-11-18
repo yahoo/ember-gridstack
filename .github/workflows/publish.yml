@@ -1,8 +1,8 @@
-# For every push to the primary branch with .release-plan.json modified (or a manual run):
-# if the version is not on npm yet, stages it with `npm stage publish` for owner approval;
-# once approved and on npm, a re-run tags it and creates the GitHub release.
+# Push (.release-plan.json changed) or manual run: stages an unpublished version with `npm stage publish`,
+# waits up to 24 hours for owner approval on npm, then tags it and creates the GitHub release.
+# A manual run for an approved but untagged version only tags and releases.
 
-name: Publish Stable
+name: Publish
 
 on:
   workflow_dispatch:
@@ -14,7 +14,7 @@ on:
 permissions: {}
 
 concurrency:
-  group: publish-${{ github.head_ref || github.ref }}
+  group: publish
   cancel-in-progress: false
 
 jobs:
@@ -25,6 +25,7 @@ jobs:
     outputs:
       version: ${{ steps.check.outputs.version }}
       published: ${{ steps.check.outputs.published }}
+      tagged: ${{ steps.check.outputs.tagged }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { persist-credentials: false }
@@ -41,8 +42,12 @@ jobs:
           else
             echo "$out"; exit 1
           fi
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "published=$published" >> "$GITHUB_OUTPUT"
+          if [ -n "$(git ls-remote --tags origin "refs/tags/v$VERSION")" ]; then tagged=true; else tagged=false; fi
+          {
+            echo "version=$VERSION"
+            echo "published=$published"
+            echo "tagged=$tagged"
+          } >> "$GITHUB_OUTPUT"
 
   stage:
     needs: detect
@@ -77,16 +82,98 @@ jobs:
           PUBLISH_TAG: ${{ steps.channel.outputs.publish-tag }}
         run: |
           {
-            echo "Staged ember-gridstack@$VERSION (tag \`$PUBLISH_TAG\`)."
+            echo "**Approve: https://www.npmjs.com/package/ember-gridstack (Staged Packages tab, 2FA) or \`npm stage approve <id>\`.**"
             echo
-            echo "Approve on https://www.npmjs.com/package/ember-gridstack (Staged Packages tab) or \`npm stage approve <id>\`, then re-run this workflow."
+            echo "Staged ember-gridstack@$VERSION (tag \`$PUBLISH_TAG\`). This run waits up to 24 hours for approval, then creates the git tag and GitHub release."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # Hosted jobs are capped at 6 hours, so the 24-hour wait is split into four chained jobs.
+  wait-1:
+    needs: [detect, stage]
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    permissions:
+      contents: read
+    outputs:
+      approved: ${{ steps.wait.outputs.approved }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - id: wait
+        run: bash build-scripts/wait-for-npm.sh "$VERSION" 350
+        env:
+          VERSION: ${{ needs.detect.outputs.version }}
+
+  wait-2:
+    needs: [detect, wait-1]
+    if: needs.wait-1.outputs.approved == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    permissions:
+      contents: read
+    outputs:
+      approved: ${{ steps.wait.outputs.approved }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - id: wait
+        run: bash build-scripts/wait-for-npm.sh "$VERSION" 350
+        env:
+          VERSION: ${{ needs.detect.outputs.version }}
+
+  wait-3:
+    needs: [detect, wait-2]
+    if: needs.wait-2.outputs.approved == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    permissions:
+      contents: read
+    outputs:
+      approved: ${{ steps.wait.outputs.approved }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - id: wait
+        run: bash build-scripts/wait-for-npm.sh "$VERSION" 350
+        env:
+          VERSION: ${{ needs.detect.outputs.version }}
+
+  wait-4:
+    needs: [detect, wait-3]
+    if: needs.wait-3.outputs.approved == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    permissions:
+      contents: read
+    outputs:
+      approved: ${{ steps.wait.outputs.approved }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - id: wait
+        run: bash build-scripts/wait-for-npm.sh "$VERSION" 350
+        env:
+          VERSION: ${{ needs.detect.outputs.version }}
+      - if: steps.wait.outputs.approved == 'false'
+        run: |
+          {
+            echo "Not approved within 24 hours. To finish the release:"
             echo
-            echo "If this was run twice before approving, approve or reject the older staged copy first."
+            echo "1. Approve the staged version at https://www.npmjs.com/package/ember-gridstack (Staged Packages, 2FA), or \`npm stage approve <id>\`."
+            echo "2. Run Publish from the Actions tab; it sees the version on npm and tags and releases."
+            echo
+            echo "If the stage was rejected or expired, merge a new Prepare Release PR."
           } >> "$GITHUB_STEP_SUMMARY"
 
   release:
-    needs: detect
-    if: needs.detect.outputs.published == 'true'
+    needs: [detect, wait-1, wait-2, wait-3, wait-4]
+    if: >-
+      always() && needs.detect.result == 'success' &&
+      ((needs.detect.outputs.published == 'true' && needs.detect.outputs.tagged == 'false') ||
+      (needs.wait-1.result == 'success' && needs.wait-1.outputs.approved == 'true') ||
+      (needs.wait-2.result == 'success' && needs.wait-2.outputs.approved == 'true') ||
+      (needs.wait-3.result == 'success' && needs.wait-3.outputs.approved == 'true') ||
+      (needs.wait-4.result == 'success' && needs.wait-4.outputs.approved == 'true'))
     runs-on: ubuntu-latest
     permissions:
       contents: write
