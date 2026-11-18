@@ -89,7 +89,9 @@ jobs:
       - working-directory: ember-gridstack
         env:
           PUBLISH_TAG: ${{ steps.channel.outputs.publish-tag }}
-        run: npm publish --dry-run --tag "$PUBLISH_TAG" --provenance=false
+        run: |
+          npm version prerelease --preid dryrun --no-git-tag-version
+          npm publish --dry-run --tag "$PUBLISH_TAG" --provenance=false
       - name: Release channel summary
         env:
           CHANNEL: ${{ steps.channel.outputs.channel }}
