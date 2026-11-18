@@ -47,7 +47,7 @@ Every PR to `main` needs exactly one label (checked by CI). The title becomes th
 - `documentation` – no release, changelog only
 - `internal` – no release, changelog only (tooling, CI, deps, refactors)
 
-Merging to `main` updates the Prepare Release PR; see [RELEASE.md](RELEASE.md). Merging that stages the version on npm: approve on npm within 24 hours and the running Publish workflow tags and releases automatically; after that, approve and run Publish from the Actions tab.
+Merging to `main` updates the Prepare Release PR; see [RELEASE.md](RELEASE.md). Merging that stages the version on npm (not public yet). A maintainer approves it on npm (2FA) within an hour, and Publish then creates the git tag and GitHub release automatically. Approved later? Run Publish from the Actions tab.
 
 The demo is built and deployed to GitHub Pages from `main` by the Pages workflow (`.github/workflows/pages.yml`).
 
