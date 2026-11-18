@@ -39,15 +39,15 @@ Releases are done with [release-plan](https://github.com/embroider-build/release
 
 ## Pull request labels
 
-Every pull request must carry exactly one of these labels; release-plan uses it to pick the version bump:
+Every PR to `main` needs exactly one label (checked by CI). The title becomes the changelog line.
 
-- `breaking` – a breaking change
-- `enhancement` – a new feature or improvement
-- `bug` – fixes a bug in a released version
-- `documentation` – documentation only
-- `internal` – anything else (tooling, CI, dependencies, refactors)
+- `breaking` – major, breaking change
+- `enhancement` – minor, new feature or improvement
+- `bug` – patch, fixes a released bug
+- `documentation` – no release, changelog only
+- `internal` – no release, changelog only (tooling, CI, deps, refactors)
 
-Pull request titles become the changelog lines, so write them for users.
+Merging to `main` updates the Prepare Release PR; see [RELEASE.md](RELEASE.md). Merging that stages the version on npm: approve on npm within 24 hours and the running Publish workflow tags and releases automatically; after that, approve and run Publish from the Actions tab.
 
 The demo is built and deployed to GitHub Pages from `main` by the Pages workflow (`.github/workflows/pages.yml`).
 
