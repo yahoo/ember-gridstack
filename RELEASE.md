@@ -1,5 +1,13 @@
 # Release Process
 
+## TL;DR
+
+1. Label every PR to `main` with exactly one of `breaking`, `enhancement`, `bug`, `documentation`, `internal`; the title is the changelog line.
+2. Merging to `main` opens or updates the Prepare Release PR.
+3. Merging it runs Publish, which stages the version on npm (not public yet).
+4. A maintainer approves it on npmjs.com (Staged Packages, 2FA) or with `npm stage approve <id>`.
+5. Approve on npm within 24 hours and the running Publish workflow tags and releases automatically; after that, approve and run Publish from the Actions tab. A rejected or expired stage needs a new Prepare Release PR.
+
 Releases in this repo are mostly automated using [release-plan](https://github.com/embroider-build/release-plan/). Once you label all your PRs correctly (see below) you will have an automatically generated PR that updates your CHANGELOG.md file and a `.release-plan.json` that is used to prepare the release once the PR is merged.
 
 ## Preparation
@@ -26,13 +34,13 @@ When reviewing merged PR's the labels to be used are:
 
 Once the prep work is completed, the actual release is straight forward: you just need to merge the open [Plan Release](https://github.com/yahoo/ember-gridstack/pulls?q=is%3Apr+is%3Aopen+%22Prepare+Release%22+in%3Atitle) PR.
 
-The `Plan Release` workflow (`.github/workflows/plan-release.yml`) keeps that PR up to date on every push to `main` and whenever a PR label changes. Merging it changes `.release-plan.json`, which triggers `.github/workflows/publish.yml`. Publishing takes two runs:
+The `Plan Release` workflow (`.github/workflows/plan-release.yml`) keeps that PR up to date on every push to `main` and whenever a PR label changes. Merging it changes `.release-plan.json`, which triggers `.github/workflows/publish.yml`. The **Publish** workflow then:
 
-1. **Stage.** The version is not on npm yet, so the workflow runs `npm stage publish` with trusted publishing (OIDC) and provenance (no npm token). It stops after staging; the job summary has the version and dist-tag. No git tag or GitHub release is created yet.
+1. **Stage.** The version is not on npm yet, so the workflow runs `npm stage publish` with trusted publishing (OIDC) and provenance (no npm token). The job summary links to the approval page and shows the version and dist-tag.
 2. **Approve.** An npm maintainer approves the staged version with 2FA on the [package page](https://www.npmjs.com/package/ember-gridstack) (Staged Packages tab), or with `npm stage approve <id>`.
-3. **Tag and release.** Re-run the workflow (re-run the job, or start **Publish Stable** from the Actions tab on `main`). The version is now on npm, so `release-plan publish` skips the npm publish and only creates the git tag and GitHub release.
+3. **Tag and release.** The same run waits up to 24 hours (four chained wait jobs, as hosted jobs are capped at 6 hours). Once the version appears on npm, `release-plan publish` skips the npm publish and creates the git tag and GitHub release.
 
-Do not re-run the workflow before the staged version is approved or rejected: a second run stages another copy. If that happens, approve or reject the older staged copy first.
+If approval comes later than 24 hours, approve and then run **Publish** from the Actions tab on `main`: it sees the version on npm and only tags and releases. If the stage was rejected or expired, merge a new Prepare Release PR.
 
 All workflows pin npm `11.21.0` (`npm stage` needs >= 11.15.0, OIDC `npm dist-tag` needs >= 11.21.0).
 
