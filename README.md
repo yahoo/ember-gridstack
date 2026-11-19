@@ -74,7 +74,10 @@ pnpm add -D @ember/render-modifiers
 
 {{! grid.Item is bound to its grid; grid.* calls gridstack }}
 <GridStack as |grid|>
-  <button type='button' {{on 'click' (fn grid.compact 'list')}}>Compact</button>
+  <button
+    type='button'
+    {{on 'click' (fn grid.compact 'list' true)}}
+  >Compact</button>
   <grid.Item @options={{hash w=6 h=2}}>Widget</grid.Item>
 </GridStack>
 ```
@@ -218,7 +221,10 @@ The full list of events can found here: https://github.com/gridstack/gridstack.j
 
 ```hbs
 <GridStack as |grid|>
-  <button type='button' {{on 'click' (fn grid.compact 'list')}}>Compact</button>
+  <button
+    type='button'
+    {{on 'click' (fn grid.compact 'list' true)}}
+  >Compact</button>
   <grid.Item @options={{hash x=0 y=0 w=6 h=2}}>
     Widget #1
   </grid.Item>
