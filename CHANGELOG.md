@@ -2,22 +2,49 @@
 
 ## Release (2026-11-19)
 
-* ember-gridstack 6.0.0-alpha.0 (major)
+- ember-gridstack 6.0.0-alpha.0 (major)
 
 #### :boom: Breaking Change
-* `ember-gridstack`
-  * [#157](https://github.com/yahoo/ember-gridstack/pull/157) ember-gridstack 6.0: typed v2 addon, gridstack 14, data mode ([@kevinhinterlong](https://github.com/kevinhinterlong))
+
+- `ember-gridstack`
+  - [#157](https://github.com/yahoo/ember-gridstack/pull/157) ember-gridstack 6.0: typed v2 addon, gridstack 14, data mode ([@kevinhinterlong](https://github.com/kevinhinterlong))
 
 #### :house: Internal
-* [#159](https://github.com/yahoo/ember-gridstack/pull/159) Pin every action in Plan Release by inlining release-plan's actions ([@kevinhinterlong](https://github.com/kevinhinterlong))
-* [#155](https://github.com/yahoo/ember-gridstack/pull/155) ci: run builds on Node 22 and fix ember-try scenarios ([@jkusa](https://github.com/jkusa))
+
+- [#159](https://github.com/yahoo/ember-gridstack/pull/159) Pin every action in Plan Release by inlining release-plan's actions ([@kevinhinterlong](https://github.com/kevinhinterlong))
+- [#155](https://github.com/yahoo/ember-gridstack/pull/155) ci: run builds on Node 22 and fix ember-try scenarios ([@jkusa](https://github.com/jkusa))
 
 #### Committers: 2
+
 - Jon Kilroy ([@jkusa](https://github.com/jkusa))
 - Kevin Hinterlong ([@kevinhinterlong](https://github.com/kevinhinterlong))
 
-## 6.0.0 (unreleased)
+## 6.0 upgrade notes
 
+Everything that changed from 5.x, for the steps see [Migrating to 6.0](./README.md#migrating-to-60).
+
+- ember-gridstack is now a v2 (Embroider) addon. Your app needs `ember-source` >= 4.12 and ember-auto-import >= 2 (or Embroider).
+- gridstack is a regular dependency that your app's bundler resolves; it is no longer copied into the vendor tree.
+- `gridstack/dist/gridstack.css` is imported by the addon automatically, so remove any manual import of it.
+- gridstack.js goes from 12 to 14. See the [gridstack.js changelog](https://github.com/gridstack/gridstack.js/blob/master/doc/CHANGES.md).
+- `float` is replaced by `mode` (`'top'`, `'float'`, `'list'` or `'compact'`). Legacy `float: true` is migrated to `mode: 'float'` automatically, but use `mode` in new code. `save()` now writes `mode`, not `float`.
+- `update()` (and so changing a `<GridStackItem>`'s `@options`) may refuse a move onto a locked item or past `maxRow`. The item then stays where it was.
+- Changed `@options` are applied in place with `updateOptions()` instead of re-creating the grid. Only the options listed under [Options](#options) re-create it.
+- DOM order is owned by Ember: the addon turns off gridstack's re-sorting of `.grid-stack-item` elements, so `{{#each}}` keeps working after items move. Tab order follows your template, not the visual layout.
+- New `@onResizecontent` action.
+- Contextual components: `<GridStack as |grid|>` yields `grid.Item`, a `<GridStackItem>` bound to that grid. Plain `<GridStackItem>` still works and joins the closest `<GridStack>`.
+- No generated element ids: grids are found through their element, so you can set your own `id` on `<GridStack>` and `<GridStackItem>`.
+- `item.element` is `undefined` until the item is inserted.
+- Event delivery is no longer coalesced: every gridstack event reaches its `@on*` action, in order, with its own arguments, even several in one run loop.
+- The `grid-stack-registry` service finds grids by element, GridStack instance or `@name` (`find`, `get`). `registerGrid`, `findGridComponent` and `unregisterGridComponent` are removed; use `registry.find(element)` or `registry.get(name)`.
+- A grid no longer finds its `<GridStackItem>`s through the registry by element id; items resolve their grid from the DOM.
+- A cross-grid drop whose `id` already exists in the target grid is refused, with a dev warning (`ember-gridstack.drop-id-collision`).
+- An item dropped on another grid (`acceptWidgets`) is now removed from the source and created fresh in the target by your `@onDropped`; a grid with `acceptWidgets` and no `@onDropped` refuses drops. See [Cross-grid drops](#cross-grid-drops-template-mode).
+- `@ember/render-modifiers` is no longer a dependency. Add it to your app yourself if you used it through this addon.
+- `package.json` has an `exports` map. The public import paths are the package root and `components/*`, `modifiers/*` and `services/*` (with or without `.js`). Other paths such as `utils/*` still resolve, but they are private and can change in any release.
+- New root named exports: `import { GridStack, GridStackItem, gsItemAttributes, GridStackRegistry, GRID_STACK_EVENTS } from 'ember-gridstack'`.
+- TypeScript / Glint types ship in `declarations/`: `GridStackSignature`, `GridStackItemSignature`, `GsItemAttributesSignature`. They change nothing for JavaScript users.
+- The yielded grid and item have new members, see [Yields](#yields).
 - BREAKING: removed `registerGrid`, `findGridComponent` and `unregisterGridComponent` from the `grid-stack-registry` service; use `find(element)` or `get(name)`.
 - Cross-grid drops whose `id` already exists in the target grid are refused with a dev warning (`ember-gridstack.drop-id-collision`).
 - Data mode: `@layout` is compared by content; an equal layout (even a new array) no longer calls `load()`. Call `grid.load(layout)` to reset positions after user drags.
