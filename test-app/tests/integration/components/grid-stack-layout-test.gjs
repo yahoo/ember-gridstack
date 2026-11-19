@@ -502,4 +502,102 @@ module('Integration | Component | grid stack layout', function (hooks) {
     assert.strictEqual(comp.instance, null);
     await this.grid.destroy();
   });
+
+  test('a REINIT option change rebuilds the grid, keeping layout and serializer state', async function (assert) {
+    let created = 0;
+    let destroyed = 0;
+    class Counted extends Counter {
+      constructor() {
+        super(...arguments);
+        created++;
+        registerDestructor(this, () => destroyed++);
+      }
+    }
+    const layout = [
+      {
+        id: 'a',
+        x: 0,
+        y: 0,
+        w: 2,
+        h: 1,
+        component: 'text',
+        props: { text: 'A' },
+      },
+      {
+        id: 'b',
+        x: 2,
+        y: 0,
+        w: 2,
+        h: 1,
+        component: 'counter',
+        props: { count: 1 },
+      },
+    ];
+    const components = { text: Text, counter: Counted };
+    await this.grid.render({
+      options: { float: true },
+      template: (d) => <template>
+        {{#if d.visible}}
+          <GridStackLayout
+            @layout={{layout}}
+            @options={{d.gridOptions}}
+            @components={{components}}
+          />
+        {{/if}}
+      </template>,
+    });
+    const el = find('.grid-stack');
+    const api = el._gridComp;
+    const counts = () => [
+      findAll('.grid-stack-item-content .text').length,
+      findAll('.grid-stack-item-content .inc').length,
+    ];
+
+    const first = el.gridstack;
+    await this.grid.setOptions({ cellHeight: 55 });
+    assert.strictEqual(
+      el.gridstack,
+      first,
+      'non-reinit key keeps the instance',
+    );
+    assert.strictEqual(el.gridstack.opts.cellHeight, 55);
+
+    api.instance.update(find('[gs-id="b"]'), { x: 4, y: 1 });
+    await click('[gs-id="b"] .inc');
+    const expected = strip(api.save()).sort((p, q) => p.id.localeCompare(q.id));
+    assert.deepEqual(expected.find((w) => w.id === 'b').props, { count: 2 });
+    created = 0;
+    destroyed = 0;
+
+    await this.grid.setOptions({ handle: '.text' });
+    assert.notStrictEqual(el.gridstack, first, 'new instance');
+    assert.strictEqual(el.gridstack.opts.handle, '.text');
+    const sorted = () =>
+      strip(api.save()).sort((p, q) => p.id.localeCompare(q.id));
+    assert.deepEqual(sorted(), expected, 'layout kept');
+    assert.dom('[gs-id="b"] .inc').hasText('2', 'serializer state kept');
+    assert.deepEqual(counts(), [1, 1], 'no duplicates');
+    assert.strictEqual(created, 1, 'counter re-created once');
+    assert.strictEqual(destroyed, 1, 'old counter destroyed');
+
+    const second = el.gridstack;
+    await this.grid.setOptions({
+      draggable: { scroll: false },
+      marginTop: 7,
+      marginUnit: 'px',
+    });
+    assert.notStrictEqual(el.gridstack, second);
+    assert.false(el.gridstack.opts.draggable.scroll, 'draggable applied');
+    assert.strictEqual(el.gridstack.opts.marginTop, 7);
+    assert.deepEqual(sorted(), expected);
+    assert.deepEqual(counts(), [1, 1]);
+    assert.strictEqual(created, 2);
+    assert.strictEqual(domIds().length, 2);
+    assert.strictEqual(
+      [...el.classList].filter((c) => c.startsWith('grid-stack-instance-'))
+        .length,
+      0,
+    );
+    await this.grid.destroy();
+  });
 });

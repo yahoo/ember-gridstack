@@ -39,6 +39,7 @@ import {
 } from '../utils/grid-elements.ts';
 import type GridStackRegistry from '../services/grid-stack-registry.ts';
 import { GRID_STACK_EVENTS, capitalize } from '../utils/events.ts';
+import { REINIT_OPTIONS, sameOption, sameLayout } from '../utils/options.ts';
 import {
   ID_COLLISION_MESSAGE,
   WARN_ID_COLLISION,
@@ -381,12 +382,14 @@ export default class GridStackLayoutComponent extends Component<GridStackLayoutS
     elm._gridComp = this;
     this._lastLayout = this.args.layout;
     this._lastOptions = this.args.options;
+    this._create(this.args.layout ?? this.args.options?.children ?? []);
+  }
+
+  private _create(children: LayoutWidget[]) {
+    const elm = this.elm!;
     try {
       this.gridStack = GridStack.init(
-        {
-          ...this._withAccept(this.args.options),
-          children: this.args.layout ?? this.args.options?.children ?? [],
-        },
+        { ...this._withAccept(this.args.options), children },
         elm,
       );
     } catch (e) {
@@ -424,17 +427,41 @@ export default class GridStackLayoutComponent extends Component<GridStackLayoutS
   @action
   private update() {
     const { layout, options } = this.args;
-    if (options !== this._lastOptions) {
-      this._lastOptions = options;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { children, ...opts } = options ?? {};
-      this.gridStack?.updateOptions(this._withAccept(opts) ?? {});
+    const prev = (this._lastOptions ?? {}) as Record<string, unknown>;
+    const next = (options ?? {}) as Record<string, unknown>;
+    this._lastOptions = options;
+    let reinit = false;
+    const changed: Record<string, unknown> = {};
+    for (const key of new Set([...Object.keys(prev), ...Object.keys(next)])) {
+      if (key === 'children' || sameOption(prev[key], next[key])) continue;
+      if (!(key in next) || REINIT_OPTIONS.includes(key)) reinit = true;
+      else changed[key] = next[key];
+    }
+    if (reinit) this._reinit();
+    else if (Object.keys(changed).length) {
+      this.gridStack?.updateOptions(this._withAccept(changed) ?? {});
     }
     if (layout !== this._lastLayout) {
       this._lastLayout = layout;
       // diffs by id: same id updated in place, new added, missing removed
       if (layout) this.gridStack?.load(layout);
     }
+  }
+
+  private _reinit() {
+    const gs = this.gridStack;
+    if (!gs || !this.elm) return;
+    const saved = gs.save(true, false) as LayoutWidget[];
+    this.subscribedEvents.forEach((e) => gs.off(e));
+    this.subscribedEvents = [];
+    gs.removeAll(true, false);
+    gs.destroy(false);
+    this.gridStack = null;
+    const elm = this.elm;
+    [...elm.classList]
+      .filter((x) => /grid-stack-instance-\d*/.test(x))
+      .forEach((x) => elm.classList.remove(x));
+    this._create(saved);
   }
 
   @action
