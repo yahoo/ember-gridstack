@@ -1,5 +1,5 @@
 // Records what the template API (<GridStack><GridStackItem/>{{#each}}) does
-// in the data-mode DnD scenarios; see docs/wrapper-parity.md.
+// in the data-mode DnD scenarios; see the README's "Limits" section.
 import { module, test } from 'qunit';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
