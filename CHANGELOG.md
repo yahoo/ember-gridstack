@@ -1,5 +1,21 @@
 # Changelog
 
+## Release (2026-11-19)
+
+* ember-gridstack 6.0.0-alpha.0 (major)
+
+#### :boom: Breaking Change
+* `ember-gridstack`
+  * [#157](https://github.com/yahoo/ember-gridstack/pull/157) ember-gridstack 6.0: typed v2 addon, gridstack 14, data mode ([@kevinhinterlong](https://github.com/kevinhinterlong))
+
+#### :house: Internal
+* [#159](https://github.com/yahoo/ember-gridstack/pull/159) Pin every action in Plan Release by inlining release-plan's actions ([@kevinhinterlong](https://github.com/kevinhinterlong))
+* [#155](https://github.com/yahoo/ember-gridstack/pull/155) ci: run builds on Node 22 and fix ember-try scenarios ([@jkusa](https://github.com/jkusa))
+
+#### Committers: 2
+- Jon Kilroy ([@jkusa](https://github.com/jkusa))
+- Kevin Hinterlong ([@kevinhinterlong](https://github.com/kevinhinterlong))
+
 ## 6.0.0 (unreleased)
 
 - BREAKING: removed `registerGrid`, `findGridComponent` and `unregisterGridComponent` from the `grid-stack-registry` service; use `find(element)` or `get(name)`.

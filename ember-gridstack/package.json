@@ -1,6 +1,6 @@
 {
   "name": "ember-gridstack",
-  "version": "5.0.1",
+  "version": "6.0.0-alpha.0",
   "description": "Ember components for gridstack.js: draggable, resizable dashboard grids, from templates or JSON layouts.",
   "keywords": [
     "ember-addon",
