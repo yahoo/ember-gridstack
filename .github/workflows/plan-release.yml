@@ -74,8 +74,10 @@ jobs:
             exit 1
           fi
           rm release-plan-stderr.txt
-          if [ "$(jq '.solution | length' .release-plan.json)" -eq 1 ]; then
-            echo "new-version=v$(jq -r '.solution[].newVersion' .release-plan.json)" >> "$GITHUB_OUTPUT"
+          versions=$(jq -r '[.solution[] | select(.newVersion) | .newVersion]' .release-plan.json)
+          echo "has-release=$(jq 'length > 0' <<< "$versions")" >> "$GITHUB_OUTPUT"
+          if [ "$(jq length <<< "$versions")" -eq 1 ]; then
+            echo "new-version=v$(jq -r '.[0]' <<< "$versions")" >> "$GITHUB_OUTPUT"
           fi
           {
             echo 'text<<EOF'
@@ -85,6 +87,8 @@ jobs:
 
       - uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
         name: Create Prepare Release PR
+        # internal/documentation-only changes bump nothing; they roll into the next release's notes
+        if: steps.explanation.outputs.has-release == 'true'
         with:
           commit-message: "Prepare Release ${{ steps.explanation.outputs.new-version}} using 'release-plan'"
           labels: 'internal'
