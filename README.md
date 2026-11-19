@@ -26,7 +26,7 @@ Needs `ember-source` 4.12+, ember-auto-import 2+ (or Embroider) and Node.js 20.1
 **1. Upgrade**
 
 ```sh
-pnpm add -D ember-gridstack@alpha
+pnpm add -D ember-gridstack@^6
 ```
 
 **2. Remove the gridstack CSS import** (the addon imports it)

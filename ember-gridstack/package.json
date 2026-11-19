@@ -110,15 +110,6 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "release-plan": {
-    "semverIncrementAs": {
-      "major": "prerelease",
-      "minor": "prerelease",
-      "patch": "prerelease"
-    },
-    "semverIncrementTag": "alpha",
-    "publishTag": "alpha"
-  },
   "ember": {
     "edition": "octane"
   },
