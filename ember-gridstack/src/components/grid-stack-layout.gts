@@ -441,7 +441,7 @@ export default class GridStackLayoutComponent extends Component<GridStackLayoutS
     else if (Object.keys(changed).length) {
       this.gridStack?.updateOptions(this._withAccept(changed) ?? {});
     }
-    if (layout !== this._lastLayout) {
+    if (!sameLayout(layout, this._lastLayout)) {
       this._lastLayout = layout;
       // diffs by id: same id updated in place, new added, missing removed
       if (layout) this.gridStack?.load(layout);

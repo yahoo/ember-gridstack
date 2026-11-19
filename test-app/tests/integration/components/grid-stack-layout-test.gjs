@@ -600,4 +600,64 @@ module('Integration | Component | grid stack layout', function (hooks) {
     );
     await this.grid.destroy();
   });
+
+  test('equal-but-new options and layout do not reload; real changes do', async function (assert) {
+    class State {
+      @tracked tick = 0;
+      @tracked x = 0;
+      @tracked text = 'A';
+      get layout() {
+        return [
+          {
+            id: 'a',
+            x: this.x,
+            y: 0,
+            w: 2,
+            h: 1,
+            component: 'text',
+            props: { text: this.text, nested: { list: [1, 2] } },
+            tick: this.tick && 0,
+          },
+        ];
+      }
+    }
+    const s = new State();
+    const components = { text: Text };
+    await this.grid.render({
+      template: () => <template>
+        {{#if s.layout}}
+          <GridStackLayout
+            @layout={{s.layout}}
+            @options={{hash handle=".h" float=true tick=(if s.tick 0 0)}}
+            @components={{components}}
+          />
+        {{/if}}
+      </template>,
+    });
+    const gs = find('.grid-stack').gridstack;
+    const calls = { load: 0, updateOptions: 0 };
+    for (const name of Object.keys(calls)) {
+      const orig = gs[name];
+      gs[name] = function (...args) {
+        calls[name]++;
+        return orig.apply(this, args);
+      };
+    }
+
+    s.tick++;
+    await settled();
+    assert.deepEqual(calls, { load: 0, updateOptions: 0 }, 'equal: no calls');
+    assert.strictEqual(find('.grid-stack').gridstack, gs, 'no re-init');
+
+    s.x = 3;
+    await settled();
+    assert.strictEqual(calls.load, 1, 'moved widget loads');
+    assert.strictEqual(gs.engine.nodes[0].x, 3);
+
+    s.text = 'B';
+    await settled();
+    assert.strictEqual(calls.load, 2, 'deep prop change loads');
+    assert.dom('[gs-id="a"] .text').hasText('B');
+    assert.strictEqual(calls.updateOptions, 0);
+  });
 });
