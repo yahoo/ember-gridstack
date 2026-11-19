@@ -56,6 +56,7 @@ import {
 import type GridStackRegistry from '../services/grid-stack-registry.ts';
 
 import { GRID_STACK_EVENTS, capitalize } from '../utils/events.ts';
+import { REINIT_OPTIONS, sameOption } from '../utils/options.ts';
 import {
   WARN_NEEDS_ID,
   WARN_NO_HANDLER,
@@ -117,37 +118,7 @@ export type BoundItem = TemplateOnlyComponent<{
 /** A handler as gridstack calls it, whichever `@on*` it is. */
 export type AnyHandler = (this: GridStack, ...args: unknown[]) => void;
 
-/**
- * Options gridstack's `updateOptions()` cannot apply; changing any of these, or
- * removing any option, destroys and re-creates the GridStack instance.
- */
-export const REINIT_OPTIONS: string[] = [
-  'alwaysShowResizeHandle',
-  'draggable',
-  'handle',
-  'handleClass',
-  'itemClass',
-  'layout',
-  'placeholderClass',
-  'placeholderText',
-  'resizable',
-  'removable',
-  'children',
-  'disableOneColumnMode',
-  'marginTop',
-  'marginRight',
-  'marginBottom',
-  'marginLeft',
-  'marginUnit',
-];
-
-const sameOption = (a: unknown, b: unknown) =>
-  a === b ||
-  (typeof a === 'object' &&
-    typeof b === 'object' &&
-    a !== null &&
-    b !== null &&
-    JSON.stringify(a) === JSON.stringify(b));
+export { REINIT_OPTIONS } from '../utils/options.ts';
 
 interface Claim {
   el: GridItemHTMLElement;
