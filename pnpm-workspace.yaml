@@ -6,3 +6,9 @@ packages:
 dedupeInjectedDeps: false
 syncInjectedDepsAfterScripts:
   - build
+
+# Dependabot alerts in dev-only tooling (ember-cli, release-plan); none of these ship in the addon.
+overrides:
+  'tmp@<0.2.6': ^0.2.7
+  'glob@>=9 <14.0.2': ^14.0.6
+  'minimatch@>=7 <11.0.1': ^11.0.8

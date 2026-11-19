@@ -12,6 +12,10 @@ updates:
     directories: ['/', '/ember-gridstack', '/test-app']
     schedule:
       interval: weekly
+    ignore:
+      # Ember type tooling does not support TypeScript 7 yet
+      - dependency-name: typescript
+        versions: ['>=7']
     groups:
       npm:
         patterns: ['*']

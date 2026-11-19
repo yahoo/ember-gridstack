@@ -1,6 +1,6 @@
 # Push (.release-plan.json changed) or manual run: stages an unpublished version with `npm stage publish`,
 # waits up to 1 hour for owner approval on npm, then tags it and creates the GitHub release.
-# A manual run for an approved but untagged version only tags and releases.
+# A manual run for an approved version without a GitHub release only tags and releases.
 
 name: Publish
 
@@ -25,7 +25,7 @@ jobs:
     outputs:
       version: ${{ steps.check.outputs.version }}
       published: ${{ steps.check.outputs.published }}
-      tagged: ${{ steps.check.outputs.tagged }}
+      released: ${{ steps.check.outputs.released }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with: { persist-credentials: false }
@@ -33,6 +33,8 @@ jobs:
         with:
           node-version-file: package.json
       - id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           VERSION=$(node -p "require('./ember-gridstack/package.json').version")
           if out=$(npm view "ember-gridstack@$VERSION" version --registry https://registry.npmjs.org/ 2>&1); then
@@ -42,11 +44,11 @@ jobs:
           else
             echo "$out"; exit 1
           fi
-          if [ -n "$(git ls-remote --tags origin "refs/tags/v$VERSION")" ]; then tagged=true; else tagged=false; fi
+          if gh release view "v$VERSION" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then released=true; else released=false; fi
           {
             echo "version=$VERSION"
             echo "published=$published"
-            echo "tagged=$tagged"
+            echo "released=$released"
           } >> "$GITHUB_OUTPUT"
 
   stage:
@@ -109,7 +111,7 @@ jobs:
 
   release:
     needs: [detect, stage]
-    if: always() && needs.detect.result == 'success' && ((needs.detect.outputs.published == 'true' && needs.detect.outputs.tagged == 'false') || needs.stage.outputs.approved == 'true')
+    if: always() && needs.detect.result == 'success' && ((needs.detect.outputs.published == 'true' && needs.detect.outputs.released == 'false') || needs.stage.outputs.approved == 'true')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -132,9 +134,8 @@ jobs:
         env:
           GITHUB_AUTH: ${{ secrets.GITHUB_TOKEN }}
           PRERELEASE: ${{ steps.channel.outputs.prerelease }}
+        # A release created right after its tag can 422 ("must have a valid tag"); a rerun skips the existing tag.
         run: |
-          if [ "$PRERELEASE" = true ]; then
-            pnpm exec release-plan publish --github-prerelease
-          else
-            pnpm exec release-plan publish
-          fi
+          args=()
+          if [ "$PRERELEASE" = true ]; then args+=(--github-prerelease); fi
+          pnpm exec release-plan publish "${args[@]}" || { sleep 30; pnpm exec release-plan publish "${args[@]}"; }

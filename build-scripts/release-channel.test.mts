@@ -19,6 +19,7 @@ function scratch(version: string): string {
   copyFileSync('ember-gridstack/package.json', file);
   const pkg = JSON.parse(readFileSync(file, 'utf8')) as Record<string, unknown>;
   pkg.version = version;
+  delete pkg['release-plan'];
   writeFileSync(file, JSON.stringify(pkg, null, 2) + '\n');
   return file;
 }
@@ -30,7 +31,15 @@ function run(file: string, ...args: string[]): Record<string, unknown> {
 
 test('alpha -> beta -> rc -> stable -> alpha on stable version', () => {
   const file = scratch('5.0.1');
-  const keys = Object.keys(JSON.parse(readFileSync(file, 'utf8')) as object);
+  const stableKeys = Object.keys(
+    JSON.parse(readFileSync(file, 'utf8')) as object,
+  );
+  const at = stableKeys.indexOf('publishConfig') + 1;
+  const keys = [
+    ...stableKeys.slice(0, at),
+    'release-plan',
+    ...stableKeys.slice(at),
+  ];
   const stableMap = { major: 'premajor', minor: 'preminor', patch: 'prepatch' };
   for (const ch of ['alpha', 'beta', 'rc'] as const) {
     const pkg = run(file, ch);
@@ -43,6 +52,7 @@ test('alpha -> beta -> rc -> stable -> alpha on stable version', () => {
   }
   const stable = run(file, 'stable');
   assert.equal('release-plan' in stable, false);
+  assert.deepEqual(Object.keys(stable), stableKeys);
   const again = run(file, 'alpha');
   assert.deepEqual(Object.keys(again), keys);
   assert.ok(readFileSync(file, 'utf8').endsWith('}\n'));
