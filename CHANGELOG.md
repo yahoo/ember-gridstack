@@ -2,6 +2,17 @@
 
 ## Release (2026-11-19)
 
+* ember-gridstack 6.0.0 (patch)
+
+#### :bug: Bug Fix
+* `ember-gridstack`
+  * [#162](https://github.com/yahoo/ember-gridstack/pull/162) 6.0.0 stable: step-by-step migration guide, clearer demo, dev-dependency security fixes ([@kevinhinterlong](https://github.com/kevinhinterlong))
+
+#### Committers: 1
+- Kevin Hinterlong ([@kevinhinterlong](https://github.com/kevinhinterlong))
+
+## Release (2026-11-19)
+
 - ember-gridstack 6.0.0-alpha.0 (major)
 
 #### :boom: Breaking Change
