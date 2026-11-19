@@ -4,6 +4,8 @@
 
 - BREAKING: removed `registerGrid`, `findGridComponent` and `unregisterGridComponent` from the `grid-stack-registry` service; use `find(element)` or `get(name)`.
 - Cross-grid drops whose `id` already exists in the target grid are refused with a dev warning (`ember-gridstack.drop-id-collision`).
+- Data mode: `@layout` is compared by content; an equal layout (even a new array) no longer calls `load()`. Call `grid.load(layout)` to reset positions after user drags.
+- Data mode: changing a re-init option (`handle`, `draggable`, margins, ...) rebuilds the grid keeping the layout; widgets are re-created once and keep state only through serializers.
 
 ## [5.0.0](https://github.com/yahoo/ember-gridstack/compare/v4.0.1...v5.0.0) (2025-05-22)
 

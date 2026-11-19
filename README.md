@@ -285,8 +285,10 @@ Pass `@layout` (or `@components`) to `<GridStack>` and gridstack builds the item
 | ------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `@layout`     | `LayoutWidget[]`                  | `{ id, x, y, w, h, component, props }` entries; changes are applied with `grid.load()` (see below)                          |
 | `@components` | `Record<string, WidgetComponent>` | component per `component` name, invoked with `@props`, `@widget` and `@grid`; others use the yielded block                  |
-| `@options`    | `GridStackOptions`                | as for `<GridStack>`; `children` is ignored when `@layout` is set                                                           |
+| `@options`    | `GridStackOptions`                | as for `<GridStack>`; `children` is ignored when `@layout` is set (see below for re-init options)                           |
 | `@on*`        | handlers                          | the same 13 events as `<GridStack>`; `@onDropped(event, previousNode, newNode)` (`previousNode` is `undefined` for drag-in) |
+
+Changing a re-init option (`handle`, `draggable`, `resizable`, margins, ..., see [Options](#options)) rebuilds the grid from `grid.save()`, so the layout and positions are kept. Widgets are re-created once, and their state survives only through serializers (`props`), the same as save/load.
 
 #### `widget`
 
@@ -303,13 +305,15 @@ Pass `@layout` (or `@components`) to `<GridStack>` and gridstack builds the item
 
 #### `grid`
 
-`instance`, `addWidget(w)`, `removeWidget(idOrEl)`, `save()`, `load(layout)`, `compact()`, `enableMove()`, `enableResize()`, `setMode()`, `removeAll()`, as on the template-API `grid`.
+`instance`, `addWidget(w)`, `removeWidget(idOrEl)`, `save()`, `load(layout)`, `compact()`, `enableMove()`, `enableResize()`, `setMode()`, `removeAll()`, as on the template-API `grid`. In data mode `removeWidget` and `removeAll` default `removeDOM` to `true` because gridstack owns the elements; the [template-mode default is `false`](#yields) because Ember owns the DOM.
 
 #### Save and load
 
 `grid.save()` returns the React/Vue schema `[{ id, x, y, w, h, component, props }]` (`w`/`h` of 1 are left out, no `content`), with each widget's serializer output merged into `props`. `beforeRemove` and `droppedFrom` are never saved. `grid.load(json)` takes the same list.
 
 Replacing `@layout` calls `grid.load(layout)`, which diffs by `id`: an entry with an existing id is moved and resized in place and keeps its component instance and state, new ids are added, and ids that are missing are removed.
+
+`@layout` is compared by content, so passing an equal layout, even a new array, does not call `load()`. To reset positions after user drags, call `grid.load(layout)`.
 
 #### Moving widgets between grids
 
