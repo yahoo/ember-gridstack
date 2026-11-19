@@ -2,6 +2,16 @@
 
 ## Release (2026-11-19)
 
+
+
+#### :house: Internal
+* [#164](https://github.com/yahoo/ember-gridstack/pull/164) docs(release): point stale prerelease dist-tags at latest ([@kevinhinterlong](https://github.com/kevinhinterlong))
+
+#### Committers: 1
+- Kevin Hinterlong ([@kevinhinterlong](https://github.com/kevinhinterlong))
+
+## Release (2026-11-19)
+
 * ember-gridstack 6.0.0 (patch)
 
 #### :bug: Bug Fix

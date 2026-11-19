@@ -1,18 +1,8 @@
 {
   "solution": {
     "ember-gridstack": {
-      "impact": "patch",
-      "oldVersion": "6.0.0-alpha.0",
-      "newVersion": "6.0.0",
-      "tagName": "latest",
-      "constraints": [
-        {
-          "impact": "patch",
-          "reason": "Appears in changelog section :bug: Bug Fix"
-        }
-      ],
-      "pkgJSONPath": "./ember-gridstack/package.json"
+      "oldVersion": "6.0.0"
     }
   },
-  "description": "## Release (2026-11-19)\n\n* ember-gridstack 6.0.0 (patch)\n\n#### :bug: Bug Fix\n* `ember-gridstack`\n  * [#162](https://github.com/yahoo/ember-gridstack/pull/162) 6.0.0 stable: step-by-step migration guide, clearer demo, dev-dependency security fixes ([@kevinhinterlong](https://github.com/kevinhinterlong))\n\n#### Committers: 1\n- Kevin Hinterlong ([@kevinhinterlong](https://github.com/kevinhinterlong))\n"
+  "description": "## Release (2026-11-19)\n\n\n\n#### :house: Internal\n* [#164](https://github.com/yahoo/ember-gridstack/pull/164) docs(release): point stale prerelease dist-tags at latest ([@kevinhinterlong](https://github.com/kevinhinterlong))\n\n#### Committers: 1\n- Kevin Hinterlong ([@kevinhinterlong](https://github.com/kevinhinterlong))\n"
 }
