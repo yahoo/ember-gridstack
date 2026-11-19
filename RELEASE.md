@@ -69,7 +69,7 @@ Commit the resulting `ember-gridstack/package.json` change in its own PR. The co
 - **Going stable:** `pnpm release:channel stable` deletes the block; the next release of `6.0.0-rc.N` is `6.0.0` on `latest`.
 - `publish.yml` and the CI dry run read the channel from `package.json` (`release-channel.mts status`), so no workflow edits are needed; release-plan itself has no `--tag` option and uses `publishTag`.
 
-Promoting an already published version (e.g. make `6.0.0-rc.2` `latest`, or fix a wrong tag): run the **npm dist-tag** workflow (`.github/workflows/dist-tag.yml`) with `action: add`, `tag: latest`. Remove a stale tag (e.g. `alpha` after 6.0.0 ships) with `action: rm`; `latest` cannot be removed. Both start as a dry run; uncheck `dry_run` to apply. The workflow authenticates with OIDC through a second trusted publisher for `dist-tag.yml` (see One-time setup) and needs npm >= 11.21.0.
+Promoting an already published version (e.g. make `6.0.0-rc.2` `latest`, or fix a wrong tag): run the **npm dist-tag** workflow (`.github/workflows/dist-tag.yml`) with `action: add`, `tag: latest`. After a stable release, point stale prerelease tags at it instead of removing them, so installs of `ember-gridstack@alpha` keep working (e.g. `action: add`, `tag: alpha`, `version: 6.0.0`). Remove a tag nobody should use with `action: rm`; `latest` cannot be removed. Both start as a dry run; uncheck `dry_run` to apply. The workflow authenticates with OIDC through a second trusted publisher for `dist-tag.yml` (see One-time setup) and needs npm >= 11.21.0.
 
 ## Deprecating versions
 
