@@ -29,7 +29,7 @@ Everything that changed from 5.x, for the steps see [Migrating to 6.0](./README.
 - gridstack.js goes from 12 to 14. See the [gridstack.js changelog](https://github.com/gridstack/gridstack.js/blob/master/doc/CHANGES.md).
 - `float` is replaced by `mode` (`'top'`, `'float'`, `'list'` or `'compact'`). Legacy `float: true` is migrated to `mode: 'float'` automatically, but use `mode` in new code. `save()` now writes `mode`, not `float`.
 - `update()` (and so changing a `<GridStackItem>`'s `@options`) may refuse a move onto a locked item or past `maxRow`. The item then stays where it was.
-- Changed `@options` are applied in place with `updateOptions()` instead of re-creating the grid. Only the options listed under [Options](#options) re-create it.
+- Changed `@options` are applied in place with `updateOptions()` instead of re-creating the grid. Only the options listed under [Options](./README.md#options) re-create it.
 - DOM order is owned by Ember: the addon turns off gridstack's re-sorting of `.grid-stack-item` elements, so `{{#each}}` keeps working after items move. Tab order follows your template, not the visual layout.
 - New `@onResizecontent` action.
 - Contextual components: `<GridStack as |grid|>` yields `grid.Item`, a `<GridStackItem>` bound to that grid. Plain `<GridStackItem>` still works and joins the closest `<GridStack>`.
@@ -39,14 +39,12 @@ Everything that changed from 5.x, for the steps see [Migrating to 6.0](./README.
 - The `grid-stack-registry` service finds grids by element, GridStack instance or `@name` (`find`, `get`). `registerGrid`, `findGridComponent` and `unregisterGridComponent` are removed; use `registry.find(element)` or `registry.get(name)`.
 - A grid no longer finds its `<GridStackItem>`s through the registry by element id; items resolve their grid from the DOM.
 - A cross-grid drop whose `id` already exists in the target grid is refused, with a dev warning (`ember-gridstack.drop-id-collision`).
-- An item dropped on another grid (`acceptWidgets`) is now removed from the source and created fresh in the target by your `@onDropped`; a grid with `acceptWidgets` and no `@onDropped` refuses drops. See [Cross-grid drops](#cross-grid-drops-template-mode).
+- An item dropped on another grid (`acceptWidgets`) is now removed from the source and created fresh in the target by your `@onDropped`; a grid with `acceptWidgets` and no `@onDropped` refuses drops. See [Cross-grid drops](./README.md#cross-grid-drops-template-mode).
 - `@ember/render-modifiers` is no longer a dependency. Add it to your app yourself if you used it through this addon.
 - `package.json` has an `exports` map. The public import paths are the package root and `components/*`, `modifiers/*` and `services/*` (with or without `.js`). Other paths such as `utils/*` still resolve, but they are private and can change in any release.
 - New root named exports: `import { GridStack, GridStackItem, gsItemAttributes, GridStackRegistry, GRID_STACK_EVENTS } from 'ember-gridstack'`.
 - TypeScript / Glint types ship in `declarations/`: `GridStackSignature`, `GridStackItemSignature`, `GsItemAttributesSignature`. They change nothing for JavaScript users.
-- The yielded grid and item have new members, see [Yields](#yields).
-- BREAKING: removed `registerGrid`, `findGridComponent` and `unregisterGridComponent` from the `grid-stack-registry` service; use `find(element)` or `get(name)`.
-- Cross-grid drops whose `id` already exists in the target grid are refused with a dev warning (`ember-gridstack.drop-id-collision`).
+- The yielded grid and item have new members, see [Yields](./README.md#yields).
 - Data mode: `@layout` is compared by content; an equal layout (even a new array) no longer calls `load()`. Call `grid.load(layout)` to reset positions after user drags.
 - Data mode: changing a re-init option (`handle`, `draggable`, margins, ...) rebuilds the grid keeping the layout; widgets are re-created once and keep state only through serializers.
 
