@@ -1,0 +1,15 @@
+{
+  "extends": "@ember/library-tsconfig",
+  "include": ["./src/**/*", "./unpublished-development-types/**/*"],
+  "compilerOptions": {
+    "allowJs": true,
+    "declarationDir": "declarations",
+    // published files exclude src/, so maps would point nowhere
+    "declarationMap": false,
+    // `@internal` members are shared between the addon's own modules only
+    "stripInternal": true,
+    // must match rollup's srcDir so declarations line up with dist/ for package.json#exports
+    "rootDir": "./src",
+    "types": ["ember-source/types", "@glint/ember-tsc/types"]
+  }
+}

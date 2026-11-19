@@ -1,0 +1,426 @@
+{{page-title "ember-gridstack"}}
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="brand" href="#top">ember-gridstack</a>
+    <nav class="site-nav" aria-label="Sections">
+      <a href="#install">Install</a>
+      <a href="#demo">Demo</a>
+      <a href="#examples">Examples</a>
+      <a href="#usage">Usage</a>
+      <a href="#api">API</a>
+      <a href="https://github.com/yahoo/ember-gridstack">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page" id="top">
+  <section class="intro">
+    <h1>ember-gridstack</h1>
+    <p class="lede">
+      Ember components for
+      <a href="https://gridstackjs.com/">gridstack.js</a>. Build dashboards
+      whose widgets can be dragged, resized and rearranged, with layout state
+      kept in gridstack.js and content rendered by Ember.
+    </p>
+    <p class="meta">Ember 4.12+ · gridstack.js 14 · Embroider-ready v2 addon</p>
+  </section>
+
+  <section id="install">
+    <h2>Install</h2>
+    <pre class="code"><code
+        class="language-bash"
+        {{highlight}}
+      >{{this.snippets.install}}</code></pre>
+  </section>
+
+  <section id="demo">
+    <h2>Demo</h2>
+    <p>
+      Drag a widget by its body, resize it from the bottom-right corner. The
+      <code>mode</code>
+      option decides how widgets settle.
+    </p>
+
+    <div class="toolbar">
+      <button type="button" class="button" {{on "click" this.changeItems}}>
+        Add widget
+      </button>
+      <label class="mode-picker">
+        <span>mode</span>
+        <select class="select" {{on "change" this.setMode}}>
+          {{#each this.modeOptions as |m|}}
+            <option
+              value={{m.value}}
+              selected={{m.selected}}
+            >{{m.value}}</option>
+          {{/each}}
+        </select>
+      </label>
+      <span class="mode-description">{{this.modeDescription}}</span>
+    </div>
+
+    <ExampleCard @id="demo-card" @source={{this.snippets.demo}} @lang="gjs">
+      <div class="demo-layout">
+        <GridStack
+          @onAdded={{fn this.log "added"}}
+          @onChange={{fn this.log "change"}}
+          @onRemoved={{fn this.log "removed"}}
+          @onDragstart={{fn this.log "dragstart"}}
+          @onDrag={{fn this.log "drag"}}
+          @onDragstop={{fn this.log "dragstop"}}
+          @onResizestart={{fn this.log "resizestart"}}
+          @onResize={{fn this.log "resize"}}
+          @onResizestop={{fn this.log "resizestop"}}
+          @onResizecontent={{fn this.log "resizecontent"}}
+          @onEnable={{fn this.log "enable"}}
+          @onDisable={{fn this.log "disable"}}
+          @onDropped={{fn this.log "dropped"}}
+          @options={{hash
+            mode=this.mode
+            cellHeight=80
+            margin=6
+            columnOpts=(hash
+              breakpoints=(array (hash w=700 c=1) (hash w=1000 c=6))
+              columnMax=12
+              breakpointForWindow=true
+            )
+          }}
+        >
+          <GridStackItem @options={{hash id="requests" x=0 y=0 w=3 h=2}}>
+            <StatWidget
+              @label="Requests / min"
+              @value="12,480"
+              @delta="+3.2% w/w"
+            />
+          </GridStackItem>
+
+          <GridStackItem @options={{hash id="errors" x=4 y=0 w=3 h=2}}>
+            <StatWidget
+              @label="Error rate"
+              @value="0.42%"
+              @delta="+0.05 pts"
+              @negative={{true}}
+            />
+          </GridStackItem>
+
+          <GridStackItem @options={{hash id="latency" x=7 y=0 w=4 h=2}}>
+            <div class="widget">
+              <div class="widget-label">p95 latency (ms), last 12 h</div>
+              <svg
+                class="sparkline"
+                viewBox="0 0 140 40"
+                preserveAspectRatio="none"
+                role="img"
+                aria-label="p95 latency trending down from 212 to 168 ms"
+              >
+                <polyline points={{this.latencyPoints}} />
+              </svg>
+              <div class="widget-foot">212 → 168</div>
+            </div>
+          </GridStackItem>
+
+          <GridStackItem @options={{hash id="traffic" x=0 y=3 w=5 h=4}}>
+            <div class="widget">
+              <div class="widget-label">Weekly traffic (k sessions)</div>
+              <svg
+                class="bars"
+                viewBox="0 0 144 104"
+                role="img"
+                aria-label="Sessions per day, peaking Thursday at 73k"
+              >
+                {{#each this.bars as |bar|}}
+                  <rect x={{bar.x}} y={{bar.y}} width="12" height={{bar.h}} />
+                  <text x={{bar.x}} y="102">{{bar.label}}</text>
+                {{/each}}
+              </svg>
+            </div>
+          </GridStackItem>
+
+          <GridStackItem @options={{hash id="deploys" x=5 y=2 w=4 h=4}}>
+            <div class="widget">
+              <div class="widget-label">Recent deploys</div>
+              <ul class="list">
+                {{#each this.deploys as |d|}}
+                  <li>
+                    <span class="list-main">{{d.service}}
+                      <code>{{d.version}}</code></span>
+                    <span class="list-aside">{{d.when}}</span>
+                  </li>
+                {{/each}}
+              </ul>
+            </div>
+          </GridStackItem>
+
+          <GridStackItem @options={{hash id="uptime" x=9 y=3 w=3 h=4}}>
+            <div class="widget">
+              <div class="widget-label">Uptime, 30 d</div>
+              <ul class="list status-list">
+                {{#each this.services as |s|}}
+                  <li>
+                    <span class="list-main">
+                      <span
+                        class="status-dot {{if s.degraded 'is-degraded'}}"
+                      ></span>
+                      {{s.name}}
+                      {{#if s.degraded}}<span
+                          class="status-note"
+                        >degraded</span>{{/if}}
+                    </span>
+                    <span class="list-aside">{{s.uptime}}</span>
+                  </li>
+                {{/each}}
+              </ul>
+            </div>
+          </GridStackItem>
+
+          {{#each this.items as |item|}}
+            <GridStackItem
+              @options={{hash id=(concat "widget-" item.id) w=3 h=2}}
+            >
+              <div class="widget">
+                <div class="widget-label">Widget {{item.id}}</div>
+                <p class="widget-body">Added at runtime.</p>
+                <button
+                  type="button"
+                  class="button button-quiet"
+                  {{on "click" (fn this.removeItem item)}}
+                >Remove</button>
+              </div>
+            </GridStackItem>
+          {{/each}}
+        </GridStack>
+        <div class="event-log" aria-live="polite">
+          <div class="event-log-title">Events</div>
+          {{#if this.events.length}}
+            <ol class="event-list">
+              {{#each this.events as |e|}}
+                <li>
+                  <code>{{e.name}}</code>
+                  {{#if e.ids}}<span class="event-ids">{{e.ids}}</span>{{/if}}
+                  {{#if e.repeat}}<span
+                      class="event-count"
+                    >{{e.repeat}}</span>{{/if}}
+                </li>
+              {{/each}}
+            </ol>
+          {{else}}
+            <p class="event-empty">Drag, resize or add a widget.</p>
+          {{/if}}
+        </div>
+      </div>
+    </ExampleCard>
+  </section>
+
+  <section id="examples">
+    <h2>Examples</h2>
+    {{#each this.examples as |example|}}
+      <h3 id="example-{{example.id}}">{{example.title}}</h3>
+      <ExampleCard @id={{example.id}} @source={{example.source}} @lang="gjs">
+        <example.component />
+      </ExampleCard>
+    {{/each}}
+  </section>
+
+  <section id="usage">
+    <h2>Usage</h2>
+
+    <h3>Template tag</h3>
+    <p>Import the components directly in
+      <code>.gjs</code>
+      or
+      <code>.gts</code>
+      files.</p>
+    <pre class="code"><code
+        class="language-javascript"
+        {{highlight}}
+      >{{this.snippets.templateTag}}</code></pre>
+
+    <h3>Classic template (.hbs)</h3>
+    <p>The components are also available by name in classic templates.</p>
+    <pre class="code"><code
+        class="language-handlebars"
+        {{highlight}}
+      >{{this.snippets.demoClassic}}</code></pre>
+
+    <h3><code>&lt;GridStack&gt;</code></h3>
+    <p>
+      Creates the gridstack.js instance on insert and applies changed
+      <code>@options</code>
+      with
+      <code>updateOptions()</code>
+      (a few options, such as
+      <code>handle</code>, still re-create it). Event actions run after render.
+      DOM order is owned by Ember.
+    </p>
+    <pre class="code"><code
+        class="language-handlebars"
+        {{highlight}}
+      >{{this.snippets.gridStack}}</code></pre>
+
+    <h3><code>&lt;GridStackItem&gt;</code></h3>
+    <p>
+      Registers itself with the closest
+      <code>&lt;GridStack&gt;</code>
+      and is removed from the grid when it leaves the DOM. Changing
+      <code>@options</code>
+      calls
+      <code>grid.update()</code>.
+    </p>
+    <pre class="code"><code
+        class="language-handlebars"
+        {{highlight}}
+      >{{this.snippets.gridStackItem}}</code></pre>
+
+    <h3><code>\{{gs-item-attributes}}</code> modifier</h3>
+    <p>Used by
+      <code>&lt;GridStackItem&gt;</code>; available for custom item markup.</p>
+    <pre class="code"><code
+        class="language-handlebars"
+        {{highlight}}
+      >{{this.snippets.modifier}}</code></pre>
+
+    <h3><code>grid-stack-registry</code> service</h3>
+    <p>Finds the API a
+      <code>&lt;GridStack&gt;</code>
+      yields, in template and data mode, by element, GridStack instance or
+      <code>@name</code>.</p>
+    <pre class="code"><code
+        class="language-javascript"
+        {{highlight}}
+      >{{this.snippets.service}}</code></pre>
+  </section>
+
+  <section id="api">
+    <h2>API reference</h2>
+
+    <h3><code>&lt;GridStack&gt;</code></h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Argument</th><th>Type</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>@options</code></td>
+            <td>object</td>
+            <td>Passed to
+              <code>GridStack.init</code>. See
+              <a
+                href="https://github.com/gridstack/gridstack.js/tree/master/doc#grid-options"
+              >grid options</a>.</td>
+          </tr>
+          <tr>
+            <td><code>@onAdded</code>,
+              <code>@onChange</code>,
+              <code>@onRemoved</code></td>
+            <td>function</td>
+            <td>Called with
+              <code>(event, items)</code>
+              when widgets are added, moved/resized or removed.</td>
+          </tr>
+          <tr>
+            <td><code>@onDragstart</code>,
+              <code>@onDrag</code>,
+              <code>@onDragstop</code></td>
+            <td>function</td>
+            <td>Called with
+              <code>(event, element)</code>
+              during a drag.</td>
+          </tr>
+          <tr>
+            <td><code>@onResizestart</code>,
+              <code>@onResize</code>,
+              <code>@onResizestop</code></td>
+            <td>function</td>
+            <td>Called with
+              <code>(event, element)</code>
+              during a resize.</td>
+          </tr>
+          <tr>
+            <td><code>@onEnable</code>,
+              <code>@onDisable</code>,
+              <code>@onDropped</code>,
+              <code>@onResizecontent</code></td>
+            <td>function</td>
+            <td>Forwarded gridstack.js events of the same name.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Yields the component;
+      <code>.gridStack</code>
+      is the gridstack.js instance (or
+      <code>null</code>
+      before insert).</p>
+
+    <h3><code>&lt;GridStackItem&gt;</code></h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Argument</th><th>Type</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>@options</code></td>
+            <td>object</td>
+            <td>Item options such as
+              <code>x</code>,
+              <code>y</code>,
+              <code>w</code>,
+              <code>h</code>,
+              <code>minW</code>,
+              <code>noMove</code>. See
+              <a
+                href="https://github.com/gridstack/gridstack.js/tree/master/doc#item-options"
+              >item options</a>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Yields the component;
+      <code>.elm</code>
+      is the
+      <code>.grid-stack-item</code>
+      element. Content is wrapped in
+      <code>.grid-stack-item-content</code>.</p>
+
+    <h3><code>grid-stack-registry</code></h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Method</th><th>Description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>find(elementOrInstance)</code></td>
+            <td>The yielded grid API for an element inside a grid or a GridStack
+              instance, or
+              <code>undefined</code>.</td>
+          </tr>
+          <tr>
+            <td><code>get(name)</code></td>
+            <td>The grid rendered with
+              <code>@name</code>, or
+              <code>undefined</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><code>registerGrid</code>/<code>findGridComponent</code>/<code
+        >unregisterGridComponent</code>
+        are removed in 6.0; use
+        <code>registry.find(element)</code>
+        or
+        <code>registry.get(name)</code>.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  BSD-3-Clause · Yahoo Inc. ·
+  <a href="https://github.com/yahoo/ember-gridstack">Source</a>
+  ·
+  <a
+    href="https://github.com/yahoo/ember-gridstack/blob/main/CHANGELOG.md"
+  >Changelog</a>
+</footer>

@@ -1,0 +1,140 @@
+{
+  "name": "ember-gridstack",
+  "version": "5.0.1",
+  "description": "Ember components for gridstack.js: draggable, resizable dashboard grids, from templates or JSON layouts.",
+  "keywords": [
+    "ember-addon",
+    "gridstack",
+    "drag-and-drop",
+    "grid",
+    "dashboard",
+    "layout",
+    "resizable",
+    "widgets"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yahoo/ember-gridstack.git",
+    "directory": "ember-gridstack"
+  },
+  "homepage": "https://yahoo.github.io/ember-gridstack/",
+  "bugs": "https://github.com/yahoo/ember-gridstack/issues",
+  "license": "BSD-3-Clause",
+  "authors": [
+    "Balaji Manoharan<balajim1@verizonmedia.com>",
+    "Jon Kilroy<jkilroy@gmail.com>",
+    "Mike Musson",
+    "Kevin Hinterlong<kevinhinterlong@gmail.com>"
+  ],
+  "types": "./declarations/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./declarations/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./addon-main.js": "./addon-main.cjs",
+    "./_app_/*": "./dist/_app_/*",
+    "./*.js": {
+      "types": "./declarations/*.d.ts",
+      "default": "./dist/*.js"
+    },
+    "./*": {
+      "types": "./declarations/*.d.ts",
+      "default": "./dist/*.js"
+    }
+  },
+  "files": [
+    "addon-main.cjs",
+    "declarations",
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup --config",
+    "format": "prettier . --cache --write",
+    "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\" --prefixColors auto",
+    "lint:fix": "concurrently \"pnpm:lint:*:fix\" --names \"fix:\" --prefixColors auto && pnpm run format",
+    "lint:format": "prettier . --cache --check",
+    "lint:hbs": "ember-template-lint . --no-error-on-unmatched-pattern",
+    "lint:hbs:fix": "ember-template-lint . --fix --no-error-on-unmatched-pattern",
+    "lint:js": "eslint . --cache",
+    "lint:js:fix": "eslint . --fix",
+    "lint:types": "ember-tsc --noEmit",
+    "prepack": "rollup --config",
+    "start": "rollup --config --watch",
+    "test": "echo 'A v2 addon does not have tests, run tests in test-app'"
+  },
+  "dependencies": {
+    "@embroider/addon-shim": "^1.11.0",
+    "decorator-transforms": "^2.4.0",
+    "ember-modifier": "^4.3.0",
+    "gridstack": "^14.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^8.1.2",
+    "@babel/eslint-parser": "^8.1.2",
+    "@babel/plugin-transform-typescript": "^8.0.6",
+    "@babel/runtime": "^8.1.2",
+    "@ember/library-tsconfig": "^3.0.0",
+    "@embroider/addon-dev": "^8.5.0",
+    "@eslint/js": "^10.0.1",
+    "@glimmer/component": "^2.2.1",
+    "@glimmer/tracking": "^1.1.2",
+    "@glint/ember-tsc": "^1.14.4",
+    "@glint/template": "^1.11.1",
+    "@glint/tsserver-plugin": "^2.7.17",
+    "@rollup/plugin-babel": "^7.1.0",
+    "babel-plugin-ember-template-compilation": "^4.0.1",
+    "concurrently": "^10.0.7",
+    "ember-eslint-parser": "^0.16.1",
+    "ember-source": "~7.4.1",
+    "ember-template-lint": "^7.9.4",
+    "eslint": "^10.15.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-ember": "^13.11.0",
+    "eslint-plugin-import-x": "^4.18.1",
+    "eslint-plugin-n": "^18.5.0",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.1",
+    "prettier-plugin-ember-template-tag": "^2.1.8",
+    "rollup": "^4.68.5",
+    "rollup-plugin-copy": "^3.5.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.73.0"
+  },
+  "peerDependencies": {
+    "@glimmer/component": "^1.1.2 || ^2.0.0",
+    "@glimmer/tracking": "^1.1.2",
+    "ember-source": ">= 4.12.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "release-plan": {
+    "semverIncrementAs": {
+      "major": "premajor",
+      "minor": "preminor",
+      "patch": "prepatch"
+    },
+    "semverIncrementTag": "alpha",
+    "publishTag": "alpha"
+  },
+  "ember": {
+    "edition": "octane"
+  },
+  "ember-addon": {
+    "version": 2,
+    "type": "addon",
+    "main": "addon-main.cjs",
+    "app-js": {
+      "./components/grid-stack-item.js": "./dist/_app_/components/grid-stack-item.js",
+      "./components/grid-stack-layout.js": "./dist/_app_/components/grid-stack-layout.js",
+      "./components/grid-stack.js": "./dist/_app_/components/grid-stack.js",
+      "./modifiers/gs-item-attributes.js": "./dist/_app_/modifiers/gs-item-attributes.js",
+      "./services/grid-stack-registry.js": "./dist/_app_/services/grid-stack-registry.js"
+    }
+  },
+  "volta": {
+    "extends": "../package.json"
+  }
+}

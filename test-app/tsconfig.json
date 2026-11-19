@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "allowJs": false,
+    "experimentalDecorators": true,
+    "types": ["ember-source/types"]
+  },
+  "include": ["type-tests/**/*"]
+}

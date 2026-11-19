@@ -1,0 +1,72 @@
+name: Plan Release
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request_target: # This workflow has permissions on the repo, do NOT run code from PRs in this workflow. See https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+    types:
+      - labeled
+      - unlabeled
+
+permissions: {}
+
+concurrency:
+  group: plan-release # only the latest one of these should ever be running
+  cancel-in-progress: true
+
+jobs:
+  should-run-release-plan-prepare:
+    name: Should we run release-plan prepare?
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      should-prepare: ${{ steps.should-prepare.outputs.should-prepare }}
+    steps:
+      - uses: release-plan/actions/should-prepare-release@f92e35b6889c1128d3c45875aada8097d5ed802a # v1.0.2
+        with:
+          ref: 'main'
+        id: should-prepare
+
+  create-prepare-release-pr:
+    name: Create Prepare Release PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: should-run-release-plan-prepare
+    permissions:
+      contents: write
+      issues: read
+      pull-requests: write
+    if: needs.should-run-release-plan-prepare.outputs.should-prepare == 'true'
+    steps:
+      - uses: release-plan/actions/prepare@f92e35b6889c1128d3c45875aada8097d5ed802a # v1.0.2
+        name: Run release-plan prepare
+        with:
+          ref: 'main'
+        env:
+          GITHUB_AUTH: ${{ secrets.GITHUB_TOKEN }}
+        id: explanation
+
+      - uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
+        name: Create Prepare Release PR
+        with:
+          commit-message: "Prepare Release ${{ steps.explanation.outputs.new-version}} using 'release-plan'"
+          labels: 'internal'
+          sign-commits: true
+          branch: release-preview
+          title: Prepare Release ${{ steps.explanation.outputs.new-version }}
+          body: |
+            What merging this does:
+
+            1. Stages the new version on npm (not public yet).
+            2. Needs a maintainer to approve it on npmjs.com (Staged Packages, 2FA) or with `npm stage approve <id>`.
+            3. Approved within an hour, the running Publish workflow then creates the git tag and GitHub release automatically.
+            4. Approved later? Run Publish from the Actions tab (Run workflow). A rejected stage needs a new Prepare Release PR.
+
+            Full flow: [RELEASE.md](https://github.com/yahoo/ember-gridstack/blob/main/RELEASE.md)
+
+            To change the release channel (alpha, beta, rc, stable), run `pnpm release:channel <channel>` in a separate PR (see [RELEASE.md](https://github.com/yahoo/ember-gridstack/blob/main/RELEASE.md#channels)).
+
+            -----------------------------------------
+
+            ${{ steps.explanation.outputs.text }}

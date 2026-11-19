@@ -1,126 +1,40 @@
 {
-  "name": "ember-gridstack",
-  "version": "5.0.0",
-  "description": "Ember Gridstack",
-  "keywords": [
-    "ember-addon",
-    "gridstack"
-  ],
+  "name": "ember-gridstack-monorepo",
+  "version": "0.0.0",
+  "private": true,
   "repository": "https://github.com/yahoo/ember-gridstack.git",
   "license": "BSD-3-Clause",
-  "directories": {
-    "doc": "doc",
-    "test": "tests"
-  },
-  "authors": [
-    "Balaji Manoharan<balajim1@verizonmedia.com>",
-    "Jon Kilroy<jkilroy@gmail.com>",
-    "Mike Musson",
-    "Kevin Hinterlong<kevinhinterlong@gmail.com>"
-  ],
   "scripts": {
-    "build": "ember build --environment=production",
-    "lint": "concurrently \"npm:lint:*(!fix)\" --names \"lint:\"",
-    "lint:css": "stylelint \"**/*.css\" --allow-empty-input",
-    "lint:css:fix": "concurrently \"npm:lint:css -- --fix\"",
-    "lint:fix": "concurrently \"npm:lint:*:fix\" --names \"fix:\"",
-    "lint:hbs": "ember-template-lint .",
-    "lint:hbs:fix": "ember-template-lint . --fix",
-    "lint:js": "eslint . --cache",
-    "lint:js:fix": "eslint . --fix",
-    "start": "ember serve",
-    "test": "concurrently \"npm:lint\" \"npm:test:ember\" --names \"lint,test:\" && yarn run test:ember-compatibility",
-    "test:ember": "ember test",
-    "test:ember-compatibility": "ember try:each",
-    "semantic-release": "semantic-release"
-  },
-  "dependencies": {
-    "@ember/render-modifiers": "^2.0.2",
-    "ember-auto-import": "^2.7.4",
-    "ember-cli-babel": "^7.26.11",
-    "ember-cli-htmlbars": "^6.2.0",
-    "ember-modifier": "^4.2.2",
-    "gridstack": "^12.1.2"
+    "build": "pnpm --filter ember-gridstack build",
+    "lint": "pnpm --filter '*' lint && pnpm lint:scripts",
+    "lint:fix": "pnpm --filter '*' lint:fix",
+    "lint:scripts": "prettier --check build-scripts && node --test build-scripts/release-channel.test.mts && ./build-scripts/check-lockfile.sh",
+    "release:channel": "node build-scripts/release-channel.mts",
+    "prepare": "husky && pnpm build",
+    "start": "concurrently 'pnpm:start:*' --restart-after 5000 --prefixColors auto",
+    "start:addon": "pnpm --filter ember-gridstack start --no-watch.clearScreen",
+    "start:test-app": "pnpm --filter test-app start",
+    "test": "pnpm lint && pnpm test:ember",
+    "test:classic": "bash build-scripts/check-classic.sh",
+    "test:ember": "pnpm --filter '*' test:ember",
+    "test:try": "./build-scripts/try-scenarios.sh"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.21.3",
-    "@babel/plugin-proposal-decorators": "^7.21.0",
-    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
-    "@commitlint/prompt-cli": "^11.0.0",
-    "@denali-design/ember": "^1.0.0-alpha.31",
-    "@ember/optional-features": "^2.0.0",
-    "@ember/string": "^3.0.1",
-    "@ember/test-helpers": "^2.9.3",
-    "@embroider/test-setup": "^3.0.3",
-    "@glimmer/component": "^1.1.2",
-    "@glimmer/tracking": "^1.1.2",
-    "babel-plugin-dynamic-import-node": "^2.3.3",
-    "broccoli-asset-rev": "^3.0.0",
-    "concurrently": "^8.0.1",
-    "ember-cli": "~4.12.3",
-    "ember-cli-dependency-checker": "^3.3.1",
-    "ember-cli-github-pages": "^0.2.2",
-    "ember-cli-inject-live-reload": "^2.1.0",
-    "ember-cli-sass": "^10.0.1",
-    "ember-cli-sri": "^2.1.1",
-    "ember-cli-terser": "^4.0.2",
-    "ember-load-initializers": "^2.1.2",
-    "ember-page-title": "^7.0.0",
-    "ember-qunit": "^6.2.0",
-    "ember-resolver": "^10.0.0",
-    "ember-source": "~4.12.0",
-    "ember-source-channel-url": "^3.0.0",
-    "ember-template-lint": "^5.7.2",
-    "ember-try": "^3.0.0-beta.1",
-    "eslint": "^8.37.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-ember": "^11.5.0",
-    "eslint-plugin-n": "^15.7.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-qunit": "^7.3.4",
-    "highlight.js": "^11.3.1",
-    "husky": "^4.2.3",
-    "loader.js": "^4.7.0",
-    "prettier": "^2.8.7",
-    "pretty-quick": "^2.0.1",
-    "qunit": "^2.19.4",
-    "qunit-dom": "^2.0.0",
-    "sass": "^1.43.3",
-    "semantic-release": "^17.4.2",
-    "stylelint": "^15.4.0",
-    "stylelint-config-standard": "^32.0.0",
-    "stylelint-prettier": "^3.0.0",
-    "webpack": "^5.78.0"
-  },
-  "peerDependencies": {
-    "ember-source": "^4.0.0"
+    "@types/semver": "^7.7.1",
+    "concurrently": "^10.0.7",
+    "husky": "^9.1.7",
+    "prettier": "^3.10.1",
+    "prettier-plugin-ember-template-tag": "^2.1.8",
+    "pretty-quick": "^4.2.2",
+    "release-plan": "^0.20.1",
+    "semver": "^7.8.6"
   },
   "engines": {
-    "node": "14.* || 16.* || >= 18"
+    "node": ">= 20.19"
   },
-  "ember": {
-    "edition": "octane"
+  "volta": {
+    "node": "22.23.5",
+    "pnpm": "10.34.9"
   },
-  "ember-addon": {
-    "configPath": "tests/dummy/config"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "release": {
-    "repositoryUrl": "https://github.com/yahoo/ember-gridstack.git"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+  "packageManager": "pnpm@10.34.9"
 }

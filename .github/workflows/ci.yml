@@ -1,0 +1,129 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, alpha]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version-file: package.json, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version-file: package.json, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test:ember
+
+  classic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version-file: package.json, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: bash build-scripts/check-classic.sh
+
+  scenarios:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.list.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version-file: package.json, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - id: list
+        working-directory: test-app
+        run: echo "matrix=$(pnpm exec try list | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.stringify({scenario:JSON.parse(s).name})))')" >> "$GITHUB_OUTPUT"
+
+  try:
+    needs: [test, scenarios]
+    name: 'Try: ${{ matrix.scenario }}'
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.scenario == 'ember-canary' }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.scenarios.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version-file: package.json, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - env:
+          SCENARIO: ${{ matrix.scenario }}
+        run: pnpm test:try "$SCENARIO"
+
+  release-dry-run:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      # Full history and tags: release-plan reads merged PRs since the last release tag.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { fetch-depth: 0, persist-credentials: false }
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with: { node-version-file: package.json, cache: pnpm }
+      - run: npm install -g npm@11.21.0
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: bash build-scripts/check-pack.sh
+      - id: channel
+        run: node build-scripts/release-channel.mts status --github-output >> "$GITHUB_OUTPUT"
+      - working-directory: ember-gridstack
+        env:
+          PUBLISH_TAG: ${{ steps.channel.outputs.publish-tag }}
+        run: |
+          npm version prerelease --preid dryrun --no-git-tag-version
+          npm stage publish --dry-run --tag "$PUBLISH_TAG" --provenance=false
+      - name: Release channel summary
+        env:
+          CHANNEL: ${{ steps.channel.outputs.channel }}
+          PUBLISH_TAG: ${{ steps.channel.outputs.publish-tag }}
+        run: |
+          {
+            echo "### Release channel"
+            echo
+            echo "| channel | dist-tag |"
+            echo "| --- | --- |"
+            echo "| $CHANNEL | $PUBLISH_TAG |"
+            echo
+            echo '```'
+            node build-scripts/release-channel.mts next
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      # Non-blocking: release-plan exits non-zero while any merged PR is unlabelled.
+      - name: Release plan preview
+        continue-on-error: true
+        env:
+          GITHUB_AUTH: ${{ github.token }}
+        run: pnpm exec release-plan explain-plan >> "$GITHUB_STEP_SUMMARY"

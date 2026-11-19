@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
+    labels: ['internal']
+  - package-ecosystem: npm
+    directories: ['/', '/ember-gridstack', '/test-app']
+    schedule:
+      interval: weekly
+    groups:
+      npm:
+        patterns: ['*']
+    labels: ['internal']

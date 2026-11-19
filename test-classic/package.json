@@ -1,0 +1,40 @@
+{
+  "name": "test-classic",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Classic ember-cli + ember-auto-import v2 fixture that installs the packed ember-gridstack tarball",
+  "license": "BSD-3-Clause",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "ember build --environment=test",
+    "test": "ember test"
+  },
+  "devDependencies": {
+    "@babel/core": "7.29.13",
+    "@ember/optional-features": "3.0.0",
+    "@ember/test-helpers": "5.8.0",
+    "@glimmer/component": "2.2.1",
+    "@glimmer/tracking": "1.1.2",
+    "ember-auto-import": "2.13.1",
+    "ember-cli": "7.4.0",
+    "ember-cli-babel": "8.3.2",
+    "ember-cli-htmlbars": "7.0.1",
+    "ember-load-initializers": "3.0.1",
+    "ember-qunit": "9.2.1",
+    "ember-resolver": "13.2.0",
+    "ember-source": "7.4.1",
+    "ember-template-imports": "4.4.0",
+    "loader.js": "4.7.0",
+    "qunit": "2.26.0",
+    "qunit-dom": "3.6.0",
+    "webpack": "5.112.2"
+  },
+  "engines": {
+    "node": ">= 20.19"
+  },
+  "ember": {
+    "edition": "octane"
+  }
+}

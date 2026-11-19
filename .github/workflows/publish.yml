@@ -1,0 +1,140 @@
+# Push (.release-plan.json changed) or manual run: stages an unpublished version with `npm stage publish`,
+# waits up to 1 hour for owner approval on npm, then tags it and creates the GitHub release.
+# A manual run for an approved but untagged version only tags and releases.
+
+name: Publish
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.release-plan.json'
+
+permissions: {}
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+      published: ${{ steps.check.outputs.published }}
+      tagged: ${{ steps.check.outputs.tagged }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+      - id: check
+        run: |
+          VERSION=$(node -p "require('./ember-gridstack/package.json').version")
+          if out=$(npm view "ember-gridstack@$VERSION" version --registry https://registry.npmjs.org/ 2>&1); then
+            published=true
+          elif grep -q E404 <<<"$out"; then
+            published=false
+          else
+            echo "$out"; exit 1
+          fi
+          if [ -n "$(git ls-remote --tags origin "refs/tags/v$VERSION")" ]; then tagged=true; else tagged=false; fi
+          {
+            echo "version=$VERSION"
+            echo "published=$published"
+            echo "tagged=$tagged"
+          } >> "$GITHUB_OUTPUT"
+
+  stage:
+    needs: detect
+    if: needs.detect.outputs.published == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      approved: ${{ steps.wait.outputs.approved }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with: { persist-credentials: false }
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      # npm stage publish needs >= 11.15.0 and OIDC dist-tag >= 11.21.0; Node 22 ships npm 10.
+      - run: npm install -g npm@11.21.0
+      - run: pnpm install --frozen-lockfile
+      - id: channel
+        run: node build-scripts/release-channel.mts status --github-output >> "$GITHUB_OUTPUT"
+      - run: pnpm build
+      - name: Stage on npm
+        working-directory: ember-gridstack
+        env:
+          PUBLISH_TAG: ${{ steps.channel.outputs.publish-tag }}
+        run: npm stage publish --tag "$PUBLISH_TAG" --provenance
+      - name: Summary
+        env:
+          VERSION: ${{ needs.detect.outputs.version }}
+          PUBLISH_TAG: ${{ steps.channel.outputs.publish-tag }}
+        run: |
+          {
+            echo "**Approve: https://www.npmjs.com/package/ember-gridstack (Staged Packages tab, 2FA) or \`npm stage approve <id>\`.**"
+            echo
+            echo "Staged ember-gridstack@$VERSION (tag \`$PUBLISH_TAG\`). This run waits up to 1 hour for approval, then creates the git tag and GitHub release."
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Wait for approval
+        id: wait
+        env:
+          VERSION: ${{ needs.detect.outputs.version }}
+        run: |
+          for _ in $(seq 60); do
+            if npm view "ember-gridstack@$VERSION" version --registry https://registry.npmjs.org/ >/dev/null 2>&1; then
+              echo "approved=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 60
+          done
+          echo "approved=false" >> "$GITHUB_OUTPUT"
+          {
+            echo
+            echo "Not approved within 1 hour. Approve on npm, then run Publish from the Actions tab (Run workflow) to create the tag and GitHub release. If the stage was rejected, merge a new Prepare Release PR."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  release:
+    needs: [detect, stage]
+    if: always() && needs.detect.result == 'success' && ((needs.detect.outputs.published == 'true' && needs.detect.outputs.tagged == 'false') || needs.stage.outputs.approved == 'true')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # release-plan creates the tag and GitHub release through the API, so no git credentials are needed.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: package.json
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - id: channel
+        run: node build-scripts/release-channel.mts status --github-output >> "$GITHUB_OUTPUT"
+      # release-plan skips npm publish for versions already on npm.
+      - name: Tag and GitHub release
+        env:
+          GITHUB_AUTH: ${{ secrets.GITHUB_TOKEN }}
+          PRERELEASE: ${{ steps.channel.outputs.prerelease }}
+        run: |
+          if [ "$PRERELEASE" = true ]; then
+            pnpm exec release-plan publish --github-prerelease
+          else
+            pnpm exec release-plan publish
+          fi

@@ -1,0 +1,8 @@
+packages:
+  - 'ember-gridstack'
+  - 'test-app'
+
+# test-app injects ember-gridstack so the addon's ember-source peer resolves to test-app's copy
+dedupeInjectedDeps: false
+syncInjectedDepsAfterScripts:
+  - build
